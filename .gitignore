@@ -35,4 +35,4 @@ build/
 .vscode/
 .DS_Store
 lib
-plugin
+#plugin
