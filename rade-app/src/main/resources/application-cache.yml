@@ -1,0 +1,15 @@
+
+---
+#开发环境
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+
+---
+#开发环境
+spring:
+  config:
+    activate:
+      on-profile: prd
