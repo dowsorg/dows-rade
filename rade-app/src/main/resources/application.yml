@@ -16,7 +16,7 @@ spring:
   application:
     name: rade-admin
   profiles:
-    include: apidoc,mybatis,mysql,quartz,rade
+    include: apidoc,mybatis,mysql,quartz,rade,cache
     active: @spring.active@
   thymeleaf:
     cache: false
@@ -39,20 +39,7 @@ spring:
       add-mappings: true
       static-locations: classpath:/static/,file:./assets/public/
 
-  # caffeine 缓存
-  cache:
-    type: caffeine
-    file: assets/cache
 
-  #redis 缓存
-  #  cache:
-  #    type: redis
-  #  data:
-  #    redis:
-  #      host: 127.0.0.1
-  #      port: 6379
-  #      database: 0
-  #      password:
 
 
 # 忽略url
@@ -82,9 +69,14 @@ ignored:
     - /favicon.ico
 
 
-
 # 分布式唯一ID组件
 leaf:
   segment:
     # 默认禁用
     enable: false
+
+
+# 设置日志级别
+logging:
+  level:
+    org.dows: debug

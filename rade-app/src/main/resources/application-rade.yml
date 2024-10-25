@@ -42,10 +42,7 @@ rade:
   initData: true
   dataDir: file://E:\\workspaces\\java\\projects\\dows\\dows-rade\\rade-app\\src\\main\\resources\\rade\\data\\db
   menuDir: file://E:\\workspaces\\java\\projects\\dows\\dows-rade\\rade-app\\src\\main\\resources\\rade\\data\\menu
-# 设置日志级别
-logging:
-  level:
-    org.dows: debug
+
 
 ---
 #开发环境
@@ -57,8 +54,3 @@ spring:
 auto-table:
   # 启用自动维护表功能
   enable: false
-
-# 设置日志级别
-logging:
-  level:
-    org.dows: error
