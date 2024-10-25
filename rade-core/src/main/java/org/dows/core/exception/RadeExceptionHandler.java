@@ -1,9 +1,8 @@
 package org.dows.core.exception;
 
 import cn.hutool.core.util.ObjUtil;
-import org.dows.core.web.Response;
 import lombok.extern.slf4j.Slf4j;
-//import me.chanjar.weixin.common.error.WxErrorException;
+import org.dows.core.web.Response;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -46,7 +45,7 @@ public class RadeExceptionHandler {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public Response handleHttpRequestMethodNotSupportedException(
-        HttpRequestMethodNotSupportedException e) {
+            HttpRequestMethodNotSupportedException e) {
         log.error(e.getMessage(), e);
         return Response.error("不支持该请求方式，请区分POST、GET等请求方式是否正确");
     }

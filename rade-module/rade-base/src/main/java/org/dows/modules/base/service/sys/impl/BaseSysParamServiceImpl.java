@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
-import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.cache.RadeCache;
+import org.dows.core.crud.BaseServiceImpl;
 import org.dows.modules.base.entity.sys.BaseSysParamEntity;
 import org.dows.modules.base.mapper.sys.BaseSysParamMapper;
 import org.dows.modules.base.service.sys.BaseSysParamService;
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BaseSysParamServiceImpl extends BaseServiceImpl<BaseSysParamMapper, BaseSysParamEntity>
-    implements BaseSysParamService {
+        implements BaseSysParamService {
 
     final private RadeCache radeCache;
 
@@ -27,7 +27,7 @@ public class BaseSysParamServiceImpl extends BaseServiceImpl<BaseSysParamMapper,
     public String htmlByKey(String key) {
         String data = dataByKey(key);
         return "<html><body>" + (StrUtil.isNotEmpty(data) ? data : "key notfound")
-            + "</body></html>";
+                + "</body></html>";
     }
 
     @Override
@@ -35,7 +35,7 @@ public class BaseSysParamServiceImpl extends BaseServiceImpl<BaseSysParamMapper,
         BaseSysParamEntity baseSysParamEntity = radeCache.get(key, BaseSysParamEntity.class);
         if (baseSysParamEntity == null) {
             baseSysParamEntity = getOne(
-                QueryWrapper.create().eq(BaseSysParamEntity::getKeyName, key));
+                    QueryWrapper.create().eq(BaseSysParamEntity::getKeyName, key));
         }
         if (baseSysParamEntity != null) {
             radeCache.set("param:" + baseSysParamEntity.getKeyName(), baseSysParamEntity);

@@ -1,13 +1,14 @@
 package org.dows.modules.base.entity.sys;
 
-import org.dows.core.crud.BaseEntity;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.autotable.annotation.Index;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.dows.core.crud.BaseEntity;
+
+import java.util.List;
 
 @Getter
 @Setter

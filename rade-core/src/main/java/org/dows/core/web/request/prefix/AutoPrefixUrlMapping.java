@@ -25,7 +25,7 @@ public class AutoPrefixUrlMapping extends RequestMappingHandlerMapping {
         RequestMappingInfo info = super.getMappingForMethod(method, handlerType);
         String packageName = handlerType.getPackage().getName();
         if (info != null && annotations.length > 0 && annotations[0].value().length == 0
-            && packageName.contains("modules")) {
+                && packageName.contains("modules")) {
             if (!checkApis(annotations, info)) {
                 return null;
             }
@@ -44,7 +44,7 @@ public class AutoPrefixUrlMapping extends RequestMappingHandlerMapping {
      * @return 是否需要构建路由
      */
     private boolean checkApis(RadeController[] annotations, RequestMappingInfo info) {
-        String[] apis = new String[] { "add", "delete", "update", "page", "list", "info" };
+        String[] apis = new String[]{"add", "delete", "update", "page", "list", "info"};
         if (info.getPathPatternsCondition() == null) {
             return true;
         }
@@ -79,7 +79,7 @@ public class AutoPrefixUrlMapping extends RequestMappingHandlerMapping {
         String[] names = name.split("[.]");
         name = names[names.length - 1];
         cname = name.replace(ConvertUtil.pathToClassName(prefix), "")
-            .replace("Controller", "");
+                .replace("Controller", "");
         return ConvertUtil.classNameToPath(cname);
     }
 

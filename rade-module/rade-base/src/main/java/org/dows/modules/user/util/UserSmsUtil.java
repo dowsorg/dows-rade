@@ -6,10 +6,12 @@ import org.dows.core.cache.RadeCache;
 import org.dows.core.exception.RadePreconditions;
 import org.dows.core.plugin.service.RadePluginService;
 import org.dows.core.plugin.RadePluginInvokers;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,15 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserSmsUtil {
 
-    /**
-     * 短信发送场景枚举
-     */
-    public enum SendSceneEnum {
-        ALL,
-    }
-
     private final RadePluginService radePluginService;
-
     private final RadeCache radeCache;
 
     /**
@@ -48,6 +42,7 @@ public class UserSmsUtil {
 
     /**
      * 检查验证码
+     *
      * @param phone
      * @param code
      * @return
@@ -86,5 +81,12 @@ public class UserSmsUtil {
             // 未找到短信插件
             log.error("未找到短信插件，请前往插件市场下载安装");
         }
+    }
+
+    /**
+     * 短信发送场景枚举
+     */
+    public enum SendSceneEnum {
+        ALL,
     }
 }

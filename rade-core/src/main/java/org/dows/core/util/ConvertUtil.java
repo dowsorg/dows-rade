@@ -1,17 +1,9 @@
 package org.dows.core.util;
 
 import cn.hutool.core.util.StrUtil;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.*;
 
 /**
  * 转换
@@ -76,6 +68,38 @@ public class ConvertUtil {
             }
             return null;
         }
+    }
+
+    /**
+     * /admin/goods 转 AdminGoods
+     */
+    public static String pathToClassName(String path) {
+        // 按斜杠分割字符串
+        String[] parts = path.split("/");
+        StringBuilder className = new StringBuilder();
+        for (String part : parts) {
+            // 将每个部分的首字母大写，并追加到 StringBuilder 中
+            className.append(StrUtil.upperFirst(part));
+        }
+        return className.toString();
+    }
+
+    /**
+     * CouponInfo 转 coupon/info
+     */
+    public static String classNameToPath(String className) {
+        StringBuilder path = new StringBuilder();
+        for (char c : className.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                if (!path.isEmpty()) {
+                    path.append("/");
+                }
+                path.append(Character.toLowerCase(c));
+            } else {
+                path.append(c);
+            }
+        }
+        return path.toString();
     }
 
     // 简单的MultipartFile实现，用于模拟Spring中的MultipartFile对象
@@ -149,39 +173,5 @@ public class ConvertUtil {
                 }
             }
         }
-    }
-
-
-
-    /**
-     * /admin/goods 转 AdminGoods
-     */
-    public static String pathToClassName(String path) {
-        // 按斜杠分割字符串
-        String[] parts = path.split("/");
-        StringBuilder className = new StringBuilder();
-        for (String part : parts) {
-            // 将每个部分的首字母大写，并追加到 StringBuilder 中
-            className.append(StrUtil.upperFirst(part));
-        }
-        return className.toString();
-    }
-
-    /**
-     * CouponInfo 转 coupon/info
-     */
-    public static String classNameToPath(String className) {
-        StringBuilder path = new StringBuilder();
-        for (char c : className.toCharArray()) {
-            if (Character.isUpperCase(c)) {
-                if (!path.isEmpty()) {
-                    path.append("/");
-                }
-                path.append(Character.toLowerCase(c));
-            } else {
-                path.append(c);
-            }
-        }
-        return path.toString();
     }
 }

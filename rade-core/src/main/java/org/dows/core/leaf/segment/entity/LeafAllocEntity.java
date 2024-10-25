@@ -1,16 +1,16 @@
 package org.dows.core.leaf.segment.entity;
 
-import org.dows.core.crud.BaseEntity;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
 import lombok.Getter;
 import lombok.Setter;
+import org.dows.core.crud.BaseEntity;
 
 @Getter
 @Setter
 @Table(value = "leaf_alloc", comment = "唯一id分配")
-public class LeafAllocEntity  extends BaseEntity<LeafAllocEntity> {
+public class LeafAllocEntity extends BaseEntity<LeafAllocEntity> {
 
     @UniIndex
     @ColumnDefine(comment = "业务key ，比如orderId", length = 20, notNull = true)

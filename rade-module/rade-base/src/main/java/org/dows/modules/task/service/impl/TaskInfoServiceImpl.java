@@ -28,7 +28,7 @@ import static org.dows.modules.task.entity.table.TaskLogEntityTableDef.TASK_LOG_
 @Service
 @RequiredArgsConstructor
 public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfoMapper, TaskInfoEntity> implements
-    TaskInfoService {
+        TaskInfoService {
 
     final private Scheduler scheduler;
 
@@ -38,7 +38,7 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfoMapper, TaskInf
             List<TaskInfoEntity> list = list();
             list.forEach(scheduleJob -> {
                 CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler,
-                    scheduleJob.getJobId());
+                        scheduleJob.getJobId());
                 if (cronTrigger == null) {
                     ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
                 } else {
@@ -70,11 +70,11 @@ public class TaskInfoServiceImpl extends BaseServiceImpl<TaskInfoMapper, TaskInf
     public Object log(Page page, Long taskId, Integer status) {
 
         QueryWrapper queryWrapper = QueryWrapper.create().select(TASK_LOG_ENTITY.ALL_COLUMNS,
-                TASK_INFO_ENTITY.NAME.as("taskName")).from(TASK_LOG_ENTITY)
-            .leftJoin(TASK_INFO_ENTITY).on(TASK_LOG_ENTITY.TASK_ID.eq(TASK_INFO_ENTITY.ID))
-            .eq(TaskLogEntity::getTaskId, taskId, taskId != null)
-            .eq(TaskLogEntity::getStatus, status, status != null)
-            .orderBy(TaskLogEntity::getCreateTime, false);
+                        TASK_INFO_ENTITY.NAME.as("taskName")).from(TASK_LOG_ENTITY)
+                .leftJoin(TASK_INFO_ENTITY).on(TASK_LOG_ENTITY.TASK_ID.eq(TASK_INFO_ENTITY.ID))
+                .eq(TaskLogEntity::getTaskId, taskId, taskId != null)
+                .eq(TaskLogEntity::getStatus, status, status != null)
+                .orderBy(TaskLogEntity::getCreateTime, false);
         return mapper.paginate(page, queryWrapper);
     }
 

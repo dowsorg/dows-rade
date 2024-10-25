@@ -18,7 +18,7 @@ public class AdminUserInfoController extends BaseController<UserInfoService, Use
     protected void init(HttpServletRequest request, JSONObject requestParams) {
 
         setPageOption(createOp().fieldEq(USER_INFO_ENTITY.STATUS, USER_INFO_ENTITY.GENDER,
-                USER_INFO_ENTITY.LOGIN_TYPE)
-            .keyWordLikeFields(USER_INFO_ENTITY.NICK_NAME, USER_INFO_ENTITY.PHONE));
+                        USER_INFO_ENTITY.LOGIN_TYPE)
+                .keyWordLikeFields(USER_INFO_ENTITY.NICK_NAME, USER_INFO_ENTITY.PHONE));
     }
 }

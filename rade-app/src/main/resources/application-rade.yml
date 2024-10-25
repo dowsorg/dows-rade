@@ -40,7 +40,8 @@ spring:
 rade:
   # 初始化数据
   initData: true
-
+  dataDir: file://E:\\workspaces\\java\\projects\\dows\\dows-rade\\rade-app\\src\\main\\resources\\rade\\data\\db
+  menuDir: file://E:\\workspaces\\java\\projects\\dows\\dows-rade\\rade-app\\src\\main\\resources\\rade\\data\\menu
 # 设置日志级别
 logging:
   level:

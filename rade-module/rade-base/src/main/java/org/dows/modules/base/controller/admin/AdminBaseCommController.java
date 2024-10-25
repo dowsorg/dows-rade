@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.dows.core.aid.RadeAid;
 import org.dows.core.annotation.RadeController;
 import org.dows.core.annotation.TokenIgnore;
-import org.dows.core.aid.RadeAid;
 import org.dows.core.plugin.upload.FileUploadStrategyFactory;
 import org.dows.core.web.Response;
 import org.dows.modules.base.entity.sys.BaseSysUserEntity;
@@ -68,10 +68,10 @@ public class AdminBaseCommController {
 
     @Operation(summary = "文件上传")
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
-        MediaType.ALL_VALUE})
+            MediaType.ALL_VALUE})
     public Response upload(
-        @RequestPart(value = "upload", required = false) @Parameter(description = "文件") MultipartFile[] files,
-        HttpServletRequest request) {
+            @RequestPart(value = "upload", required = false) @Parameter(description = "文件") MultipartFile[] files,
+            HttpServletRequest request) {
         return Response.ok(fileUploadStrategyFactory.upload(files, request));
     }
 

@@ -25,7 +25,7 @@ body {
     padding: 10px 0 20px 0;
     text-align: center;
     opacity: 0; /* 开始时隐藏 */
-    animation: fadeIn 5s forwards;  /* 应用动画 */
+    animation: fadeIn 5s forwards; /* 应用动画 */
 }
 
 .link {
@@ -42,11 +42,13 @@ body {
     text-transform: uppercase;
     white-space: pre;
 }
+
 .reveal span {
     opacity: 0;
     transform: scale(0);
     animation: fadeIn 2.4s forwards;
 }
+
 .reveal::before, .reveal::after {
     position: absolute;
     content: "";
@@ -58,10 +60,12 @@ body {
     opacity: 0;
     transform: scale(0);
 }
+
 .reveal::before {
     left: 50%;
     animation: slideLeft 1.5s cubic-bezier(0.7, -0.6, 0.3, 1.5) forwards;
 }
+
 .reveal::after {
     right: 50%;
     animation: slideRight 1.5s cubic-bezier(0.7, -0.6, 0.3, 1.5) forwards;
@@ -73,6 +77,7 @@ body {
         transform: scale(1);
     }
 }
+
 @keyframes slideLeft {
     to {
         left: -6%;
@@ -80,6 +85,7 @@ body {
         transform: scale(0.9);
     }
 }
+
 @keyframes slideRight {
     to {
         right: -6%;

@@ -1,14 +1,15 @@
 package org.dows.core.plugin;
 
 import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.dows.core.exception.RadePreconditions;
 import org.dows.core.plugin.service.DynamicJarLoaderService;
 import org.dows.core.util.SpringContextUtils;
+import org.springframework.context.ApplicationContext;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 
 /**
  * 插件调用封装
@@ -17,7 +18,7 @@ import org.springframework.context.ApplicationContext;
 public class RadePluginInvokers {
 
     private static final DynamicJarLoaderService dynamicJarLoaderService = SpringContextUtils
-        .getBean(DynamicJarLoaderService.class);
+            .getBean(DynamicJarLoaderService.class);
 
     /**
      * 插件默认调用入口
@@ -41,11 +42,11 @@ public class RadePluginInvokers {
         ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread()
-                .setContextClassLoader(dynamicJarLoaderService.getDynamicJarClassLoader(key));
+                    .setContextClassLoader(dynamicJarLoaderService.getDynamicJarClassLoader(key));
             Object beanInstance = dynamicJarLoaderService.getBeanInstance(key);
             Method method = beanInstance.getClass().getSuperclass()
-                .getMethod(PluginConsts.setApplicationContext,
-                    ApplicationContext.class);
+                    .getMethod(PluginConsts.setApplicationContext,
+                            ApplicationContext.class);
             method.invoke(beanInstance, SpringContextUtils.applicationContext);
         } catch (Exception e) {
             log.error("setApplicationContext err", e);
@@ -63,12 +64,12 @@ public class RadePluginInvokers {
      */
     public static Object invoke(String key, String methodName, Object... params) {
         Object beanInstance = dynamicJarLoaderService.getBeanInstance(key);
-        RadePreconditions.checkEmpty(beanInstance, "未找到该插件：{}, 请前往插件市场进行安装",key);
+        RadePreconditions.checkEmpty(beanInstance, "未找到该插件：{}, 请前往插件市场进行安装", key);
         ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             // 设置当前线程的上下文类加载器为插件的类加载器
             Thread.currentThread()
-                .setContextClassLoader(dynamicJarLoaderService.getDynamicJarClassLoader(key));
+                    .setContextClassLoader(dynamicJarLoaderService.getDynamicJarClassLoader(key));
             log.info("调用插件类: {}, 方法: {} 参数: {}", key, methodName, params);
             return invoke(beanInstance, methodName, params);
         } catch (Exception e) {
@@ -88,18 +89,18 @@ public class RadePluginInvokers {
      * @param params       参数
      */
     private static Object invoke(Object beanInstance, String methodName, Object[] params)
-        throws InvocationTargetException, IllegalAccessException {
+            throws InvocationTargetException, IllegalAccessException {
         Class<?>[] paramTypes = Arrays.stream(params).map(Object::getClass)
-            .toArray(Class<?>[]::new);
+                .toArray(Class<?>[]::new);
         Method method = findMethod(beanInstance.getClass(), methodName, paramTypes);
         RadePreconditions.check(method == null, "No such method: {} with parameters {}", methodName,
-            Arrays.toString(paramTypes));
+                Arrays.toString(paramTypes));
         if (method.isVarArgs()) {
             // 处理可变参数调用
             int varArgIndex = method.getParameterTypes().length - 1;
             Object[] varArgs = (Object[]) java.lang.reflect.Array.newInstance(
-                method.getParameterTypes()[varArgIndex].getComponentType(),
-                params.length - varArgIndex);
+                    method.getParameterTypes()[varArgIndex].getComponentType(),
+                    params.length - varArgIndex);
             System.arraycopy(params, varArgIndex, varArgs, 0, varArgs.length);
             Object[] methodArgs = new Object[varArgIndex + 1];
             System.arraycopy(params, 0, methodArgs, 0, varArgIndex);
@@ -119,7 +120,7 @@ public class RadePluginInvokers {
             // Try to find a varargs method
             for (Method method : clazz.getMethods()) {
                 if (method.getName().equals(methodName) && isAssignable(paramTypes,
-                    method.getParameterTypes(), method.isVarArgs())) {
+                        method.getParameterTypes(), method.isVarArgs())) {
                     return method;
                 }
             }
@@ -132,7 +133,7 @@ public class RadePluginInvokers {
     }
 
     private static boolean isAssignable(Class<?>[] paramTypes, Class<?>[] methodParamTypes,
-        boolean isVarArgs) {
+                                        boolean isVarArgs) {
         if (isVarArgs) {
             if (paramTypes.length < methodParamTypes.length - 1) {
                 return false;

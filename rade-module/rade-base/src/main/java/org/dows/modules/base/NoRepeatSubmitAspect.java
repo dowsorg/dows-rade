@@ -1,19 +1,20 @@
 package org.dows.modules.base;
 
-import org.dows.core.annotation.NoRepeatSubmit;
-import org.dows.core.exception.RadePreconditions;
-import org.dows.core.lock.RadeLock;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.Duration;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.dows.core.annotation.NoRepeatSubmit;
+import org.dows.core.exception.RadePreconditions;
+import org.dows.core.lock.RadeLock;
 import org.dows.core.security.RadeSecurityUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.time.Duration;
+import java.util.Objects;
 
 @Aspect
 @Component
@@ -25,7 +26,7 @@ public class NoRepeatSubmitAspect {
     @Around("@annotation(noRepeatSubmit)")
     public Object around(ProceedingJoinPoint joinPoint, NoRepeatSubmit noRepeatSubmit) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(
-            RequestContextHolder.getRequestAttributes())).getRequest();
+                RequestContextHolder.getRequestAttributes())).getRequest();
         String key = request.getRequestURI() + ":" + RadeSecurityUtil.getCurrentUserId();
         // 加锁
         RadePreconditions.check(!radeLock.tryLock(key, Duration.ofMillis(noRepeatSubmit.expireTime())), "请勿重复操作");

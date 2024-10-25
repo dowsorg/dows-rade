@@ -30,10 +30,6 @@ import static org.dows.core.leaf.segment.entity.table.LeafAllocEntityTableDef.LE
 public class SegmentIDGenImpl implements IDGenService, DisposableBean {
 
     private static final Logger logger = LoggerFactory.getLogger(SegmentIDGenImpl.class);
-
-    @Value("${leaf.segment.enable:false}")
-    private boolean enable;
-
     /**
      * IDCache未初始化成功时的异常码
      */
@@ -61,23 +57,11 @@ public class SegmentIDGenImpl implements IDGenService, DisposableBean {
         t.setDaemon(true);
         return t;
     });
-    private volatile boolean initOK = false;
     private final Map<String, SegmentBuffer> cache = new ConcurrentHashMap<>();
     private final LeafAllocMapper leafAllocMapper;
-
-    public static class UpdateThreadFactory implements ThreadFactory {
-
-        private static int threadInitNumber = 0;
-
-        private static synchronized int nextThreadNum() {
-            return threadInitNumber++;
-        }
-
-        @Override
-        public Thread newThread(Runnable r) {
-            return new Thread(r, "Thread-Segment-Update-" + nextThreadNum());
-        }
-    }
+    @Value("${leaf.segment.enable:false}")
+    private boolean enable;
+    private volatile boolean initOK = false;
 
     @Override
     public long next(String key) {
@@ -106,7 +90,7 @@ public class SegmentIDGenImpl implements IDGenService, DisposableBean {
         StopWatch sw = new Slf4JStopWatch();
         try {
             List<String> dbTags = leafAllocMapper.selectListByQuery(QueryWrapper.create().select(
-                LeafAllocEntity::getKey)).stream().map(LeafAllocEntity::getKey).toList();
+                    LeafAllocEntity::getKey)).stream().map(LeafAllocEntity::getKey).toList();
             if (dbTags.isEmpty()) {
                 return;
             }
@@ -194,7 +178,7 @@ public class SegmentIDGenImpl implements IDGenService, DisposableBean {
             } else {
                 nextStep = nextStep / 2 >= buffer.getMinStep() ? nextStep / 2 : nextStep;
             }
-            logger.info("leafKey[{}], step[{}], duration[{}mins], nextStep[{}]", key, buffer.getStep(), String.format("%.2f",((double)duration / (1000 * 60))), nextStep);
+            logger.info("leafKey[{}], step[{}], duration[{}mins], nextStep[{}]", key, buffer.getStep(), String.format("%.2f", ((double) duration / (1000 * 60))), nextStep);
             LeafAllocEntity temp = new LeafAllocEntity();
             temp.setKey(key);
             temp.setStep(nextStep);
@@ -213,20 +197,20 @@ public class SegmentIDGenImpl implements IDGenService, DisposableBean {
 
     private LeafAllocEntity updateMaxIdByCustomStepAndGetLeafAlloc(LeafAllocEntity temp) {
         UpdateChain.of(LeafAllocEntity.class)
-            .setRaw(LeafAllocEntity::getMaxId, LEAF_ALLOC_ENTITY.MAX_ID.getName() + " + " + temp.getStep())
-            .where(LeafAllocEntity::getKey).eq(temp.getKey())
-            .update();
+                .setRaw(LeafAllocEntity::getMaxId, LEAF_ALLOC_ENTITY.MAX_ID.getName() + " + " + temp.getStep())
+                .where(LeafAllocEntity::getKey).eq(temp.getKey())
+                .update();
         return leafAllocMapper.selectOneByQuery(QueryWrapper.create().select(
-            LEAF_ALLOC_ENTITY.KEY, LEAF_ALLOC_ENTITY.MAX_ID, LEAF_ALLOC_ENTITY.STEP).eq(LeafAllocEntity::getKey, temp.getKey()));
+                LEAF_ALLOC_ENTITY.KEY, LEAF_ALLOC_ENTITY.MAX_ID, LEAF_ALLOC_ENTITY.STEP).eq(LeafAllocEntity::getKey, temp.getKey()));
     }
 
     private LeafAllocEntity updateMaxIdAndGetLeafAlloc(String key) {
         UpdateChain.of(LeafAllocEntity.class)
-            .setRaw(LeafAllocEntity::getMaxId, LEAF_ALLOC_ENTITY.MAX_ID.getName() + " + " + LEAF_ALLOC_ENTITY.STEP.getName())
-            .where(LeafAllocEntity::getKey).eq(key)
-            .update();
+                .setRaw(LeafAllocEntity::getMaxId, LEAF_ALLOC_ENTITY.MAX_ID.getName() + " + " + LEAF_ALLOC_ENTITY.STEP.getName())
+                .where(LeafAllocEntity::getKey).eq(key)
+                .update();
         return leafAllocMapper.selectOneByQuery(QueryWrapper.create().select(
-            LEAF_ALLOC_ENTITY.KEY, LEAF_ALLOC_ENTITY.MAX_ID, LEAF_ALLOC_ENTITY.STEP).eq(LeafAllocEntity::getKey, key));
+                LEAF_ALLOC_ENTITY.KEY, LEAF_ALLOC_ENTITY.MAX_ID, LEAF_ALLOC_ENTITY.STEP).eq(LeafAllocEntity::getKey, key));
     }
 
     public Result getIdFromSegmentBuffer(final SegmentBuffer buffer) {
@@ -288,12 +272,12 @@ public class SegmentIDGenImpl implements IDGenService, DisposableBean {
         int roll = 0;
         while (buffer.getThreadRunning().get()) {
             roll += 1;
-            if(roll > 10000) {
+            if (roll > 10000) {
                 try {
                     TimeUnit.MILLISECONDS.sleep(10);
                     break;
                 } catch (InterruptedException e) {
-                    logger.warn("Thread {} Interrupted",Thread.currentThread().getName());
+                    logger.warn("Thread {} Interrupted", Thread.currentThread().getName());
                     break;
                 }
             }
@@ -307,5 +291,19 @@ public class SegmentIDGenImpl implements IDGenService, DisposableBean {
 
         scheduledExecutorService.shutdown();
         scheduledExecutorService.awaitTermination(10, TimeUnit.SECONDS);
+    }
+
+    public static class UpdateThreadFactory implements ThreadFactory {
+
+        private static int threadInitNumber = 0;
+
+        private static synchronized int nextThreadNum() {
+            return threadInitNumber++;
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "Thread-Segment-Update-" + nextThreadNum());
+        }
     }
 }

@@ -1,11 +1,11 @@
 package org.dows.modules.dict.entity;
 
-import org.dows.core.crud.BaseEntity;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import com.tangzc.mybatisflex.autotable.annotation.UniIndex;
 import lombok.Getter;
 import lombok.Setter;
+import org.dows.core.crud.BaseEntity;
 
 @Getter
 @Setter

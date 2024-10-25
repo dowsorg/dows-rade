@@ -21,7 +21,7 @@ import static org.dows.modules.task.entity.table.TaskInfoEntityTableDef.TASK_INF
  * 任务
  */
 @Tag(name = "任务管理", description = "统一管理任务")
-@RadeController(api = { "add", "delete", "update", "info", "page" })
+@RadeController(api = {"add", "delete", "update", "info", "page"})
 public class AdminTaskInfoController extends BaseController<TaskInfoService, TaskInfoEntity> {
 
     @Override

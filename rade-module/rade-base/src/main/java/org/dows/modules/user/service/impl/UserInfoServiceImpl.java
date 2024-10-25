@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserInfoServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfoEntity> implements
-    UserInfoService {
+        UserInfoService {
 
     private final UserSmsUtil userSmsUtil;
 

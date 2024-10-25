@@ -6,5 +6,5 @@ package org.dows.core.enums;
 public enum QueryModeEnum {
     ENTITY, // 实体（默认）
     ENTITY_WITH_RELATIONS, // 实体关联查询(如实体字段上加 @RelationOneToMany 等注解)
-    CUSTOM , // 自定义，默认为Map
+    CUSTOM, // 自定义，默认为Map
 }

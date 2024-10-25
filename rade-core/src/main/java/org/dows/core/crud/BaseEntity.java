@@ -8,10 +8,11 @@ import com.mybatisflex.core.activerecord.Model;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.tangzc.autotable.annotation.Ignore;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 基础实体类

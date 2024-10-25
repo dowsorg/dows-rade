@@ -21,25 +21,23 @@ import java.util.Map;
 @Table(value = "recycle_data", comment = "数据回收站表")
 public class RecycleDataEntity extends BaseEntity<RecycleDataEntity> {
 
+    @Ignore
+    @Column(ignore = true) // 操作人名称
+    public String userName;
     @ColumnDefine(comment = "表信息", type = "json")
     @Column(typeHandler = Fastjson2TypeHandler.class)
     private EntityInfo entityInfo;
-
     @Index()
     @ColumnDefine(comment = "操作人", notNull = true)
     private Long userId;
-
     @ColumnDefine(comment = "被删除的数据", type = "json")
     @Column(typeHandler = Fastjson2TypeHandler.class)
     private List<Object> data;
-
     @ColumnDefine(comment = "请求的接口", notNull = true)
     private String url;
-
     @ColumnDefine(comment = "请求参数", type = "json", notNull = true)
     @Column(typeHandler = Fastjson2TypeHandler.class)
     private Map<String, Object> params;
-
     @ColumnDefine(comment = "删除数据条数", defaultValue = "1")
     private Integer count;
 
@@ -50,8 +48,4 @@ public class RecycleDataEntity extends BaseEntity<RecycleDataEntity> {
         // entityClassName
         public String entityClassName;
     }
-
-    @Ignore
-    @Column(ignore = true) // 操作人名称
-    public String userName;
 }

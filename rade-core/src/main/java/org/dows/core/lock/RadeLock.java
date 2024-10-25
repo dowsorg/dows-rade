@@ -19,33 +19,30 @@ import java.util.concurrent.locks.ReentrantLock;
 @Component
 @RequiredArgsConstructor
 public class RadeLock {
+    // 非redis方式时使用
+    private static final Map<String, Lock> lockMap = new ConcurrentHashMap<>();
+    private static final String LOCK_PREFIX = "lock:";
+    private final CacheManager cacheManager;
     // 缓存类型
     @Value("${spring.cache.type}")
     private String type;
-
     @Value("${rade.cacheName}")
     private String cacheName;
-
-    private final CacheManager cacheManager;
-    private RedisCacheWriter redisCache ;
-
-    // 非redis方式时使用
-    private static final Map<String, Lock> lockMap = new ConcurrentHashMap<>();
-
-    private static final String LOCK_PREFIX = "lock:";
+    private RedisCacheWriter redisCache;
 
     @PostConstruct
     private void init() {
         this.type = type.toLowerCase();
         if (type.equalsIgnoreCase(CacheType.REDIS.name())) {
             redisCache = (RedisCacheWriter) Objects.requireNonNull(cacheManager.getCache(cacheName))
-                .getNativeCache();
+                    .getNativeCache();
         }
     }
+
     /**
      * 尝试获取锁
      *
-     * @param key 锁的 key
+     * @param key        锁的 key
      * @param expireTime 锁的过期时间
      * @return 如果成功获取锁则返回 true，否则返回 false
      */
@@ -86,7 +83,7 @@ public class RadeLock {
     /**
      * 等待锁
      *
-     * @param key 锁的 key
+     * @param key        锁的 key
      * @param expireTime 锁的过期时间
      * @return 如果成功获取锁则返回 true，否则返回 false
      */

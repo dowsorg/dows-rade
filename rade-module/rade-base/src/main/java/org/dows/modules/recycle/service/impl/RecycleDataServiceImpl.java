@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RecycleDataServiceImpl extends BaseServiceImpl<RecycleDataMapper, RecycleDataEntity>
-    implements RecycleDataService {
+        implements RecycleDataService {
 
     final private BaseSysUserService baseSysUserService;
 
@@ -39,13 +39,13 @@ public class RecycleDataServiceImpl extends BaseServiceImpl<RecycleDataMapper, R
 
     @Override
     public Object page(JSONObject requestParams, Page<RecycleDataEntity> page,
-        QueryWrapper queryWrapper) {
+                       QueryWrapper queryWrapper) {
         String keyWord = requestParams.getStr("keyWord");
         if (ObjUtil.isNotEmpty(keyWord)) {
             List<Long> list = baseSysUserService
-                .list(queryWrapper.select(BaseSysUserEntity::getId)
-                    .like(BaseSysUserEntity::getName, keyWord))
-                .stream().map(BaseSysUserEntity::getId).toList();
+                    .list(queryWrapper.select(BaseSysUserEntity::getId)
+                            .like(BaseSysUserEntity::getName, keyWord))
+                    .stream().map(BaseSysUserEntity::getId).toList();
             queryWrapper.like(RecycleDataEntity::getUrl, keyWord).or(w -> {
                 w.in(RecycleDataEntity::getUserId, list, ObjUtil.isNotEmpty(list));
             });
@@ -53,15 +53,15 @@ public class RecycleDataServiceImpl extends BaseServiceImpl<RecycleDataMapper, R
         Page<RecycleDataEntity> iPage = page(page, queryWrapper);
         List<RecycleDataEntity> records = iPage.getRecords();
         List<Long> list = records.stream().map(RecycleDataEntity::getUserId)
-            .filter(ObjUtil::isNotEmpty).toList();
+                .filter(ObjUtil::isNotEmpty).toList();
 
         if (ObjUtil.isNotEmpty(list)) {
             Map<Long, String> map = baseSysUserService
-                .list(QueryWrapper.create()
-                    .select(BaseSysUserEntity::getId, BaseSysUserEntity::getName)
-                    .in(BaseSysUserEntity::getId, list))
-                .stream()
-                .collect(Collectors.toMap(BaseSysUserEntity::getId, BaseSysUserEntity::getName));
+                    .list(QueryWrapper.create()
+                            .select(BaseSysUserEntity::getId, BaseSysUserEntity::getName)
+                            .in(BaseSysUserEntity::getId, list))
+                    .stream()
+                    .collect(Collectors.toMap(BaseSysUserEntity::getId, BaseSysUserEntity::getName));
             records.forEach(o -> {
                 if (map.containsKey(o.getUserId())) {
                     o.setUserName(map.get(o.getUserId()));
@@ -77,7 +77,7 @@ public class RecycleDataServiceImpl extends BaseServiceImpl<RecycleDataMapper, R
             return false;
         }
         List<RecycleDataEntity> list = list(
-            QueryWrapper.create().in(RecycleDataEntity::getId, ids));
+                QueryWrapper.create().in(RecycleDataEntity::getId, ids));
         list.forEach(o -> {
             // 处理恢复数据
             boolean flag = handlerRestore(o);
@@ -98,7 +98,7 @@ public class RecycleDataServiceImpl extends BaseServiceImpl<RecycleDataMapper, R
             Class<?> entityClass = ClassUtil.loadClass(entityInfo.getEntityClassName());
             List<Object> records = recycleDataEntity.getData();
             BaseMapper<?> baseMapper = mapperProviderService.getMapperByEntityClass(
-                entityClass);
+                    entityClass);
             // 插入数据
             List insertList = new ArrayList<>();
             for (Object record : records) {

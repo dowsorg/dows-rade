@@ -22,7 +22,7 @@ public class AdminBaseSysParamController extends BaseController<BaseSysParamServ
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(createOp().fieldEq(BASE_SYS_PARAM_ENTITY.DATA_TYPE)
-            .keyWordLikeFields(BASE_SYS_PARAM_ENTITY.NAME, BASE_SYS_PARAM_ENTITY.KEY_NAME));
+                .keyWordLikeFields(BASE_SYS_PARAM_ENTITY.NAME, BASE_SYS_PARAM_ENTITY.KEY_NAME));
     }
 
     @Operation(summary = "根据键返回网页的参数值")

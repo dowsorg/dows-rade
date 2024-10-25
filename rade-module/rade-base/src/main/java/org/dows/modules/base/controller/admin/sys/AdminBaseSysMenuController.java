@@ -22,7 +22,7 @@ import java.util.Map;
 @Tag(name = "系统菜单", description = "系统菜单")
 @RadeController(api = {"add", "delete", "update", "page", "list", "info"})
 public class AdminBaseSysMenuController extends
-    BaseController<BaseSysMenuService, BaseSysMenuEntity> {
+        BaseController<BaseSysMenuService, BaseSysMenuEntity> {
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {

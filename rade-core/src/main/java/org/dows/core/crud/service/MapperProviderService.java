@@ -2,12 +2,13 @@ package org.dows.core.crud.service;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.TypeUtil;
-import org.dows.core.util.SpringContextUtils;
 import com.mybatisflex.core.BaseMapper;
+import org.dows.core.util.SpringContextUtils;
+import org.springframework.stereotype.Service;
+
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.stereotype.Service;
 
 @Service
 public class MapperProviderService {

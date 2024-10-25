@@ -16,7 +16,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,8 +38,8 @@ public class AdminPluginInfoController extends BaseController<PluginInfoService,
     protected void init(HttpServletRequest request, JSONObject requestParams) {
 
         setPageOption(createOp().queryWrapper(
-                QueryWrapper.create().orderBy(PLUGIN_INFO_ENTITY.UPDATE_TIME, false))
-            .select(PLUGIN_INFO_ENTITY.DEFAULT_COLUMNS));
+                        QueryWrapper.create().orderBy(PLUGIN_INFO_ENTITY.UPDATE_TIME, false))
+                .select(PLUGIN_INFO_ENTITY.DEFAULT_COLUMNS));
     }
 
     @Override
@@ -52,8 +54,8 @@ public class AdminPluginInfoController extends BaseController<PluginInfoService,
     @Operation(summary = "安装插件")
     @PostMapping(value = "/install", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response install(
-        @RequestParam(value = "files") @Parameter(description = "文件") MultipartFile[] files,
-        @RequestParam(value = "force") @Parameter(description = "是否强制安装") boolean force) {
+            @RequestParam(value = "files") @Parameter(description = "文件") MultipartFile[] files,
+            @RequestParam(value = "force") @Parameter(description = "是否强制安装") boolean force) {
         radePluginService.install(files[0], force);
         return Response.ok();
     }

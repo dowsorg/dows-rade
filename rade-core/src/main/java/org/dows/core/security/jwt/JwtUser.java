@@ -23,6 +23,7 @@ public class JwtUser implements UserDetails {
     private Boolean status;
     private UserTypeEnum userTypeEnum;
     private List<GrantedAuthority> perms;
+
     public JwtUser(Long userId, String username, String password, List<GrantedAuthority> perms, Boolean status) {
         this.userId = userId;
         this.username = username;

@@ -49,7 +49,7 @@ public class UserWxServiceImpl extends BaseServiceImpl<UserWxMapper, UserWxEntit
 
     public UserWxEntity getBySave(UserWxEntity entity, int type) {
         UserWxEntity one = this.getOne(
-            QueryWrapper.create().eq(UserWxEntity::getOpenid, entity.getOpenid()));
+                QueryWrapper.create().eq(UserWxEntity::getOpenid, entity.getOpenid()));
         if (ObjUtil.isEmpty(one)) {
             entity.setType(type);
             super.save(entity);

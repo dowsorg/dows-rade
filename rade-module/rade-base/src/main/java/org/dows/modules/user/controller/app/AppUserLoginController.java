@@ -75,7 +75,7 @@ public class AppUserLoginController {
     @Operation(summary = "手机号登录")
     @PostMapping("/phone")
     public Response phone(
-        @RequestBody LoginParam param) {
+            @RequestBody LoginParam param) {
         String phone = param.getPhone();
         String smsCode = param.getSmsCode();
         RadePreconditions.checkEmpty(phone);
@@ -90,7 +90,7 @@ public class AppUserLoginController {
     @Operation(summary = "一键手机号登录")
     @PostMapping("/uniPhone")
     public Response uniPhone(
-        @RequestBody LoginParam param) {
+            @RequestBody LoginParam param) {
         String accessToken = param.getAccess_token();
         String openid = param.getOpenid();
         String appId = param.getAppId();
@@ -123,7 +123,7 @@ public class AppUserLoginController {
     @Operation(summary = "图片验证码")
     @GetMapping("/captcha")
     public Response captcha(
-        @ModelAttribute CaptchaParam param) {
+            @ModelAttribute CaptchaParam param) {
         String type = param.getType();
         Integer width = param.getWidth();
         Integer height = param.getHeight();
@@ -142,7 +142,7 @@ public class AppUserLoginController {
     @Operation(summary = "验证码")
     @PostMapping("/smsCode")
     public Response smsCode(
-        @RequestBody SmsCodeParam param) {
+            @RequestBody SmsCodeParam param) {
         String phone = param.getPhone();
         String captchaId = param.getCaptchaId();
         String code = param.getCode();
@@ -171,7 +171,7 @@ public class AppUserLoginController {
     @Operation(summary = "密码登录")
     @PostMapping("/password")
     public Response password(
-        @RequestBody LoginParam param) {
+            @RequestBody LoginParam param) {
         String phone = param.getPhone();
         String password = param.getPassword();
 

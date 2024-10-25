@@ -38,11 +38,11 @@ public class DeleteAspect {
 
     @Around(value = "execution(* org.dows.core.crud.BaseController.delete*(..)) && args(request, params, requestParams)", argNames = "joinPoint,request,params,requestParams")
     public Object aroundAdvice(ProceedingJoinPoint joinPoint, HttpServletRequest request,
-        Map<String, Object> params,
-        JSONObject requestParams) throws Throwable {
+                               Map<String, Object> params,
+                               JSONObject requestParams) throws Throwable {
         Method currentMethod = getCurrentMethod(joinPoint);
         if (Objects.nonNull(currentMethod) && currentMethod.isAnnotationPresent(
-            IgnoreRecycleData.class)) {
+                IgnoreRecycleData.class)) {
             // 忽略回收站记录
             return joinPoint.proceed();
         }
@@ -72,8 +72,8 @@ public class DeleteAspect {
             recycleDataEntity.setUrl(request.getRequestURI());
             recycleDataEntity.setUserName(RadeSecurityUtil.getAdminUsername());
             recycleDataEntity
-                .setUserId(Long.parseLong(
-                        String.valueOf(RadeSecurityUtil.getAdminUserInfo(requestParams).get("userId"))));
+                    .setUserId(Long.parseLong(
+                            String.valueOf(RadeSecurityUtil.getAdminUserInfo(requestParams).get("userId"))));
             recycleDataEntity.setParams(params);
             recycleDataEntity.setData(list);
             recycleDataEntity.setParams(params);

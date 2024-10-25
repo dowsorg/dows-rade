@@ -8,12 +8,12 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.dows.core.config.CustomOpenApiResource;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dows.core.config.CustomOpenApiResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.scheduling.annotation.Async;
@@ -38,23 +38,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RadeAid {
 
+    final private RequestMappingHandlerMapping requestMappingHandlerMapping;
+    final private CustomOpenApiResource customOpenApiResource;
+    public Dict admin;
+    public Dict app;
     @Value("${server.port}")
     private int serverPort;
-
     private Dict entityInfo;
-
     private JSONObject swaggerInfo;
-
     @Value("${springdoc.api-docs.enabled}")
     private boolean apiDocsEnabled;
-
-    public Dict admin;
-
-    public Dict app;
-
-    final private RequestMappingHandlerMapping requestMappingHandlerMapping;
-
-    final private CustomOpenApiResource customOpenApiResource;
 
     @Async
     public void init() {
@@ -322,7 +315,7 @@ public class RadeAid {
         return switch (type) {
             case "java.lang.Boolean" -> "boolean";
             case "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Float",
-                 "java.lang.Double" -> "number";
+                    "java.lang.Double" -> "number";
             case "java.util.Date" -> "date";
             default -> "string";
         };

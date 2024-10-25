@@ -27,21 +27,16 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class RadeCache {
 
+    private final static String NULL_VALUE = "@_NULL_VALUE$@";
+    final private CacheManager cacheManager;
+    // redis
+    public RedisCacheWriter redisCache;
     // 缓存类型
     @Value("${spring.cache.type}")
     private String type;
-
-    // redis
-    public RedisCacheWriter redisCache;
-
     private Cache cache;
-
     @Value("${rade.cacheName}")
     private String cacheName;
-
-    private final static String NULL_VALUE = "@_NULL_VALUE$@";
-
-    final private CacheManager cacheManager;
 
     @PostConstruct
     private void init() {
@@ -51,13 +46,6 @@ public class RadeCache {
         if (type.equalsIgnoreCase(CacheType.REDIS.name())) {
             redisCache = (RedisCacheWriter) cache.getNativeCache();
         }
-    }
-
-    /**
-     * 数据来源
-     */
-    public interface ToCacheData {
-        Object apply();
     }
 
     /**
@@ -175,7 +163,14 @@ public class RadeCache {
             cache.put(key, value);
         } else if (type.equalsIgnoreCase(CacheType.REDIS.name())) {
             redisCache.put(cacheName, key.getBytes(), ObjectUtil.serialize(value),
-                java.time.Duration.ofSeconds(ttl));
+                    java.time.Duration.ofSeconds(ttl));
         }
+    }
+
+    /**
+     * 数据来源
+     */
+    public interface ToCacheData {
+        Object apply();
     }
 }

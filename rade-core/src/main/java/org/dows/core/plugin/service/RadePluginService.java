@@ -7,7 +7,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -49,10 +48,22 @@ public class RadePluginService {
     @Value("${rade.plugin.path}")
     private String pluginPath;
 
+    /**
+     * 忽略无变更，无需更新的字段
+     */
+    private static void ignoreNoChange(PluginDetail pluginDetail, PluginDetail one) {
+        if (ObjUtil.equals(pluginDetail.getLogo(), one.getLogo())) {
+            // 头像没变，无需更新
+            pluginDetail.setLogo(null);
+        }
+        if (ObjUtil.equals(pluginDetail.getReadme(), one.getReadme())) {
+            // readme没变，无需更新
+            pluginDetail.setReadme(null);
+        }
+    }
+
     public void init() {
-        List<PluginDetail> list = pluginRepository.listPlugin(QueryWrapper.create()
-                .select(PluginDetail::getId, PluginDetail::getPluginJson, PluginDetail::getKey, PluginDetail::getName)
-                .eq(PluginDetail::getStatus, 1));
+        List<? extends PluginDetail> list = pluginRepository.listPlugin(1);
         if (ObjUtil.isEmpty(list)) {
             log.info("没有可初始化的插件");
             return;
@@ -230,20 +241,6 @@ public class RadePluginService {
             sameHookPlugin.setStatus(0);
             sameHookPlugin.setId(pluginJson.getSameHookId());
             updatePlugin(sameHookPlugin);
-        }
-    }
-
-    /**
-     * 忽略无变更，无需更新的字段
-     */
-    private static void ignoreNoChange(PluginDetail pluginDetail, PluginDetail one) {
-        if (ObjUtil.equals(pluginDetail.getLogo(), one.getLogo())) {
-            // 头像没变，无需更新
-            pluginDetail.setLogo(null);
-        }
-        if (ObjUtil.equals(pluginDetail.getReadme(), one.getReadme())) {
-            // readme没变，无需更新
-            pluginDetail.setReadme(null);
         }
     }
 

@@ -1,8 +1,8 @@
 package org.dows.core.init;
 
-import org.dows.core.leaf.IDGenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dows.core.leaf.IDGenService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;

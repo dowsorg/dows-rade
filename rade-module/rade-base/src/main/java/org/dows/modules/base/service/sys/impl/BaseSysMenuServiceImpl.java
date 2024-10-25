@@ -4,25 +4,26 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONObject;
+import com.mybatisflex.core.query.QueryWrapper;
+import lombok.RequiredArgsConstructor;
+import org.dows.core.aid.RadeAid;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
-import org.dows.core.aid.RadeAid;
 import org.dows.core.init.AppInstance;
-import org.dows.core.util.CompilerUtils;
 import org.dows.core.security.RadeSecurityUtil;
+import org.dows.core.util.CompilerUtils;
 import org.dows.core.util.PathUtils;
 import org.dows.core.util.SpringContextUtils;
 import org.dows.modules.base.entity.sys.BaseSysMenuEntity;
 import org.dows.modules.base.mapper.sys.BaseSysMenuMapper;
 import org.dows.modules.base.service.sys.BaseSysMenuService;
 import org.dows.modules.base.service.sys.BaseSysPermsService;
-import com.mybatisflex.core.query.QueryWrapper;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 /**
  * 系统菜单
@@ -30,7 +31,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BaseSysMenuServiceImpl extends BaseServiceImpl<BaseSysMenuMapper, BaseSysMenuEntity>
-    implements BaseSysMenuService {
+        implements BaseSysMenuService {
 
     final private BaseSysPermsService baseSysPermsService;
 
@@ -41,9 +42,9 @@ public class BaseSysMenuServiceImpl extends BaseServiceImpl<BaseSysMenuMapper, B
         List<BaseSysMenuEntity> list = baseSysPermsService.getMenus(RadeSecurityUtil.getAdminUsername());
         list.forEach(e -> {
             List<BaseSysMenuEntity> parent = list.stream()
-                .filter(sysMenuEntity -> e.getParentId() != null && e.getParentId()
-                    .equals(sysMenuEntity.getId()))
-                .toList();
+                    .filter(sysMenuEntity -> e.getParentId() != null && e.getParentId()
+                            .equals(sysMenuEntity.getId()))
+                    .toList();
             if (!parent.isEmpty()) {
                 e.setParentName(parent.get(0).getName());
             }
@@ -53,7 +54,7 @@ public class BaseSysMenuServiceImpl extends BaseServiceImpl<BaseSysMenuMapper, B
 
     @Override
     public void modifyAfter(JSONObject requestParams, BaseSysMenuEntity sysMenuEntity,
-        ModifyEnum type) {
+                            ModifyEnum type) {
         if (sysMenuEntity != null && sysMenuEntity.getId() != null) {
             baseSysPermsService.refreshPermsByMenuId(requestParams.getLong("id"));
         }
@@ -81,7 +82,7 @@ public class BaseSysMenuServiceImpl extends BaseServiceImpl<BaseSysMenuMapper, B
      */
     private void delChildMenu(Long id) {
         List<BaseSysMenuEntity> delMenu = list(
-            QueryWrapper.create().eq(BaseSysMenuEntity::getParentId, id));
+                QueryWrapper.create().eq(BaseSysMenuEntity::getParentId, id));
         if (CollectionUtil.isEmpty(delMenu)) {
             return;
         }
@@ -97,20 +98,20 @@ public class BaseSysMenuServiceImpl extends BaseServiceImpl<BaseSysMenuMapper, B
     @Override
     public Object export(List<Long> ids) {
         List<BaseSysMenuEntity> list = list(
-            QueryWrapper.create().in(BaseSysMenuEntity::getId, ids));
+                QueryWrapper.create().in(BaseSysMenuEntity::getId, ids));
         List<BaseSysMenuEntity> parentList = list.stream()
-            .filter(o -> ObjUtil.isEmpty(o.getParentId())).toList();
+                .filter(o -> ObjUtil.isEmpty(o.getParentId())).toList();
         Map<Long, List<BaseSysMenuEntity>> map = list.stream()
-            .filter(o -> ObjUtil.isNotEmpty(o.getParentId()))
-            .collect(Collectors.groupingBy(BaseSysMenuEntity::getParentId));
+                .filter(o -> ObjUtil.isNotEmpty(o.getParentId()))
+                .collect(Collectors.groupingBy(BaseSysMenuEntity::getParentId));
         parentList.forEach(o -> handler(o, map));
         return parentList;
     }
 
     private void handler(BaseSysMenuEntity parentBaseSysMenuEntity,
-        Map<Long, List<BaseSysMenuEntity>> map) {
+                         Map<Long, List<BaseSysMenuEntity>> map) {
         parentBaseSysMenuEntity.setChildMenus(
-            map.getOrDefault(parentBaseSysMenuEntity.getId(), new ArrayList<>()));
+                map.getOrDefault(parentBaseSysMenuEntity.getId(), new ArrayList<>()));
         parentBaseSysMenuEntity.getChildMenus().forEach(o -> {
             handler(o, map);
             o.setId(null);

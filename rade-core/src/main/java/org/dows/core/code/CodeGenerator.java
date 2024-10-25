@@ -37,20 +37,20 @@ public class CodeGenerator {
     private String filePath(CodeModel codeModel, String type) {
         if (type.equals("controller")) {
             return StrUtil.isEmpty(codeModel.getSubModule())
-                ? baseSrcPath + codeModel.getModule() + "/" + type + "/" + codeModel.getType()
-                .value()
-                : baseSrcPath + codeModel.getModule() + "/" + type + "/" + codeModel.getType()
+                    ? baseSrcPath + codeModel.getModule() + "/" + type + "/" + codeModel.getType()
+                    .value()
+                    : baseSrcPath + codeModel.getModule() + "/" + type + "/" + codeModel.getType()
                     .value() + "/"
                     + codeModel.getSubModule();
         }
         if (type.equals("xmlMapper")) {
             return StrUtil.isEmpty(codeModel.getSubModule()) ? baseResPath + "mapper/"
-                + codeModel.getModule()
-                : baseResPath + "mapper/" + codeModel.getModule() + "/" + codeModel.getSubModule();
+                    + codeModel.getModule()
+                    : baseResPath + "mapper/" + codeModel.getModule() + "/" + codeModel.getSubModule();
         }
         return StrUtil.isEmpty(codeModel.getSubModule()) ? baseSrcPath + codeModel.getModule() + "/"
-            + type
-            : baseSrcPath + codeModel.getModule() + "/" + type + "/" + codeModel.getSubModule();
+                + type
+                : baseSrcPath + codeModel.getModule() + "/" + type + "/" + codeModel.getSubModule();
     }
 
     /**
@@ -62,7 +62,7 @@ public class CodeGenerator {
         Template template = templateEngine.getTemplate("/mapper/interface.th");
         String result = template.render(Dict.parse(codeModel));
         FileWriter writer = new FileWriter(
-            filePath(codeModel, "mapper") + "/" + codeModel.getEntity() + "Mapper.java");
+                filePath(codeModel, "mapper") + "/" + codeModel.getEntity() + "Mapper.java");
         writer.write(result);
     }
 
@@ -75,13 +75,13 @@ public class CodeGenerator {
         Template interfaceTemplate = templateEngine.getTemplate("/service/interface.th");
         String interfaceResult = interfaceTemplate.render(Dict.parse(codeModel));
         FileWriter interfaceWriter = new FileWriter(
-            filePath(codeModel, "service") + "/" + codeModel.getEntity() + "Service.java");
+                filePath(codeModel, "service") + "/" + codeModel.getEntity() + "Service.java");
         interfaceWriter.write(interfaceResult);
 
         Template template = templateEngine.getTemplate("/service/impl.th");
         String result = template.render(Dict.parse(codeModel));
         FileWriter writer = new FileWriter(
-            filePath(codeModel, "service") + "/impl/" + codeModel.getEntity() + "ServiceImpl.java");
+                filePath(codeModel, "service") + "/impl/" + codeModel.getEntity() + "ServiceImpl.java");
         writer.write(result);
     }
 
@@ -94,15 +94,15 @@ public class CodeGenerator {
         Template template = templateEngine.getTemplate("controller.th");
         System.out.println(codeModel.getType().value());
         Dict data = Dict.create().set("upperType", StrUtil.upperFirst(codeModel.getType().value()))
-            .set("url",
-                "/" + codeModel.getType() + "/" + StrUtil.toUnderlineCase(codeModel.getEntity())
-                    .replace("_", "/"));
+                .set("url",
+                        "/" + codeModel.getType() + "/" + StrUtil.toUnderlineCase(codeModel.getEntity())
+                                .replace("_", "/"));
         data.putAll(Dict.parse(codeModel));
         data.set("type", codeModel.getType().value());
         String result = template.render(data);
         FileWriter writer = new FileWriter(filePath(codeModel, "controller") + "/"
-            + StrUtil.upperFirst(codeModel.getType().value()) + codeModel.getEntity()
-            + "Controller.java");
+                + StrUtil.upperFirst(codeModel.getType().value()) + codeModel.getEntity()
+                + "Controller.java");
         writer.write(result);
     }
 }

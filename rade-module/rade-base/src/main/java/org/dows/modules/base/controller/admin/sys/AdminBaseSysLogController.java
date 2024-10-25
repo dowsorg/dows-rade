@@ -24,34 +24,34 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 @RadeController(api = {"page"})
 public class AdminBaseSysLogController extends BaseController<BaseSysLogService, BaseSysLogEntity> {
 
-	private final BaseSysConfService baseSysConfService;
+    private final BaseSysConfService baseSysConfService;
 
-	@Override
-	protected void init(HttpServletRequest request, JSONObject requestParams) {
-		setPageOption(
-			createOp()
-				.keyWordLikeFields(
-					BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.NAME,
-					BaseSysLogEntityTableDef.BASE_SYS_LOG_ENTITY.PARAMS));
-	}
+    @Override
+    protected void init(HttpServletRequest request, JSONObject requestParams) {
+        setPageOption(
+                createOp()
+                        .keyWordLikeFields(
+                                BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.NAME,
+                                BaseSysLogEntityTableDef.BASE_SYS_LOG_ENTITY.PARAMS));
+    }
 
-	@Operation(summary = "清理日志")
-	@PostMapping("/clear")
-	public Response clear() {
-		service.clear(true);
-		return Response.ok();
-	}
+    @Operation(summary = "清理日志")
+    @PostMapping("/clear")
+    public Response clear() {
+        service.clear(true);
+        return Response.ok();
+    }
 
-	@Operation(summary = "设置日志保存时间")
-	@PostMapping("/setKeep")
-	public Response setKeep(@RequestAttribute JSONObject requestParams) {
-		baseSysConfService.updateValue("logKeep", requestParams.getStr("value"));
-		return Response.ok();
-	}
+    @Operation(summary = "设置日志保存时间")
+    @PostMapping("/setKeep")
+    public Response setKeep(@RequestAttribute JSONObject requestParams) {
+        baseSysConfService.updateValue("logKeep", requestParams.getStr("value"));
+        return Response.ok();
+    }
 
-	@Operation(summary = "获得日志报错时间")
-	@PostMapping("/getKeep")
-	public Response getKeep() {
-		return Response.ok(baseSysConfService.getValue("logKeep"));
-	}
+    @Operation(summary = "获得日志报错时间")
+    @PostMapping("/getKeep")
+    public Response getKeep() {
+        return Response.ok(baseSysConfService.getValue("logKeep"));
+    }
 }

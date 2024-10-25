@@ -22,13 +22,14 @@ public class CloudFileUploadStrategy implements FileUploadStrategy {
 
     @Override
     public Map<String, String> getMode(String key) {
-        try{
+        try {
             Object mode = RadePluginInvokers.invoke(key, "getMode");
             if (Objects.nonNull(mode)) {
                 return (Map) mode;
             }
-        } catch (Exception ignore){}
+        } catch (Exception ignore) {
+        }
         return Map.of("mode", FileModeEnum.CLOUD.value(),
-            "type", FileModeEnum.CLOUD.type());
+                "type", FileModeEnum.CLOUD.type());
     }
 }

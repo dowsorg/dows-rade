@@ -8,17 +8,18 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import org.dows.core.enums.QueryModeEnum;
 import com.mybatisflex.annotation.Table;
 import com.mybatisflex.core.query.QueryColumn;
 import com.mybatisflex.core.query.QueryCondition;
 import com.mybatisflex.core.query.QueryTable;
 import com.mybatisflex.core.query.QueryWrapper;
+import lombok.Data;
+import org.dows.core.enums.QueryModeEnum;
+import org.springframework.core.env.Environment;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import lombok.Data;
-import org.springframework.core.env.Environment;
 
 /**
  * 查询构建器
@@ -37,16 +38,10 @@ public class CrudOption<T> {
     private QueryModeEnum queryModeEnum;
 
     private Transform<Object> transform;
-
-    public interface Transform<B> {
-        void apply(B obj);
-    }
-
     /**
      * queryModeEnum 为 CUSTOM,可设置 默认为Map
      */
     private Class<?> asType;
-
     private Environment evn;
 
     public CrudOption(JSONObject requestParams) {
@@ -96,7 +91,7 @@ public class CrudOption<T> {
     public CrudOption<T> queryModeEnum(QueryModeEnum queryModeEnum) {
         this.queryModeEnum = queryModeEnum;
         if (ObjUtil.equal(queryModeEnum, QueryModeEnum.CUSTOM)
-            && ObjUtil.isEmpty(asType)) {
+                && ObjUtil.isEmpty(asType)) {
             asType = Map.class;
         }
         return this;
@@ -132,7 +127,7 @@ public class CrudOption<T> {
                 }
                 if (obj instanceof JSONArray) {
                     // 集合
-                    queryWrapper.and(filed.in(((JSONArray)obj).toArray()));
+                    queryWrapper.and(filed.in(((JSONArray) obj).toArray()));
                 } else {
                     // 对象
                     queryWrapper.and(filed.eq(obj));
@@ -175,12 +170,16 @@ public class CrudOption<T> {
             tableAlias = queryTable.getName() + ".";
         }
         String order = requestParams.getStr("order",
-            tableAnnotation.camelToUnderline() ? "create_time" : "createTime");
+                tableAnnotation.camelToUnderline() ? "create_time" : "createTime");
         String sort = requestParams.getStr("sort", "desc");
         if (StrUtil.isNotEmpty(order) && StrUtil.isNotEmpty(sort)) {
             queryWrapper.orderBy(
-                tableAlias + (tableAnnotation.camelToUnderline() ? StrUtil.toUnderlineCase(order) : order),
-                sort.equals("asc"));
+                    tableAlias + (tableAnnotation.camelToUnderline() ? StrUtil.toUnderlineCase(order) : order),
+                    sort.equals("asc"));
         }
+    }
+
+    public interface Transform<B> {
+        void apply(B obj);
     }
 }

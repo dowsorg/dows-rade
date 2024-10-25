@@ -1,13 +1,9 @@
 package org.dows.core.security;
 
-import org.dows.core.annotation.TokenIgnore;
-import org.dows.core.enums.UserTypeEnum;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dows.core.annotation.TokenIgnore;
+import org.dows.core.enums.UserTypeEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -30,6 +26,11 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.util.pattern.PathPattern;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @EnableWebSecurity
 @Configuration
@@ -96,7 +97,7 @@ public class JwtSecurityConfig {
                     }
                     if (tokenIgnoreCtr.value().length == 0) {
                         // 通配
-                        ignoredUrlsProperties.getAdminAuthUrls().add(String.join("/", urls)+ "/**");
+                        ignoredUrlsProperties.getAdminAuthUrls().add(String.join("/", urls) + "/**");
                     }
                     handlerCtr.add(handlerMethod.getBeanType().getName());
                 });

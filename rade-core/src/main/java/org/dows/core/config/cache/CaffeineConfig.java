@@ -1,15 +1,6 @@
 package org.dows.core.config.cache;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +13,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
- 
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Configuration
 @EnableCaching
@@ -79,7 +74,7 @@ public class CaffeineConfig {
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
             Map<Object, Object> cacheMap = (Map<Object, Object>) inputStream.readObject();
             com.github.benmanes.caffeine.cache.Cache<Object, Object> caffeineCache = Caffeine.newBuilder()
-                .build();
+                    .build();
             caffeineCache.putAll(cacheMap);
             cacheManager.registerCustomCache(cacheName, caffeineCache);
         } catch (IOException | ClassNotFoundException e) {
@@ -107,11 +102,11 @@ public class CaffeineConfig {
         public void persistCache() {
             Cache cache = cacheManager.getCache(cacheName);
             if (cache != null
-                && cache.getNativeCache() instanceof com.github.benmanes.caffeine.cache.Cache) {
+                    && cache.getNativeCache() instanceof com.github.benmanes.caffeine.cache.Cache) {
                 Map<Object, Object> cacheMap = ((com.github.benmanes.caffeine.cache.Cache<Object, Object>) cache
-                    .getNativeCache()).asMap();
+                        .getNativeCache()).asMap();
                 try (ObjectOutputStream outputStream = new ObjectOutputStream(
-                    new FileOutputStream(cacheFile))) {
+                        new FileOutputStream(cacheFile))) {
                     outputStream.writeObject(new HashMap<>(cacheMap));
                 } catch (IOException e) {
                     log.error("persistCacheErr", e);

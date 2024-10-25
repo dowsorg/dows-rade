@@ -1,8 +1,8 @@
 package org.dows.modules.base.mapper.sys;
 
 import com.mybatisflex.core.BaseMapper;
-import org.dows.modules.base.entity.sys.BaseSysMenuEntity;
 import org.apache.ibatis.annotations.Param;
+import org.dows.modules.base.entity.sys.BaseSysMenuEntity;
 
 import java.util.List;
 

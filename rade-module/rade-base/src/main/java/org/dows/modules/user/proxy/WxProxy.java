@@ -14,23 +14,24 @@ public class WxProxy {
     public WxMaService getWxMaService() {
         return (WxMaService) RadePluginInvokers.invoke("wx", "getWxMaService");
     }
+
     public WxMpService getWxMpService() {
         return (WxMpService) RadePluginInvokers.invoke("wx", "getWxMpService");
     }
 
     public WxMaJscode2SessionResult getSessionInfo(String jsCode) throws WxErrorException {
         return getWxMaService().getUserService()
-            .getSessionInfo(jsCode);
+                .getSessionInfo(jsCode);
     }
 
     public WxMaPhoneNumberInfo getPhoneNumber(String jsCode) throws WxErrorException {
         return getWxMaService().getUserService()
-            .getPhoneNumber(jsCode);
+                .getPhoneNumber(jsCode);
     }
 
     public WxMaUserInfo getUserInfo(String sessionKey, String encryptedData, String ivStr) throws WxErrorException {
         return getWxMaService().getUserService()
-            .getUserInfo(sessionKey, encryptedData, ivStr);
+                .getUserInfo(sessionKey, encryptedData, ivStr);
     }
 
 }

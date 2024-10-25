@@ -40,23 +40,6 @@ public class DynamicJarLoaderService {
 
     private final Map<String, Object> pluginMap = new ConcurrentHashMap<>();
 
-    public PluginJson install(String jarFilePath, boolean force) throws Exception {
-        URL jarUrl = new URL("jar:file:" + new File(jarFilePath).getAbsolutePath() + "!/");
-        DynamicJarClassLoader dynamicJarClassLoader = new DynamicJarClassLoader(new URL[]{jarUrl},
-                Thread.currentThread().getContextClassLoader());
-        Thread.currentThread().setContextClassLoader(dynamicJarClassLoader);
-        PluginJson pluginJson = getPluginJsonAndCheck(force, dynamicJarClassLoader);
-        // 历史如果有安装过，先卸载
-        uninstall(pluginJson.getKey());
-        // 加载class
-        List<Class<?>> plugins = loadClass(pluginJson.getKey(), jarUrl, dynamicJarClassLoader);
-        // 校验插件
-        checkPlugin(plugins);
-        // 注册插件,目前一个插件包，只允许有一个插件入口
-        registerPlugin(pluginJson.getKey(), plugins.get(0), dynamicJarClassLoader, force);
-        return pluginJson;
-    }
-
     /**
      * 加载class
      */
@@ -82,6 +65,23 @@ public class DynamicJarLoaderService {
         } else {
             return new ArrayList<>(list.subList(0, n)); // 返回前 N 个元素的副本
         }
+    }
+
+    public PluginJson install(String jarFilePath, boolean force) throws Exception {
+        URL jarUrl = new URL("jar:file:" + new File(jarFilePath).getAbsolutePath() + "!/");
+        DynamicJarClassLoader dynamicJarClassLoader = new DynamicJarClassLoader(new URL[]{jarUrl},
+                Thread.currentThread().getContextClassLoader());
+        Thread.currentThread().setContextClassLoader(dynamicJarClassLoader);
+        PluginJson pluginJson = getPluginJsonAndCheck(force, dynamicJarClassLoader);
+        // 历史如果有安装过，先卸载
+        uninstall(pluginJson.getKey());
+        // 加载class
+        List<Class<?>> plugins = loadClass(pluginJson.getKey(), jarUrl, dynamicJarClassLoader);
+        // 校验插件
+        checkPlugin(plugins);
+        // 注册插件,目前一个插件包，只允许有一个插件入口
+        registerPlugin(pluginJson.getKey(), plugins.get(0), dynamicJarClassLoader, force);
+        return pluginJson;
     }
 
     /**

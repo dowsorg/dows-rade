@@ -16,6 +16,6 @@ public class UserAddressServiceImpl extends BaseServiceImpl<UserAddressMapper, U
     @Override
     public Object getDefault(Long userId) {
         return this.getOne(QueryWrapper.create().eq(UserAddressEntity::getUserId, userId)
-            .eq(UserAddressEntity::getIsDefault, true).limit(1));
+                .eq(UserAddressEntity::getIsDefault, true).limit(1));
     }
 }

@@ -14,27 +14,6 @@ import org.quartz.*;
 public class ScheduleUtils {
     private final static String JOB_NAME = "TASK_";
 
-    public enum ScheduleStatus {
-        /**
-         * 暂停
-         */
-        PAUSE(0),
-        /**
-         * 正常
-         */
-        NORMAL(1);
-
-        private int value;
-
-        ScheduleStatus(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
     /**
      * 获取触发器key
      */
@@ -246,6 +225,27 @@ public class ScheduleUtils {
             scheduler.deleteJob(getJobKey(jobId));
         } catch (SchedulerException e) {
             throw new RadeException("删除定时任务失败", e);
+        }
+    }
+
+    public enum ScheduleStatus {
+        /**
+         * 暂停
+         */
+        PAUSE(0),
+        /**
+         * 正常
+         */
+        NORMAL(1);
+
+        private int value;
+
+        ScheduleStatus(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
         }
     }
 }

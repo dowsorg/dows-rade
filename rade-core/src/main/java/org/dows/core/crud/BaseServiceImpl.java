@@ -5,6 +5,7 @@ import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +17,8 @@ import java.util.List;
  * @param <T> 实体
  */
 public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>> extends
-    ServiceImpl<M, T>
-    implements BaseService<T> {
+        ServiceImpl<M, T>
+        implements BaseService<T> {
 
     @Override
     public Long add(T entity) {
@@ -95,13 +96,13 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>> e
 
     @Override
     public <R> Page<R> page(JSONObject requestParams, Page page, QueryWrapper queryWrapper,
-        Class<R> asType) {
+                            Class<R> asType) {
         return mapper.paginateAs(page, queryWrapper, asType);
     }
 
     @Override
     public Object pageWithRelations(JSONObject requestParams, Page<T> page,
-        QueryWrapper queryWrapper) {
+                                    QueryWrapper queryWrapper) {
         return mapper.paginateWithRelations(page, queryWrapper);
     }
 

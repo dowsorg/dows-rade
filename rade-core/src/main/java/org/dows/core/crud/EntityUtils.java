@@ -26,7 +26,7 @@ public class EntityUtils {
             for (Resource r : resources) {
                 String path = r.getURL().getPath();
                 String className = path.substring(path.indexOf("org/dows"),
-                    path.lastIndexOf('.')).replace('/', '.');
+                        path.lastIndexOf('.')).replace('/', '.');
                 entitySet.add(className);
             }
         } catch (IOException e) {
@@ -64,23 +64,23 @@ public class EntityUtils {
      * @return 字段名数组
      */
     public static QueryColumn[] getFieldNamesWithSuperClass(QueryColumn[] queryColumns,
-        String... excludeNames) {
+                                                            String... excludeNames) {
         return getFieldNamesListWithSuperClass(queryColumns, excludeNames).toArray(
-            new QueryColumn[0]);
+                new QueryColumn[0]);
     }
 
     public static List<QueryColumn> getFieldNamesListWithSuperClass(QueryColumn[] queryColumns,
-        String... excludeNames) {
+                                                                    String... excludeNames) {
         ArrayList<String> excludeList = new ArrayList<>(List.of(excludeNames));
         return Arrays.stream(queryColumns).toList().stream()
-            .filter(o -> !excludeList.contains(o.getName())).toList();
+                .filter(o -> !excludeList.contains(o.getName())).toList();
     }
 
     /**
      * 将bean的部分属性转换成map<br>
      * 可选拷贝哪些属性值，默认是不忽略值为{@code null}的值的。
      *
-     * @param bean       bean
+     * @param bean             bean
      * @param ignoreProperties 需要忽略拷贝的属性值，{@code null}或空表示拷贝所有值
      * @return Map
      * @since 5.8.0

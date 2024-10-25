@@ -1,9 +1,9 @@
 package org.dows.core.plugin.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dows.core.exception.RadePreconditions;
 import org.dows.core.util.AnnotationUtils;
 import org.dows.core.util.CompilerUtils;
-import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -21,12 +21,11 @@ import java.util.jar.JarEntry;
 public class DynamicJarClassLoader extends URLClassLoader {
 
     private final Map<String, Class<?>> loadedClasses = new ConcurrentHashMap<>();
+    private Boolean lock = false;
 
     public DynamicJarClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
     }
-
-    private Boolean lock = false;
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
@@ -55,16 +54,18 @@ public class DynamicJarClassLoader extends URLClassLoader {
                 close();
             } catch (Exception e) {
                 log.error("unload error", e);
-            } finally{
+            } finally {
                 lock = false;
             }
         }).start();
     }
+
     public void loadClass(List<JarEntry> jarEntries, List<Class<?>> plugins) {
         for (JarEntry jarEntry : jarEntries) {
             loadClass(jarEntry, plugins);
         }
     }
+
     /**
      * 加载class
      */
@@ -89,7 +90,7 @@ public class DynamicJarClassLoader extends URLClassLoader {
             }
         } catch (ClassNotFoundException e) {
             log.error("loadClassErr", e);
-        } catch ( NoClassDefFoundError | UnsupportedClassVersionError ignored) {
+        } catch (NoClassDefFoundError | UnsupportedClassVersionError ignored) {
         }
     }
 
@@ -106,7 +107,7 @@ public class DynamicJarClassLoader extends URLClassLoader {
             int currentProgress = 0;
             int progressThreshold = 10; // 输出进度的阈值为10%
             int count = 0;
-            try{
+            try {
                 for (JarEntry jarEntry : list) {
                     count++;
                     loadClass(jarEntry, null);
@@ -118,7 +119,7 @@ public class DynamicJarClassLoader extends URLClassLoader {
                         currentProgress = progress;
                     }
                 }
-            } finally{
+            } finally {
                 Instant end = Instant.now();
                 Duration timeElapsed = Duration.between(start, end);
                 log.info("异步加载插件{}依赖类完成，共加载{}个文件 耗时: {}ms", key, count, timeElapsed.toMillis());

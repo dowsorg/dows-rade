@@ -23,8 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class BaseSysDepartmentServiceImpl extends
-    BaseServiceImpl<BaseSysDepartmentMapper, BaseSysDepartmentEntity>
-    implements BaseSysDepartmentService {
+        BaseServiceImpl<BaseSysDepartmentMapper, BaseSysDepartmentEntity>
+        implements BaseSysDepartmentService {
 
     final private BaseSysUserMapper baseSysUserMapper;
 
@@ -34,9 +34,9 @@ public class BaseSysDepartmentServiceImpl extends
     public void order(List<BaseSysDepartmentEntity> list) {
         list.forEach(baseSysDepartmentEntity -> {
             UpdateChain.of(BaseSysDepartmentEntity.class)
-                .set(BaseSysDepartmentEntity::getOrderNum, baseSysDepartmentEntity.getOrderNum())
-                .set(BaseSysDepartmentEntity::getParentId, baseSysDepartmentEntity.getParentId())
-                .eq(BaseSysDepartmentEntity::getId, baseSysDepartmentEntity.getId()).update();
+                    .set(BaseSysDepartmentEntity::getOrderNum, baseSysDepartmentEntity.getOrderNum())
+                    .set(BaseSysDepartmentEntity::getParentId, baseSysDepartmentEntity.getParentId())
+                    .eq(BaseSysDepartmentEntity::getId, baseSysDepartmentEntity.getId()).update();
         });
     }
 
@@ -48,14 +48,14 @@ public class BaseSysDepartmentServiceImpl extends
             return new ArrayList<>();
         }
         List<BaseSysDepartmentEntity> list = this.list(
-            QueryWrapper.create()
-                .in(BaseSysDepartmentEntity::getId, loginDepartmentIds, !username.equals("admin"))
-                .orderBy(BaseSysDepartmentEntity::getOrderNum, false));
+                QueryWrapper.create()
+                        .in(BaseSysDepartmentEntity::getId, loginDepartmentIds, !username.equals("admin"))
+                        .orderBy(BaseSysDepartmentEntity::getOrderNum, false));
         list.forEach(e -> {
             List<BaseSysDepartmentEntity> parentDepartment = list.stream()
-                .filter(sysDepartmentEntity -> e.getParentId() != null
-                    && e.getParentId().equals(sysDepartmentEntity.getId()))
-                .toList();
+                    .filter(sysDepartmentEntity -> e.getParentId() != null
+                            && e.getParentId().equals(sysDepartmentEntity.getId()))
+                    .toList();
             if (!parentDepartment.isEmpty()) {
                 e.setParentName(parentDepartment.get(0).getName());
             }
@@ -69,15 +69,15 @@ public class BaseSysDepartmentServiceImpl extends
         // 是否删除对应用户 否则移动到顶层部门
         if (requestParams.getBool("deleteUser")) {
             return baseSysUserMapper
-                .deleteByQuery(
-                    QueryWrapper.create().in(BaseSysUserEntity::getDepartmentId, (Object) ids)) > 0;
+                    .deleteByQuery(
+                            QueryWrapper.create().in(BaseSysUserEntity::getDepartmentId, (Object) ids)) > 0;
         } else {
             BaseSysDepartmentEntity topDepartment = getOne(
-                QueryWrapper.create().isNull(BaseSysDepartmentEntity::getParentId));
+                    QueryWrapper.create().isNull(BaseSysDepartmentEntity::getParentId));
             if (topDepartment != null) {
                 UpdateChain.of(BaseSysUserEntity.class)
-                    .set(BaseSysUserEntity::getDepartmentId, topDepartment.getId())
-                    .in(BaseSysUserEntity::getDepartmentId, (Object) ids).update();
+                        .set(BaseSysUserEntity::getDepartmentId, topDepartment.getId())
+                        .in(BaseSysUserEntity::getDepartmentId, (Object) ids).update();
             }
         }
         return false;

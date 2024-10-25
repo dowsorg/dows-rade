@@ -42,7 +42,7 @@ public class LocalFileUploadStrategy implements FileUploadStrategy {
             String date = DateUtil.format(new Date(),
                     DatePattern.PURE_DATE_PATTERN);
             String relativePath =
-                File.separator + localFileProperties.getUploadPath() + File.separator + date;
+                    File.separator + localFileProperties.getUploadPath() + File.separator + date;
 
             FileUtil.mkdir(filePath + relativePath);
             for (MultipartFile file : files) {
@@ -69,6 +69,6 @@ public class LocalFileUploadStrategy implements FileUploadStrategy {
      */
     public Map<String, String> getMode(String key) {
         return Map.of("mode", FileModeEnum.LOCAL.value(),
-            "type", FileModeEnum.LOCAL.type());
+                "type", FileModeEnum.LOCAL.type());
     }
 }

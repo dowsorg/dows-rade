@@ -34,21 +34,15 @@ import java.util.List;
 @Service
 public class UserLoginServiceImpl implements UserLoginService {
 
-    private final RadeCache radeCache;
-
-    private final JwtTokenUtil jwtTokenUtil;
-
-    private final UserInfoService userInfoService;
-
-    private final UserSmsUtil userSmsUtil;
-
-    private final BaseSysLoginService baseSysLoginService;
-
-    private final UserWxService userWxService;
-
-    private final WxProxy wxProxy;
     private final static List<GrantedAuthority> authority =
-      List.of(new SimpleGrantedAuthority("ROLE_" + UserTypeEnum.APP.name()));
+            List.of(new SimpleGrantedAuthority("ROLE_" + UserTypeEnum.APP.name()));
+    private final RadeCache radeCache;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final UserInfoService userInfoService;
+    private final UserSmsUtil userSmsUtil;
+    private final BaseSysLoginService baseSysLoginService;
+    private final UserWxService userWxService;
+    private final WxProxy wxProxy;
 
     @Override
     public void smsCode(String phone, String captchaId, String code) {
@@ -71,7 +65,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         RadePreconditions.check(!jwtTokenUtil.validateRefreshToken(refreshToken), "错误的refreshToken");
         JWT jwt = jwtTokenUtil.getTokenInfo(refreshToken);
         RadePreconditions.check(jwt == null || !(Boolean) jwt.getPayload("isRefresh"),
-            "错误的refreshToken");
+                "错误的refreshToken");
         Long userId = Convert.toLong(jwt.getPayload("userId"));
         return generateToken(userId, refreshToken);
     }
@@ -84,9 +78,9 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     private Object wxLoginToken(UserWxEntity userWxEntity) {
         String unionId = ObjUtil.isNotEmpty(userWxEntity.getUnionid()) ? userWxEntity.getUnionid()
-            : userWxEntity.getOpenid();
+                : userWxEntity.getOpenid();
         UserInfoEntity userInfoEntity = userInfoService.getOne(
-            QueryWrapper.create().eq(UserInfoEntity::getUnionid, unionId));
+                QueryWrapper.create().eq(UserInfoEntity::getUnionid, unionId));
         if (ObjUtil.isEmpty(userInfoEntity)) {
             userInfoEntity = new UserInfoEntity();
             userInfoEntity.setNickName(ObjUtil.isNotEmpty(userWxEntity.getNickName()) ? userWxEntity.getNickName() : generateRandomNickname());
@@ -129,7 +123,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     @Override
     public Object password(String phone, String password) {
         UserInfoEntity userInfoEntity = userInfoService.getOne(
-            QueryWrapper.create().eq(UserInfoEntity::getPhone, phone));
+                QueryWrapper.create().eq(UserInfoEntity::getPhone, phone));
         RadePreconditions.checkEmpty(userInfoEntity, "账号或密码错误");
         if (userInfoEntity.getPassword().equals(MD5.create().digestHex(password))) {
             return generateToken(userInfoEntity, null);
@@ -144,7 +138,7 @@ public class UserLoginServiceImpl implements UserLoginService {
      */
     private Object generateTokenByPhone(String phone) {
         UserInfoEntity userInfoEntity = userInfoService.getOne(
-            QueryWrapper.create().eq(UserInfoEntity::getPhone, phone));
+                QueryWrapper.create().eq(UserInfoEntity::getPhone, phone));
         if (ObjUtil.isEmpty(userInfoEntity)) {
             userInfoEntity = new UserInfoEntity();
             userInfoEntity.setPhone(phone);
@@ -156,7 +150,6 @@ public class UserLoginServiceImpl implements UserLoginService {
     }
 
     /**
-     *
      * @return 生成的昵称
      */
     private String generateRandomNickname() {
@@ -165,6 +158,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         // 生成随机字符串
         return RandomUtil.randomString(length);
     }
+
     /**
      * 生成token
      */
@@ -172,22 +166,23 @@ public class UserLoginServiceImpl implements UserLoginService {
         UserInfoEntity userInfoEntity = userInfoService.getById(userId);
         return generateToken(userInfoEntity, refreshToken);
     }
+
     private Dict generateToken(UserInfoEntity userInfoEntity, String refreshToken) {
         Dict tokenInfo = Dict.create()
-            .set("userType", UserTypeEnum.APP.name())
-            .set("userId", userInfoEntity.getId());
+                .set("userType", UserTypeEnum.APP.name())
+                .set("userId", userInfoEntity.getId());
         String token = jwtTokenUtil.generateToken(tokenInfo);
         if (ObjUtil.isEmpty(refreshToken)) {
             refreshToken = jwtTokenUtil.generateRefreshToken(tokenInfo);
         }
         JwtUser jwtUser = new JwtUser(userInfoEntity.getId(),
-            authority,
-            ObjUtil.equals(userInfoEntity.getStatus(), 1));
+                authority,
+                ObjUtil.equals(userInfoEntity.getStatus(), 1));
         radeCache.set("app:userDetails:" + jwtUser.getUserId(), jwtUser);
         return Dict.create()
-            .set("token", token)
-            .set("expire", jwtTokenUtil.getExpire())
-            .set("refreshToken", refreshToken)
-            .set("refreshExpire", jwtTokenUtil.getRefreshExpire());
+                .set("token", token)
+                .set("expire", jwtTokenUtil.getExpire())
+                .set("refreshToken", refreshToken)
+                .set("refreshExpire", jwtTokenUtil.getRefreshExpire());
     }
 }

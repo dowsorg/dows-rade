@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.dows.core.enums.UserTypeEnum;
 import org.dows.core.security.RadeSecurityUtil;
 import org.dows.core.util.BodyReaderHttpServletRequestWrapper;
-//import org.dows.core.util.RadeSecurityUtil;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +43,7 @@ public class RequestParamsFilter implements Filter {
             BodyReaderHttpServletRequestWrapper requestWrapper = new BodyReaderHttpServletRequestWrapper(request);
             String body = requestWrapper.getBodyString(requestWrapper);
             if (StrUtil.isNotEmpty(body) && JSONUtil.isTypeJSON(body) && !JSONUtil.isTypeJSONArray(
-                body)) {
+                    body)) {
                 requestParams = JSONUtil.parseObj(body);
             }
 
@@ -83,7 +82,6 @@ public class RequestParamsFilter implements Filter {
 
     /**
      * 获取客户端请求参数中所有的信息
-     *
      */
     private Map<String, Object> getAllRequestParam(final HttpServletRequest request) {
         Map<String, Object> res = new HashMap<>();

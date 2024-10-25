@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * 文件空间信息
  */
 @Tag(name = "文件空间信息", description = "文件空间信息")
-@RadeController(api = { "add", "delete", "update", "page", "list", "info" })
+@RadeController(api = {"add", "delete", "update", "page", "list", "info"})
 public class AdminSpaceTypeController extends BaseController<SpaceTypeService, SpaceTypeEntity> {
 
     @Override

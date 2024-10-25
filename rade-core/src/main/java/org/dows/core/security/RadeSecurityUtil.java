@@ -6,7 +6,6 @@ import org.dows.core.cache.RadeCache;
 import org.dows.core.enums.UserTypeEnum;
 import org.dows.core.exception.RadePreconditions;
 import org.dows.core.security.jwt.JwtUser;
-//import org.dows.modules.base.entity.sys.BaseSysUserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +35,7 @@ public class RadeSecurityUtil {
         JSONObject tokenInfo = requestParams.getJSONObject("tokenInfo");
         if (tokenInfo != null) {
             tokenInfo.set("department",
-                RADE_CACHE.get("admin:department:" + tokenInfo.get("userId")));
+                    RADE_CACHE.get("admin:department:" + tokenInfo.get("userId")));
             tokenInfo.set("roleIds", RADE_CACHE.get("admin:roleIds:" + tokenInfo.get("userId")));
         }
         return tokenInfo;
@@ -50,7 +49,7 @@ public class RadeSecurityUtil {
      */
     public static void adminLogout(Long adminUserId, String username) {
         RADE_CACHE.del("admin:department:" + adminUserId, "admin:passwordVersion:" + adminUserId,
-            "admin:userInfo:" + adminUserId, "admin:userDetails:" + username);
+                "admin:userInfo:" + adminUserId, "admin:userDetails:" + username);
     }
 
     /**
@@ -97,6 +96,6 @@ public class RadeSecurityUtil {
      * app退出登录,移除缓存信息
      */
     public static void appLogout() {
-        RADE_CACHE.del("app:userDetails"+ getCurrentUserId());
+        RADE_CACHE.del("app:userDetails" + getCurrentUserId());
     }
 }

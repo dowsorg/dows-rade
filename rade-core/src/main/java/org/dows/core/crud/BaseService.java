@@ -89,6 +89,7 @@ public interface BaseService<T> extends IService<T> {
     /**
      * 查询所有
      * 带关联查询
+     *
      * @param requestParams 请求参数
      * @param queryWrapper  查询条件
      * @return 列表信息
@@ -118,6 +119,7 @@ public interface BaseService<T> extends IService<T> {
     /**
      * 分页查询
      * 带关联查询
+     *
      * @param requestParams 请求参数
      * @param page          分页信息
      * @param queryWrapper  查询条件
@@ -128,7 +130,7 @@ public interface BaseService<T> extends IService<T> {
     /**
      * 查询信息
      *
-     * @param id            ID
+     * @param id ID
      */
     Object info(Long id);
 

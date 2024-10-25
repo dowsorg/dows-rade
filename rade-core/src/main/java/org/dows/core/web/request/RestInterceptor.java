@@ -15,7 +15,7 @@ import java.util.Arrays;
  */
 @Component
 public class RestInterceptor implements HandlerInterceptor {
-    private final static String[] rests = { "add", "delete", "update", "info", "list", "page" };
+    private final static String[] rests = {"add", "delete", "update", "info", "list", "page"};
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

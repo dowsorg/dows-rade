@@ -54,8 +54,13 @@ public class PluginInfoServiceImpl extends BaseServiceImpl<PluginInfoMapper, Plu
     }
 
     @Override
-    public List<PluginDetail> listPlugin(QueryWrapper eq) {
-        return List.of();
+    public List<? extends PluginDetail> listPlugin(Integer state) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(PluginInfoEntity::getId, PluginInfoEntity::getPluginJson,
+                        PluginInfoEntity::getKey, PluginInfoEntity::getName)
+                .eq(PluginInfoEntity::getStatus, state);
+        List<PluginInfoEntity> list = this.list(queryWrapper);
+        return list;
     }
 
     @Override

@@ -10,29 +10,20 @@ import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.dows.core.enums.QueryModeEnum;
-import org.dows.core.exception.RadePreconditions;
-import org.dows.core.web.Response;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import lombok.Getter;
+import org.dows.core.enums.QueryModeEnum;
+import org.dows.core.exception.RadePreconditions;
+import org.dows.core.web.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  * 控制层基类
@@ -42,23 +33,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 public abstract class BaseController<S extends BaseService<T>, T extends BaseEntity<T>> {
 
+    protected final String RADE_PAGE_OP = "RADE_PAGE_OP";
+    protected final String RADE_LIST_OP = "RADE_LIST_OP";
+    private final ThreadLocal<CrudOption<T>> pageOption = new ThreadLocal<>();
+    private final ThreadLocal<CrudOption<T>> listOption = new ThreadLocal<>();
+    private final ThreadLocal<JSONObject> requestParams = new ThreadLocal<>();
     @Getter
     @Autowired
     protected S service;
     protected Class<T> entityClass;
 
-    protected final String RADE_PAGE_OP = "RADE_PAGE_OP";
-    protected final String RADE_LIST_OP = "RADE_LIST_OP";
-
-    private final ThreadLocal<CrudOption<T>> pageOption = new ThreadLocal<>();
-    private final ThreadLocal<CrudOption<T>> listOption = new ThreadLocal<>();
-    private final ThreadLocal<JSONObject> requestParams = new ThreadLocal<>();
-
     @ModelAttribute
     protected void preHandle(HttpServletRequest request,
-        @RequestAttribute JSONObject requestParams) {
+                             @RequestAttribute JSONObject requestParams) {
         String requestPath = ((ServletRequestAttributes) Objects.requireNonNull(
-            RequestContextHolder.getRequestAttributes())).getRequest().getRequestURI();
+                RequestContextHolder.getRequestAttributes())).getRequest().getRequestURI();
         if (!requestPath.endsWith("/page") && !requestPath.endsWith("/list")) {
             // 非page或list不执行
             return;
@@ -107,10 +96,10 @@ public abstract class BaseController<S extends BaseService<T>, T extends BaseEnt
         if (JSONUtil.isTypeJSONArray(body)) {
             JSONArray array = JSONUtil.parseArray(body);
             return Response.ok(Dict.create()
-                .set("ids", service.addBatch(requestParams, array.toList(currentEntityClass()))));
+                    .set("ids", service.addBatch(requestParams, array.toList(currentEntityClass()))));
         } else {
             return Response.ok(Dict.create().set("id",
-                service.add(requestParams, requestParams.toBean(currentEntityClass()))));
+                    service.add(requestParams, requestParams.toBean(currentEntityClass()))));
         }
     }
 
@@ -166,8 +155,10 @@ public abstract class BaseController<S extends BaseService<T>, T extends BaseEnt
                             @RequestAttribute(RADE_LIST_OP) CrudOption<T> option) {
         QueryModeEnum queryModeEnum = option.getQueryModeEnum();
         List list = (List) switch (queryModeEnum) {
-            case ENTITY_WITH_RELATIONS -> service.listWithRelations(requestParams, option.getQueryWrapper(currentEntityClass()));
-            case CUSTOM -> transformList(service.list(requestParams, option.getQueryWrapper(currentEntityClass()), option.getAsType()), option.getAsType());
+            case ENTITY_WITH_RELATIONS ->
+                    service.listWithRelations(requestParams, option.getQueryWrapper(currentEntityClass()));
+            case CUSTOM ->
+                    transformList(service.list(requestParams, option.getQueryWrapper(currentEntityClass()), option.getAsType()), option.getAsType());
             default -> service.list(requestParams, option.getQueryWrapper(currentEntityClass()));
         };
         invokerTransform(option, list);
@@ -187,9 +178,12 @@ public abstract class BaseController<S extends BaseService<T>, T extends BaseEnt
         Integer size = requestParams.getInt("size", 20);
         QueryModeEnum queryModeEnum = option.getQueryModeEnum();
         Object obj = switch (queryModeEnum) {
-            case ENTITY_WITH_RELATIONS -> service.pageWithRelations(requestParams, new Page<>(page, size), option.getQueryWrapper(currentEntityClass()));
-            case CUSTOM -> transformPage(service.page(requestParams, new Page<>(page, size), option.getQueryWrapper(currentEntityClass()), option.getAsType()), option.getAsType());
-            default -> service.page(requestParams, new Page<>(page, size), option.getQueryWrapper(currentEntityClass()));
+            case ENTITY_WITH_RELATIONS ->
+                    service.pageWithRelations(requestParams, new Page<>(page, size), option.getQueryWrapper(currentEntityClass()));
+            case CUSTOM ->
+                    transformPage(service.page(requestParams, new Page<>(page, size), option.getQueryWrapper(currentEntityClass()), option.getAsType()), option.getAsType());
+            default ->
+                    service.page(requestParams, new Page<>(page, size), option.getQueryWrapper(currentEntityClass()));
         };
         Page pageResult = (Page) obj;
         invokerTransform(option, pageResult.getRecords());
@@ -202,7 +196,7 @@ public abstract class BaseController<S extends BaseService<T>, T extends BaseEnt
     private void invokerTransform(CrudOption<T> option, Object obj) {
         if (ObjUtil.isNotEmpty(option.getTransform())) {
             if (obj instanceof List) {
-                ((List)obj).forEach(o -> {
+                ((List) obj).forEach(o -> {
                     option.getTransform().apply(o);
                 });
             } else {
@@ -259,9 +253,10 @@ public abstract class BaseController<S extends BaseService<T>, T extends BaseEnt
         List<Map> list = new ArrayList<>();
         Editor<String> keyEditor = property -> StrUtil.toCamelCase(property);
         records.forEach(o ->
-            list.add(BeanUtil.beanToMap(o, new HashMap(), false, keyEditor)));
+                list.add(BeanUtil.beanToMap(o, new HashMap(), false, keyEditor)));
         return list;
     }
+
     protected Page transformPage(Page page, Class<?> asType) {
         page.setRecords(transformList(page.getRecords(), asType));
         return page;

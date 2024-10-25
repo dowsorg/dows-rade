@@ -1,16 +1,19 @@
 package org.dows.modules.base.controller.admin;
 
-import org.dows.core.annotation.RadeController;
-import org.dows.core.enums.UserTypeEnum;
-import org.dows.core.aid.RadeAid;
-import org.dows.core.web.Response;
-import org.dows.modules.base.dto.sys.BaseSysLoginDto;
-import org.dows.modules.base.service.sys.BaseSysLoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.dows.core.aid.RadeAid;
+import org.dows.core.annotation.RadeController;
+import org.dows.core.enums.UserTypeEnum;
+import org.dows.core.web.Response;
+import org.dows.modules.base.dto.sys.BaseSysLoginDto;
+import org.dows.modules.base.service.sys.BaseSysLoginService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 系统开放接口，无需权限校验

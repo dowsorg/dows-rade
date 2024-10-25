@@ -50,7 +50,7 @@ public class CompilerUtils {
     }
 
     public static String createServiceImpl(String actModulePath, String fileName,
-        String serviceImpl) {
+                                           String serviceImpl) {
         String pathStr = actModulePath + File.separator + "service" + File.separator + "impl" + File.separator;
         String filePathStr = pathStr + fileName + "ServiceImpl.java";
         createFile(serviceImpl, filePathStr);
@@ -112,17 +112,17 @@ public class CompilerUtils {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null)) {
             Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(
-                entityPath);
+                    entityPath);
             // 设置注解处理器
             Iterable<? extends Processor> processors = List.of(new MybatisFlexProcessor());
             // 添加 -proc:only 选项
             List<String> options = List.of("-proc:only");
             JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, options,
-                null, compilationUnits);
+                    null, compilationUnits);
             task.setProcessors(processors);
             task.call();
             compilationUnits = fileManager.getJavaFileObjects(
-                javaPathList.toArray(new String[0]));
+                    javaPathList.toArray(new String[0]));
             // 设置编译输出目录
             fileManager.setLocation(StandardLocation.CLASS_OUTPUT, List.of(new File("target/classes")));
 
@@ -154,6 +154,7 @@ public class CompilerUtils {
             log.error("compilerEntityTableDefError", e);
         }
     }
+
     private static int countFiles(File directory) {
         File[] files = directory.listFiles();
         if (files == null) {

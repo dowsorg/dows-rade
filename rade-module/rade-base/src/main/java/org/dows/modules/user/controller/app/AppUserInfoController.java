@@ -27,7 +27,7 @@ public class AppUserInfoController {
         Long userId = RadeSecurityUtil.getCurrentUserId();
         UserInfoEntity userInfoEntity = userInfoService.person(userId);
         return Response.ok(EntityUtils.toMap(userInfoEntity,
-            "password"));
+                "password"));
     }
 
     @Operation(summary = "更新用户信息")
@@ -36,14 +36,14 @@ public class AppUserInfoController {
         UserInfoEntity infoEntity = requestParams.toBean(UserInfoEntity.class);
         infoEntity.setId(RadeSecurityUtil.getCurrentUserId());
         return Response.ok(
-            userInfoService.updateById(infoEntity)
+                userInfoService.updateById(infoEntity)
         );
     }
 
     @Operation(summary = "更新用户密码")
     @PostMapping("/updatePassword")
     public Response updatePassword(
-        @RequestAttribute JSONObject requestParams
+            @RequestAttribute JSONObject requestParams
     ) {
         String password = requestParams.get("password", String.class);
         String code = requestParams.get("code", String.class);
@@ -61,7 +61,7 @@ public class AppUserInfoController {
     @Operation(summary = "绑定手机号")
     @PostMapping("/bindPhone")
     public Response bindPhone(
-        @RequestAttribute JSONObject requestParams) {
+            @RequestAttribute JSONObject requestParams) {
         String phone = requestParams.get("phone", String.class);
         String code = requestParams.get("code", String.class);
         userInfoService.bindPhone(RadeSecurityUtil.getCurrentUserId(), phone, code);

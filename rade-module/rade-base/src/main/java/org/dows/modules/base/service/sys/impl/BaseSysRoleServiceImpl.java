@@ -2,6 +2,8 @@ package org.dows.modules.base.service.sys.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONObject;
+import com.mybatisflex.core.query.QueryWrapper;
+import lombok.RequiredArgsConstructor;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
 import org.dows.core.exception.RadeException;
@@ -14,10 +16,9 @@ import org.dows.modules.base.mapper.sys.BaseSysRoleMapper;
 import org.dows.modules.base.mapper.sys.BaseSysRoleMenuMapper;
 import org.dows.modules.base.service.sys.BaseSysPermsService;
 import org.dows.modules.base.service.sys.BaseSysRoleService;
-import com.mybatisflex.core.query.QueryWrapper;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 系统角色

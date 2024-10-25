@@ -1,10 +1,11 @@
 package org.dows.core.exception;
 
 import cn.hutool.core.util.ObjectUtil;
-import java.util.Arrays;
-import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * 校验处理
@@ -33,13 +34,13 @@ public class RadePreconditions {
 
     private static RadeException getRadeException(String message, Object... arguments) {
         Optional<Object> first = Arrays.stream(arguments).filter(o -> o instanceof Throwable)
-            .findFirst();
+                .findFirst();
         return new RadeException(formatMessage(message, arguments), (Throwable) first.orElse(null));
     }
 
     private static RadeException getRadeException(String message, int code, Object... arguments) {
         Optional<Object> first = Arrays.stream(arguments).filter(o -> o instanceof Throwable)
-            .findFirst();
+                .findFirst();
         return new RadeException(formatMessage(message, arguments), code, (Throwable) first.orElse(null));
     }
 

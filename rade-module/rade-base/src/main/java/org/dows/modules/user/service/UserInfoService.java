@@ -6,6 +6,7 @@ import org.dows.modules.user.entity.UserInfoEntity;
 public interface UserInfoService extends BaseService<UserInfoEntity> {
     /**
      * 用户个人信息
+     *
      * @param userId
      * @return
      */

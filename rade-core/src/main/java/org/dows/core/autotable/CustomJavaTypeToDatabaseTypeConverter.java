@@ -7,20 +7,21 @@ import com.tangzc.autotable.core.converter.JavaTypeToDatabaseTypeConverter;
 import com.tangzc.autotable.core.strategy.pgsql.data.PgsqlDefaultTypeEnum;
 import com.tangzc.autotable.core.utils.StringUtils;
 import com.tangzc.autotable.core.utils.TableBeanUtils;
+import org.springframework.stereotype.Component;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.stereotype.Component;
 
 @Component
 public class CustomJavaTypeToDatabaseTypeConverter implements JavaTypeToDatabaseTypeConverter {
 
-  /**
-   * 重新 java转数据库类型
-   * 兼容 mybatisflex 不兼容 postgresql 的json类型问题
-   */
-  @Override
-  public DatabaseTypeAndLength convert(String databaseDialect, Class<?> clazz, Field field) {
+    /**
+     * 重新 java转数据库类型
+     * 兼容 mybatisflex 不兼容 postgresql 的json类型问题
+     */
+    @Override
+    public DatabaseTypeAndLength convert(String databaseDialect, Class<?> clazz, Field field) {
 
         ColumnType column = TableBeanUtils.getColumnType(field);
         // 设置了类型

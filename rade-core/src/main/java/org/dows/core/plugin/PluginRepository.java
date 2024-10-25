@@ -1,7 +1,5 @@
 package org.dows.core.plugin;
 
-import com.mybatisflex.core.query.QueryWrapper;
-
 import java.util.List;
 
 /**
@@ -22,7 +20,7 @@ public interface PluginRepository<T extends PluginDetail> {
 
     T newEmptyPlugin();
 
-    List<PluginDetail> listPlugin(QueryWrapper eq);
+    List<? extends PluginDetail> listPlugin(Integer state);
 
     boolean removePluginById(Long id);
 

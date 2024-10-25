@@ -1,12 +1,12 @@
 package org.dows.modules.dict.controller.admin;
 
 import cn.hutool.json.JSONObject;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.dows.core.annotation.RadeController;
 import org.dows.core.crud.BaseController;
 import org.dows.modules.dict.entity.DictTypeEntity;
 import org.dows.modules.dict.service.DictTypeService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 
 import static org.dows.modules.dict.entity.table.DictTypeEntityTableDef.DICT_TYPE_ENTITY;
 
@@ -20,6 +20,6 @@ public class AdminDictTypeController extends BaseController<DictTypeService, Dic
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(
-            createOp().select(DICT_TYPE_ENTITY.ID, DICT_TYPE_ENTITY.KEY, DICT_TYPE_ENTITY.NAME));
+                createOp().select(DICT_TYPE_ENTITY.ID, DICT_TYPE_ENTITY.KEY, DICT_TYPE_ENTITY.NAME));
     }
 }

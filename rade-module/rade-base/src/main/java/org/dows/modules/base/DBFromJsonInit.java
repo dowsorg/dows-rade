@@ -7,29 +7,35 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.dows.core.crud.service.MapperProviderService;
+import com.mybatisflex.core.BaseMapper;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.dows.core.crud.EntityUtils;
+import org.dows.core.crud.service.MapperProviderService;
 import org.dows.modules.base.entity.sys.BaseSysConfEntity;
 import org.dows.modules.base.entity.sys.BaseSysMenuEntity;
 import org.dows.modules.base.service.sys.BaseSysConfService;
 import org.dows.modules.base.service.sys.BaseSysMenuService;
-import com.mybatisflex.core.BaseMapper;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 数据库初始数据初始化 在 classpath:rade/data/db 目录下创建.json文件 并定义表数据， 由该类统一执行初始化
@@ -50,6 +56,12 @@ public class DBFromJsonInit implements ApplicationRunner {
     @Value("${rade.initData}")
     private boolean initData;
 
+    @Value("${rade.dataDir}")
+    private String dataDir;
+
+    @Value("${rade.menuDir}")
+    private String menuDir;
+
     @Override
     public void run(ApplicationArguments args) {
         if (!initData) {
@@ -64,14 +76,25 @@ public class DBFromJsonInit implements ApplicationRunner {
         log.info("数据初始化完成！");
     }
 
-    @Getter
-    public static class DbInitCompleteEvent {
-        private final Object source;
-
-        public DbInitCompleteEvent(Object source) {
-            this.source = source;
+    private List<File> getResourceFile(String dataDir) throws IOException {
+        List<File> files = new ArrayList<>();
+        if (StrUtil.startWith(dataDir, "file://")) {
+            File file = new FileSystemResourceLoader().getResource(dataDir).getFile();
+            if (file.isDirectory()) {
+                files.addAll(Arrays.asList(file.listFiles()));
+            } else {
+                files.add(file);
+            }
+        } else if (StrUtil.startWith(dataDir, "classpath*://") || StrUtil.startWith(dataDir, "classpath://")) {
+            // 加载 JSON 文件
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources(dataDir);
+            for (Resource resource : resources) {
+                //File resourceFile = new File(resource.getURL().getFile());
+                files.add(resource.getFile());
+            }
         }
-
+        return files;
     }
 
     /**
@@ -79,28 +102,44 @@ public class DBFromJsonInit implements ApplicationRunner {
      */
     private void extractedDb() {
         try {
-            // 加载 JSON 文件
-            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-            Resource[] resources = resolver.getResources("classpath:rade/data/db/*.json");
+            /*List<File> files = new ArrayList<>();
+            if(StrUtil.startWith(dataDir,"file://")){
+                File file = new FileSystemResourceLoader().getResource(dataDir).getFile();
+                if (file.isDirectory()){
+                    files.addAll(Arrays.asList(file.listFiles()));
+                } else {
+                    files.add(file);
+                }
+            } else if(StrUtil.startWith(dataDir,"classpath*://") || StrUtil.startWith(dataDir,"classpath://")){
+                // 加载 JSON 文件
+                PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+                Resource[] resources = resolver.getResources(dataDir);
+                for (Resource resource : resources) {
+                    //File resourceFile = new File(resource.getURL().getFile());
+                    files.add(resource.getFile());
+                }
+            }*/
+            List<File> files = getResourceFile(dataDir);
             // 遍历所有.json文件
-            analysisResources(resources);
+            analysisResources(files);
         } catch (Exception e) {
             log.error("Failed to initialize data", e);
         }
     }
 
-    private void analysisResources(Resource[] resources)
-        throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    private void analysisResources(/*Resource[] resources*/List<File> files)
+            throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         String prefix = "db_";
-        for (Resource resource : resources) {
-            File resourceFile = new File(resource.getURL().getFile());
+//        for (Resource resource : resources) {
+        for (File resourceFile : files) {
+            //File resourceFile = new File(resource.getURL().getFile());
             String fileName = prefix + resourceFile.getName();
             String value = baseSysConfService.getValue(fileName);
             if (StrUtil.isNotEmpty(value)) {
                 log.info("{} 业务数据已初始化过...", fileName);
                 continue;
             }
-            String jsonStr = IoUtil.read(resource.getInputStream(), StandardCharsets.UTF_8);
+            String jsonStr = IoUtil.read(new FileInputStream(resourceFile), StandardCharsets.UTF_8);
             JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
             // 遍历 JSON 文件中的数据
             analysisJson(jsonObject);
@@ -115,7 +154,7 @@ public class DBFromJsonInit implements ApplicationRunner {
     }
 
     private void analysisJson(JSONObject jsonObject)
-        throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Map<String, Class<?>> tableMap = EntityUtils.findTableMap();
         for (String tableName : jsonObject.keySet()) {
             JSONArray records = jsonObject.getJSONArray(tableName);
@@ -130,9 +169,8 @@ public class DBFromJsonInit implements ApplicationRunner {
     /**
      * 插入列表数据
      */
-    private void insertList(BaseMapper baseMapper, Class<?> entityClass,
-        JSONArray records)
-        throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    private void insertList(BaseMapper baseMapper, Class<?> entityClass, JSONArray records)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         // 插入数据
         for (int i = 0; i < records.size(); i++) {
             JSONObject record = records.getJSONObject(i);
@@ -140,7 +178,7 @@ public class DBFromJsonInit implements ApplicationRunner {
             Method getIdMethod = entityClass.getMethod("getId");
             Object id = getIdMethod.invoke(entity);
             if (ObjUtil.isNotEmpty(id) && ObjUtil.isNotEmpty(
-                baseMapper.selectOneById((Long) id))) {
+                    baseMapper.selectOneById((Long) id))) {
                 // 数据库已经有值了
                 continue;
             }
@@ -159,26 +197,46 @@ public class DBFromJsonInit implements ApplicationRunner {
     public void extractedMenu() {
         try {
             String prefix = "menu_";
-            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-            Resource[] resources = resolver.getResources("classpath:rade/data/menu/*.json");
+            List<File> files = getResourceFile(menuDir);
+
+           /* List<File> files = new ArrayList<>();
+            if(StrUtil.startWith(menuDir,"file://")){
+                File file = new FileSystemResourceLoader().getResource(menuDir).getFile();
+                if (file.isDirectory()){
+                    files.addAll(Arrays.asList(file.listFiles()));
+                } else {
+                    files.add(file);
+                }
+            } else if(StrUtil.startWith(menuDir,"classpath*://") || StrUtil.startWith(menuDir,"classpath://")){
+                // 加载 JSON 文件
+                PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+                Resource[] resources = resolver.getResources(menuDir);
+                for (Resource resource : resources) {
+                    //File resourceFile = new File(resource.getURL().getFile());
+                    files.add(resource.getFile());
+                }
+            }*/
+            /*PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath*:rade/data/menu/*.json");*/
             // 遍历所有.json文件
-            for (Resource resource : resources) {
-                File resourceFile = new File(resource.getURL().getFile());
+//            for (Resource resource : resources) {
+            for (File resourceFile : files) {
+                //File resourceFile = new File(resource.getURL().getFile());
                 String fileName = prefix + resourceFile.getName();
                 String value = baseSysConfService.getValue(fileName);
                 if (StrUtil.isNotEmpty(value)) {
                     log.info("{} 菜单数据已初始化过...", fileName);
                     continue;
                 }
-                analysisResources(resource, fileName);
+                analysisResources(resourceFile, fileName);
             }
         } catch (Exception e) {
             log.error("Failed to initialize data", e);
         }
     }
 
-    private void analysisResources(Resource resource, String fileName) throws IOException {
-        String jsonStr = IoUtil.read(resource.getInputStream(), StandardCharsets.UTF_8);
+    private void analysisResources(File resourceFile, String fileName) throws IOException {
+        String jsonStr = IoUtil.read(new FileInputStream(resourceFile), StandardCharsets.UTF_8);
 
         // 使用 解析 JSON 字符串
         JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
@@ -213,5 +271,15 @@ public class DBFromJsonInit implements ApplicationRunner {
                 parseMenu(childObj, menuEntity);
             }
         }
+    }
+
+    @Getter
+    public static class DbInitCompleteEvent {
+        private final Object source;
+
+        public DbInitCompleteEvent(Object source) {
+            this.source = source;
+        }
+
     }
 }

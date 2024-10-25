@@ -1,24 +1,25 @@
 package org.dows.modules.dict.service.impl;
 
-import static org.dows.modules.dict.entity.table.DictInfoEntityTableDef.DICT_INFO_ENTITY;
-import static org.dows.modules.dict.entity.table.DictTypeEntityTableDef.DICT_TYPE_ENTITY;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import com.mybatisflex.core.query.QueryWrapper;
+import lombok.RequiredArgsConstructor;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.modules.dict.entity.DictInfoEntity;
 import org.dows.modules.dict.entity.DictTypeEntity;
 import org.dows.modules.dict.mapper.DictInfoMapper;
 import org.dows.modules.dict.mapper.DictTypeMapper;
 import org.dows.modules.dict.service.DictInfoService;
-import com.mybatisflex.core.query.QueryWrapper;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+
+import static org.dows.modules.dict.entity.table.DictInfoEntityTableDef.DICT_INFO_ENTITY;
+import static org.dows.modules.dict.entity.table.DictTypeEntityTableDef.DICT_TYPE_ENTITY;
 
 /**
  * 字典信息
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInfoEntity> implements
-    DictInfoService {
+        DictInfoService {
 
     final private DictTypeMapper dictTypeMapper;
 
@@ -34,8 +35,7 @@ public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInf
     public Object data(List<String> types) {
         Dict result = Dict.create();
         QueryWrapper find = QueryWrapper.create();
-        find.select(DICT_TYPE_ENTITY.ID, DICT_TYPE_ENTITY.KEY,
-            DICT_TYPE_ENTITY.NAME);
+        find.select(DICT_TYPE_ENTITY.ID, DICT_TYPE_ENTITY.KEY, DICT_TYPE_ENTITY.NAME);
         if (CollectionUtil.isNotEmpty(types)) {
             find.and(DICT_TYPE_ENTITY.KEY.in(types));
         }
@@ -44,11 +44,11 @@ public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInf
             return result;
         }
         List<DictInfoEntity> infos = this.list(QueryWrapper.create()
-            .select(DictInfoEntity::getId, DictInfoEntity::getName, DictInfoEntity::getTypeId,
-                DictInfoEntity::getParentId, DictInfoEntity::getValue)
-            .in(DictInfoEntity::getTypeId,
-                typeData.stream().map(DictTypeEntity::getId).collect(Collectors.toList()))
-            .orderBy(DICT_INFO_ENTITY.ORDER_NUM.getName(), DICT_INFO_ENTITY.CREATE_TIME.getName()));
+                .select(DictInfoEntity::getId, DictInfoEntity::getName, DictInfoEntity::getTypeId,
+                        DictInfoEntity::getParentId, DictInfoEntity::getValue)
+                .in(DictInfoEntity::getTypeId,
+                        typeData.stream().map(DictTypeEntity::getId).collect(Collectors.toList()))
+                .orderBy(DICT_INFO_ENTITY.ORDER_NUM.getName(), DICT_INFO_ENTITY.CREATE_TIME.getName()));
         typeData.forEach(item -> {
             List<Dict> datas = new ArrayList<>();
             infos.stream().filter(d -> d.getTypeId().equals(item.getId())).toList().forEach(d -> {
@@ -85,7 +85,7 @@ public class DictInfoServiceImpl extends BaseServiceImpl<DictInfoMapper, DictInf
      */
     private void delDictChild(Long id) {
         List<DictInfoEntity> delDict = list(
-            QueryWrapper.create().eq(DictInfoEntity::getParentId, id));
+                QueryWrapper.create().eq(DictInfoEntity::getParentId, id));
         if (CollectionUtil.isEmpty(delDict)) {
             return;
         }

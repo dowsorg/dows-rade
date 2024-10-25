@@ -19,8 +19,8 @@ public class BaseLogFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
-        FilterChain filterChain)
-        throws IOException, ServletException {
+                         FilterChain filterChain)
+            throws IOException, ServletException {
         // 记录日志
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         baseSysLogService.record(request, (JSONObject) request.getAttribute("requestParams"));

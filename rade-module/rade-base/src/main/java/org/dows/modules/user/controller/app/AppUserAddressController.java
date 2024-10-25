@@ -24,20 +24,20 @@ public class AppUserAddressController extends BaseController<UserAddressService,
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         setPageOption(
-            createOp()
-                .queryWrapper(
-                    QueryWrapper.create()
-                            .and(USER_ADDRESS_ENTITY.USER_ID.eq(RadeSecurityUtil.getCurrentUserId()))
-                        .orderBy(
-                            USER_ADDRESS_ENTITY.IS_DEFAULT.getName(), false)));
+                createOp()
+                        .queryWrapper(
+                                QueryWrapper.create()
+                                        .and(USER_ADDRESS_ENTITY.USER_ID.eq(RadeSecurityUtil.getCurrentUserId()))
+                                        .orderBy(
+                                                USER_ADDRESS_ENTITY.IS_DEFAULT.getName(), false)));
 
         setListOption(
-            createOp()
-                .queryWrapper(
-                    QueryWrapper.create()
-                            .and(USER_ADDRESS_ENTITY.USER_ID.eq(RadeSecurityUtil.getCurrentUserId()))
-                        .orderBy(
-                            USER_ADDRESS_ENTITY.IS_DEFAULT.getName(), false)));
+                createOp()
+                        .queryWrapper(
+                                QueryWrapper.create()
+                                        .and(USER_ADDRESS_ENTITY.USER_ID.eq(RadeSecurityUtil.getCurrentUserId()))
+                                        .orderBy(
+                                                USER_ADDRESS_ENTITY.IS_DEFAULT.getName(), false)));
     }
 
     @Operation(summary = "默认地址", description = "默认地址")

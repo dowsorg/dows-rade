@@ -37,7 +37,7 @@ public interface ConfigRepository {
     /**
      * 设置值
      *
-     * @param key 键
+     * @param key   键
      * @param value 值
      */
     void setValue(String key, String value);

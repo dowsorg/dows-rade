@@ -4,7 +4,9 @@ import org.dows.core.crud.BaseEntity;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;
 import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
+
 import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 

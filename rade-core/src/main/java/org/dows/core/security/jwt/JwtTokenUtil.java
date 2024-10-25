@@ -6,14 +6,14 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.JWTValidator;
+import lombok.RequiredArgsConstructor;
 import org.dows.core.config.ConfigRepository;
 import org.dows.core.config.RadeProperties;
-//import org.dows.modules.base.service.sys.BaseSysConfService;
+import org.springframework.stereotype.Component;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 /**
  * JWT工具类
@@ -22,10 +22,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtTokenUtil implements Serializable {
 
-    final private RadeProperties radeProperties;
-    final private ConfigRepository configRepository;
     final String tokenKey = "JWT_SECRET_TOKEN";
     final String refreshTokenKey = "JWT_SECRET_REFRESH_TOKEN";
+    final private RadeProperties radeProperties;
+    final private ConfigRepository configRepository;
 
     public long getExpire() {
         return this.radeProperties.getToken().getExpire();
@@ -138,6 +138,7 @@ public class JwtTokenUtil implements Serializable {
 
     /**
      * 校验token是否有效
+     *
      * @param token
      * @return
      */
@@ -152,6 +153,7 @@ public class JwtTokenUtil implements Serializable {
 
     /**
      * 校验refresh token是否有效
+     *
      * @param token
      * @return
      */

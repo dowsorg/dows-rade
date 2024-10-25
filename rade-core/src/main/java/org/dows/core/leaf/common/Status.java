@@ -1,6 +1,6 @@
 package org.dows.core.leaf.common;
 
-public enum  Status {
+public enum Status {
     SUCCESS,
     EXCEPTION
 }
