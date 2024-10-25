@@ -1,0 +1,10 @@
+package org.dows.modules.[(${module})].service[(${subModule}?'.'+${subModule}:'')];
+
+import org.dows.core.crud.BaseService;
+import org.dows.modules.[(${module})].entity[(${subModule}?'.'+${subModule}:'')].[(${entity})]Entity;
+
+/**
+ * [(${name})]
+ */
+public interface [(${entity})]Service extends BaseService<[(${entity})]Entity> {
+}
