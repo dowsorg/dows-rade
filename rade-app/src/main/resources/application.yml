@@ -1,15 +1,22 @@
 server:
-  port: 8001
+  port: 8081
   servlet:
     context-path: /
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/plain
+  undertow:
+    buffer-size: 1024
+    direct-buffers: true
+    threads:
+      io: 4
+      worker: 32
 
 spring:
   application:
     name: rade-admin
   profiles:
+    include: apidoc,mybatis,mysql,quartz,rade
     active: @spring.active@
   thymeleaf:
     cache: false
@@ -24,8 +31,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 300MB
+      max-request-size: 300MB
   # Web设置
   web:
     resources:
@@ -46,30 +53,7 @@ spring:
   #      port: 6379
   #      database: 0
   #      password:
-  quartz:
-    job-store-type: jdbc
-    jdbc:
-      initialize-schema: always
-    autoStartup: true
-    #相关属性配置
-    properties:
-      org:
-        quartz:
-          scheduler:
-            instanceName: RadeScheduler
-            instanceId: AUTO
-          jobStore:
-            class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-            tablePrefix: QRTZ_
-            isClustered: true
-            clusterCheckinInterval: 10000
-            useProperties: false
-          threadPool:
-            class: org.quartz.simpl.SimpleThreadPool
-            threadCount: 5
-            threadPriority: 9
-            threadsInheritContextClassLoaderOfInitializingThread: true
+
 
 # 忽略url
 ignored:
@@ -96,61 +80,8 @@ ignored:
     - /css/*
     - /js/*
     - /favicon.ico
-# 文档
-springdoc:
-  api-docs:
-    #swagger后端请求地址
-    path: /v3/api-docs
-  swagger-ui:
-    #自定义swagger前端请求路径，输入http://127.0.0.1:端口号/swagger会自动重定向到swagger页面
-    path: /swagger
-
-mybatis-flex:
-  #多数据源
-  #  datasource:
-  #MyBatis 配置文件位置，如果有单独的 MyBatis 配置，需要将其路径配置到 configLocation 中
-  #  configuration:
-  #MyBatis Mapper 所对应的 XML 文件位置，如果在 Mapper 中有自定义的方法（XML 中有自定义的实现），需要进行该配置，指定 Mapper 所对应的 XML 文件位置
-  mapper-locations: [ "classpath*:/mapper/**/*.xml" ]
-  type-aliases-package: org.dows.**.entity.*
-  global-config:
-    print-banner: false
 
 
-# Rade相关配置
-rade:
-  # 缓存名称
-  cacheName: comm
-  plugin:
-    # 插件安装位置
-    path: assets/plugin
-  # token 相关配置
-  token:
-    # 过期时间 单位：秒 半小时
-    expire: 1800
-    # 刷新token过期时间 单位：秒 7天
-    refreshExpire: 604800
-  # 文件上传相关
-  file:
-    #上传模式
-    mode: local
-    # 本地上传配置
-    local:
-      # 文件访问地址
-      base-url: http://127.0.0.1:${server.port}/upload
-  # 系统日志请求参数超过1024字节 就不记录,避免日志过大
-  log:
-    # 请求参数最大字节,超过请求参数不记录
-    max-byte-length: 1024
-    # 核心线程数的倍数
-    core-pool-size-multiplier: 2
-    # 最大线程数的倍数
-    max-pool-size-multiplier: 3
-    # 队列容量的倍数
-    queue-capacity-multiplier: 3
-# AutoTable配置，根据实体类自动生成表
-auto-table:
-  show-banner: false
 
 # 分布式唯一ID组件
 leaf:

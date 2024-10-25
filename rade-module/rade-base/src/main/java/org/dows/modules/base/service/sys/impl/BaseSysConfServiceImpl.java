@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class BaseSysConfServiceImpl extends BaseServiceImpl<BaseSysConfMapper, BaseSysConfEntity>
-        implements BaseSysConfService {
+public class BaseSysConfServiceImpl extends BaseServiceImpl<BaseSysConfMapper, BaseSysConfEntity> implements BaseSysConfService {
 
     private final RadeCache radeCache;
 

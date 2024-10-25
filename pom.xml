@@ -289,22 +289,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <spring.active>dev</spring.active>
-            </properties>
-        </profile>
-        <profile>
-            <id>prd</id>
-            <properties>
-                <spring.active>prd</spring.active>
-            </properties>
-        </profile>
-    </profiles>
-
 </project>
