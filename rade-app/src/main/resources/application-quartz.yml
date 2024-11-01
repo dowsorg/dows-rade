@@ -1,3 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    autoStartup: true
+    #相关属性配置
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: RadeScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 5
+            threadPriority: 9
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
 ---
 #开发环境
 spring:

@@ -21,6 +21,6 @@ public class AidEvent {
     @EventListener
     public void onApplicationEvent(ApplicationReadyEvent event) {
         radeAid.init();
-        log.info("构建eps信息");
+        log.info("构建aid信息");
     }
 }

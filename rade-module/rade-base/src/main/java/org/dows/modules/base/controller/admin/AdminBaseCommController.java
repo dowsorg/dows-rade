@@ -39,8 +39,8 @@ public class AdminBaseCommController {
 
     @TokenIgnore
     @Operation(summary = "实体信息与路径", description = "系统所有的实体信息与路径，供前端自动生成代码与服务")
-    @GetMapping("/eps")
-    public Response eps() {
+    @GetMapping("/aid")
+    public Response aid() {
         return Response.ok(radeAid.getAdmin());
     }
 

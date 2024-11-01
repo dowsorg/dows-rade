@@ -59,7 +59,7 @@ public class RadeAid {
         Runnable task = () -> {
             entity();
             urls();
-            log.info("初始化eps完成，服务启动成功，端口：{}", serverPort);
+            log.info("初始化aid完成，服务启动成功，端口：{}", serverPort);
         };
         // ThreadUtil.safeSleep(3000);
         ThreadUtil.execute(task);

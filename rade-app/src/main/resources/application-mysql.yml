@@ -6,9 +6,9 @@ spring:
       on-profile: dev
 
   datasource:
-    url: jdbc:mysql://localhost:13306/rade?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2b8
-    username: root
-    password: 123456
+    url: jdbc:mysql://192.168.111.103:3306/rade?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2b8
+    username: shdy
+    password: shdy123!
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 ---

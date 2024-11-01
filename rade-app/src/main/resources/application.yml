@@ -62,7 +62,7 @@ ignored:
   # 忽略记录请求日志url
   logUrls:
     - /
-    - /**/eps
+    - /**/aid
     - /app/**
     - /css/*
     - /js/*

@@ -49,8 +49,3 @@ auto-table:
   superInsertPosition: before
   # 模型包路径
   model-package: org.dows.**.entity.*
-
-# Rade相关配置
-rade:
-  # 初始化数据
-  initData: false
