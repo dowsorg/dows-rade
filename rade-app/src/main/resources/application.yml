@@ -20,7 +20,7 @@ spring:
     active: @spring.active@
   thymeleaf:
     cache: false
-    prefix: classpath:/templates/
+    prefix: classpath*:/templates/
     suffix: .html
     mode: HTML
   #返回时间格式化
@@ -37,7 +37,7 @@ spring:
   web:
     resources:
       add-mappings: true
-      static-locations: classpath:/static/,file:./assets/public/
+      static-locations: classpath*:/static/,file:./assets/public/
 
 
 

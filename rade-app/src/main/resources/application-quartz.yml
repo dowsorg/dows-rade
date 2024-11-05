@@ -18,6 +18,7 @@ spring:
             class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
             driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
             tablePrefix: QRTZ_
+
             isClustered: true
             clusterCheckinInterval: 10000
             useProperties: false

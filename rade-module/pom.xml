@@ -15,6 +15,8 @@
         <module>rade-base</module>
         <module>rade-rbac</module>
         <module>rade-uat</module>
+        <module>rade-quartz</module>
+        <module>rade-log</module>
     </modules>
 
 

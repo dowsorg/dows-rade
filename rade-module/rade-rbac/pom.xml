@@ -9,6 +9,10 @@
     <artifactId>rade-rbac</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>rade-core</artifactId>
+        </dependency>
 
     </dependencies>
 </project>
