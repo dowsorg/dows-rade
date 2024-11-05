@@ -1,4 +1,4 @@
-package org.dows.modules.aac.security;
+package org.dows.core.security;
 
 /**
  * @description: </br>

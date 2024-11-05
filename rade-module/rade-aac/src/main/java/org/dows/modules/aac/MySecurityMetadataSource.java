@@ -1,10 +1,11 @@
-package org.dows.modules.aac.security;
+package org.dows.modules.aac;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.core.enums.UserTypeEnum;
-import org.dows.modules.base.service.sys.BaseSysPermsService;
+import org.dows.modules.rbac.service.BaseSysPermsService;
+import org.dows.security.RadeSecurityUtil;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;

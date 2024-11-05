@@ -14,7 +14,7 @@ import org.dows.core.cache.RadeCache;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
 import org.dows.core.exception.RadePreconditions;
-import org.dows.core.security.RadeSecurityUtil;
+//import org.dows.core.security.RadeSecurityUtil;
 import org.dows.core.util.DatabaseDialectUtils;
 import org.dows.modules.uat.user.entity.BaseSysDepartmentEntity;
 import org.dows.modules.uat.user.entity.BaseSysUserEntity;
@@ -24,10 +24,10 @@ import org.dows.modules.uat.user.service.BaseSysUserService;
 import org.springframework.stereotype.Service;
 
 import static com.mybatisflex.core.query.QueryMethods.groupConcat;
-import static org.dows.modules.base.entity.sys.table.BaseSysDepartmentEntityTableDef.BASE_SYS_DEPARTMENT_ENTITY;
-import static org.dows.modules.base.entity.sys.table.BaseSysRoleEntityTableDef.BASE_SYS_ROLE_ENTITY;
-import static org.dows.modules.base.entity.sys.table.BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY;
-import static org.dows.modules.base.entity.sys.table.BaseSysUserRoleEntityTableDef.BASE_SYS_USER_ROLE_ENTITY;
+//import static org.dows.modules.base.entity.sys.table.BaseSysDepartmentEntityTableDef.BASE_SYS_DEPARTMENT_ENTITY;
+//import static org.dows.modules.base.entity.sys.table.BaseSysRoleEntityTableDef.BASE_SYS_ROLE_ENTITY;
+//import static org.dows.modules.base.entity.sys.table.BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY;
+//import static org.dows.modules.base.entity.sys.table.BaseSysUserRoleEntityTableDef.BASE_SYS_USER_ROLE_ENTITY;
 
 /**
  * 系统用户
@@ -39,13 +39,13 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
 
     final private RadeCache radeCache;
 
-    final private BaseSysPermsService baseSysPermsService;
+    //final private BaseSysPermsService baseSysPermsService;
 
     final private BaseSysDepartmentMapper baseSysDepartmentMapper;
 
     @Override
     public Object page(JSONObject requestParams, Page<BaseSysUserEntity> page, QueryWrapper qw) {
-        String keyWord = requestParams.getStr("keyWord");
+        /*String keyWord = requestParams.getStr("keyWord");
         Integer status = requestParams.getInt("status");
         Long[] departmentIds = requestParams.get("departmentIds", Long[].class);
         JSONObject tokenInfo = RadeSecurityUtil.getAdminUserInfo(requestParams);
@@ -102,7 +102,7 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
                     "base_sys_department.name");
         } else {
             qw.groupBy(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.ID);
-        }
+        }*/
         return mapper.paginate(page, qw);
     }
 
@@ -154,7 +154,7 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
         }
         // 被禁用
         if (entity.getStatus() == 0) {
-            RadeSecurityUtil.adminLogout(entity);
+           // RadeSecurityUtil.adminLogout(entity);
         }
         return super.update(requestParams, entity);
     }
@@ -164,19 +164,20 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
                             ModifyEnum type) {
         if (type != ModifyEnum.DELETE && requestParams.get("roleIdList", Long[].class) != null) {
             // 刷新权限
-            baseSysPermsService.updateUserRole(baseSysUserEntity.getId(),
-                    requestParams.get("roleIdList", Long[].class));
+            /*baseSysPermsService.updateUserRole(baseSysUserEntity.getId(),
+                    requestParams.get("roleIdList", Long[].class));*/
         }
     }
 
     @Override
     public Object info(Long id) {
-        BaseSysUserEntity userEntity = getById(id);
+        /*BaseSysUserEntity userEntity = getById(id);
         Long[] roleIdList = baseSysPermsService.getRoles(id);
         BaseSysDepartmentEntity departmentEntity = baseSysDepartmentMapper.selectOneById(
                 userEntity.getDepartmentId());
         userEntity.setPassword(null);
         return Dict.parse(userEntity).set("roleIdList", roleIdList).set("departmentName",
-                departmentEntity != null ? departmentEntity.getName() : null);
+                departmentEntity != null ? departmentEntity.getName() : null);*/
+        return null;
     }
 }

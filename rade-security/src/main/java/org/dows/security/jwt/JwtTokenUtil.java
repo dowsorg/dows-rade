@@ -1,4 +1,4 @@
-package org.dows.modules.aac.security.jwt;
+package org.dows.security.jwt;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;

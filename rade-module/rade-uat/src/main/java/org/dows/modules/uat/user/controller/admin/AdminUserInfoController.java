@@ -8,7 +8,6 @@ import org.dows.core.crud.BaseController;
 import org.dows.modules.uat.user.entity.UserInfoEntity;
 import org.dows.modules.uat.user.service.UserInfoService;
 
-import static org.dows.modules.user.entity.table.UserInfoEntityTableDef.USER_INFO_ENTITY;
 
 @Tag(name = "用户信息", description = "用户信息")
 @RadeController(api = {"add", "delete", "update", "page", "list", "info"})

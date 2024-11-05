@@ -21,6 +21,7 @@
         <module>rade-app</module>
         <module>rade-biz</module>
         <module>rade-handler</module>
+        <module>rade-security</module>
     </modules>
 
 
@@ -81,6 +82,26 @@
                 <artifactId>rade-rbac</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rade-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rade-log</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rade-quartz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
 
             <dependency>
                 <groupId>org.dows.cloud</groupId>

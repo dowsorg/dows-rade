@@ -1,4 +1,4 @@
-package org.dows.modules.aac.security;
+package org.dows.security;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.dows.core.cache.RadeCache;
 import org.dows.core.enums.UserTypeEnum;
-import org.dows.modules.aac.security.jwt.JwtTokenUtil;
-import org.dows.modules.aac.security.jwt.JwtUser;
+import org.dows.security.jwt.JwtTokenUtil;
+import org.dows.security.jwt.JwtUser;
 import org.dows.core.util.PathUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

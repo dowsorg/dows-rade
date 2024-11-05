@@ -1,13 +1,13 @@
-package org.dows.modules.aac.security;
+package org.dows.modules.aac;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.dows.core.cache.RadeCache;
-import org.dows.modules.aac.security.jwt.JwtUser;
-import org.dows.modules.base.entity.sys.BaseSysUserEntity;
-import org.dows.modules.base.service.sys.BaseSysPermsService;
-import org.dows.modules.base.service.sys.BaseSysUserService;
+import org.dows.modules.rbac.service.BaseSysPermsService;
+import org.dows.modules.uat.user.entity.BaseSysUserEntity;
+import org.dows.modules.uat.user.service.BaseSysUserService;
+import org.dows.security.jwt.JwtUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

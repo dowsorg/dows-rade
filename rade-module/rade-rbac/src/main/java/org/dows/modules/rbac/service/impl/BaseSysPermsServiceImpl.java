@@ -10,7 +10,6 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.row.Row;
 import lombok.RequiredArgsConstructor;
 import org.dows.core.cache.RadeCache;
-import org.dows.core.security.RadeSecurityUtil;
 import org.dows.core.util.SpringContextUtils;
 import org.dows.modules.rbac.entity.BaseSysMenuEntity;
 import org.dows.modules.rbac.entity.BaseSysRoleDepartmentEntity;
@@ -19,6 +18,12 @@ import org.dows.modules.rbac.mapper.BaseSysMenuMapper;
 import org.dows.modules.rbac.mapper.BaseSysRoleDepartmentMapper;
 import org.dows.modules.rbac.mapper.BaseSysRoleMenuMapper;
 import org.dows.modules.rbac.service.BaseSysPermsService;
+import org.dows.modules.uat.user.entity.BaseSysUserEntity;
+import org.dows.modules.uat.user.entity.BaseSysUserRoleEntity;
+import org.dows.modules.uat.user.mapper.BaseSysDepartmentMapper;
+import org.dows.modules.uat.user.mapper.BaseSysUserMapper;
+import org.dows.modules.uat.user.mapper.BaseSysUserRoleMapper;
+import org.dows.security.RadeSecurityUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -26,9 +31,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 
-import static org.dows.modules.base.entity.sys.table.BaseSysMenuEntityTableDef.BASE_SYS_MENU_ENTITY;
-import static org.dows.modules.base.entity.sys.table.BaseSysRoleMenuEntityTableDef.BASE_SYS_ROLE_MENU_ENTITY;
-import static org.dows.modules.base.entity.sys.table.BaseSysUserRoleEntityTableDef.BASE_SYS_USER_ROLE_ENTITY;
 
 @Service
 @RequiredArgsConstructor

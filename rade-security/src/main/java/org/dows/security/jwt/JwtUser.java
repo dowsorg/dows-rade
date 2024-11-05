@@ -1,4 +1,4 @@
-package org.dows.modules.aac.security.jwt;
+package org.dows.security.jwt;
 
 import lombok.Data;
 import org.dows.core.enums.UserTypeEnum;

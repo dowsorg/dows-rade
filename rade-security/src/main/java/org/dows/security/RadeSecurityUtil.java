@@ -1,11 +1,12 @@
-package org.dows.modules.aac.security;
+package org.dows.security;
 
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import org.dows.core.cache.RadeCache;
 import org.dows.core.enums.UserTypeEnum;
 import org.dows.core.exception.RadePreconditions;
-import org.dows.modules.aac.security.jwt.JwtUser;
+import org.dows.core.security.SecurityDetail;
+import org.dows.security.jwt.JwtUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

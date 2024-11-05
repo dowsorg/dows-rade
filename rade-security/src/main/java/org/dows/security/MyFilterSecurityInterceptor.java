@@ -1,4 +1,4 @@
-package org.dows.modules.aac.security;
+package org.dows.security;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.*;

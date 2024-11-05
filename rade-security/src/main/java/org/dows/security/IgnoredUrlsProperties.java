@@ -1,4 +1,4 @@
-package org.dows.modules.aac.security;
+package org.dows.security;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

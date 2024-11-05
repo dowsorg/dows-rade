@@ -12,13 +12,12 @@
 
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>rade-core</artifactId>
+            <artifactId>rade-security</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>rade-rbac</artifactId>
         </dependency>
-
     </dependencies>
 </project>
