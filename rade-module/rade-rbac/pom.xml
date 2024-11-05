@@ -16,12 +16,12 @@
 
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>rade-security</artifactId>
+            <artifactId>rade-uat</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.dows.cloud</groupId>
-            <artifactId>rade-uat</artifactId>
+            <artifactId>rade-security</artifactId>
         </dependency>
 
     </dependencies>

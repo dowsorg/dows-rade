@@ -1,4 +1,4 @@
-package org.dows.modules.base.service.sys.impl;
+package org.dows.modules.log.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
@@ -14,13 +14,10 @@ import org.dows.core.security.IgnoredUrlsProperties;
 import org.dows.core.security.RadeSecurityUtil;
 import org.dows.core.util.IPUtils;
 import org.dows.core.util.PathUtils;
-import org.dows.modules.base.entity.sys.BaseSysLogEntity;
-import org.dows.modules.base.entity.sys.BaseSysUserEntity;
-import org.dows.modules.base.entity.sys.table.BaseSysLogEntityTableDef;
-import org.dows.modules.base.entity.sys.table.BaseSysUserEntityTableDef;
-import org.dows.modules.base.mapper.sys.BaseSysLogMapper;
 import org.dows.modules.base.service.sys.BaseSysConfService;
-import org.dows.modules.base.service.sys.BaseSysLogService;
+import org.dows.modules.log.entity.BaseSysLogEntity;
+import org.dows.modules.log.mapper.BaseSysLogMapper;
+import org.dows.modules.log.service.BaseSysLogService;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

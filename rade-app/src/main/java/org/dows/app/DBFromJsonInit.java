@@ -1,4 +1,4 @@
-package org.dows.modules.base;
+package org.dows.app;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.IoUtil;
@@ -14,9 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dows.core.crud.EntityUtils;
 import org.dows.core.crud.service.MapperProviderService;
 import org.dows.modules.base.entity.sys.BaseSysConfEntity;
-import org.dows.modules.base.entity.sys.BaseSysMenuEntity;
 import org.dows.modules.base.service.sys.BaseSysConfService;
-import org.dows.modules.base.service.sys.BaseSysMenuService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

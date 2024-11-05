@@ -1,4 +1,4 @@
-package org.dows.modules.base;
+package org.dows.app;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.dows.core.annotation.NoRepeatSubmit;
 import org.dows.core.exception.RadePreconditions;
 import org.dows.core.lock.RadeLock;
-import org.dows.core.security.RadeSecurityUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

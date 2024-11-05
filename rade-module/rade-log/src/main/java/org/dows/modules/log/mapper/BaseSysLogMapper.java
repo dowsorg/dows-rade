@@ -1,7 +1,7 @@
-package org.dows.modules.base.mapper.sys;
+package org.dows.modules.log.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import org.dows.modules.base.entity.sys.BaseSysLogEntity;
+import org.dows.modules.log.entity.BaseSysLogEntity;
 
 /**
  * 系统日志

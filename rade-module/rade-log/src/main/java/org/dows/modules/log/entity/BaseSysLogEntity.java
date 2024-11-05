@@ -1,4 +1,4 @@
-package org.dows.modules.base.entity.sys;
+package org.dows.modules.log.entity;
 
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Table;

@@ -1,9 +1,9 @@
-package org.dows.modules.base.service.sys;
+package org.dows.modules.log.service;
 
 import cn.hutool.json.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.dows.core.crud.BaseService;
-import org.dows.modules.base.entity.sys.BaseSysLogEntity;
+import org.dows.modules.log.entity.BaseSysLogEntity;
 
 /**
  * 系统日志
