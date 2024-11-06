@@ -9,11 +9,18 @@ package org.dows.rbac;
  * 修改人姓名      修改时间        版本号       描述
  */
 public interface RbacApi {
-
-
-    Long[] loginDepartmentIds();
-
+    /**
+     * 获取用户角色ID
+     *
+     * @param userId
+     * @return
+     */
     Long[] getRoles(Long userId);
 
+    /**
+     * 更新用户角色
+     * @param userId
+     * @param roleIds
+     */
     void updateUserRole(Long userId, Long[] roleIds);
 }

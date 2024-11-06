@@ -42,9 +42,23 @@ public interface UserApi {
      */
     List<Long> selectUserIdByKeywordWithLike(String keyword);
 
+    /**
+     *
+     * @return
+     */
     Long[] loginDepartmentIds();
 
+    /**
+     *
+     * @param username
+     * @return
+     */
     UserInfo getUserInfoByUsername(String username);
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     UserInfo getUserInfoById(Long userId);
 }

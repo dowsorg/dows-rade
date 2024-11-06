@@ -15,10 +15,8 @@ public interface AacApi {
 
     JSONObject getAdminUserInfo(JSONObject requestParams);
 
-    Long getCurrentUserId();
-
-
     void adminLogout(Long id, String userName);
 
+    Long getCurrentUserId();
 
 }
