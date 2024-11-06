@@ -3,7 +3,6 @@ package org.dows.modules.aac.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.dows.aac.AacApi;
 import org.dows.core.annotation.RadeController;
 import org.dows.core.annotation.TokenIgnore;
 import org.dows.core.enums.UserTypeEnum;
@@ -128,8 +127,7 @@ public class AppUserLoginController {
     @TokenIgnore
     @Operation(summary = "图片验证码")
     @GetMapping("/captcha")
-    public Response captcha(
-            @ModelAttribute CaptchaParam param) {
+    public Response captcha(@ModelAttribute CaptchaParam param) {
         String type = param.getType();
         Integer width = param.getWidth();
         Integer height = param.getHeight();

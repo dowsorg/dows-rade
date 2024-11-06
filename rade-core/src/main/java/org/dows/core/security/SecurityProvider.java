@@ -1,6 +1,7 @@
-package org.dows.aac;
+package org.dows.core.security;
 
 import cn.hutool.json.JSONObject;
+import org.dows.core.enums.UserTypeEnum;
 
 /**
  * @description: </br>
@@ -10,7 +11,7 @@ import cn.hutool.json.JSONObject;
  * <author>      <time>      <version>    <desc>
  * 修改人姓名      修改时间        版本号       描述
  */
-public interface AacApi {
+public interface SecurityProvider {
     String getAdminUsername();
 
     JSONObject getAdminUserInfo(JSONObject requestParams);
@@ -18,5 +19,7 @@ public interface AacApi {
     void adminLogout(Long id, String userName);
 
     Long getCurrentUserId();
+
+    UserTypeEnum getCurrentUserType();
 
 }

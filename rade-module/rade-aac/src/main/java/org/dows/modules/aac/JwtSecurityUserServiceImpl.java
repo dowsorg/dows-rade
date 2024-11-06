@@ -1,15 +1,16 @@
 package org.dows.modules.aac;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.system.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.dows.core.cache.RadeCache;
-import org.dows.core.security.UserDetailsRefresh;
+import org.dows.core.security.SecurityUser;
+import org.dows.core.security.SecurityUserRefresh;
 import org.dows.modules.rbac.service.BaseSysPermsService;
 //import org.dows.modules.uat.user.entity.BaseSysUserEntity;
 //import org.dows.modules.uat.user.service.BaseSysUserService;
 import org.dows.security.jwt.JwtUser;
-import org.dows.uat.UserApi;
-import org.dows.uat.UserInfo;
+import org.dows.core.uat.UserProvider;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,20 +26,20 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
-public class JwtUserDetailsServiceImpl implements UserDetailsService, UserDetailsRefresh {
+public class JwtSecurityUserServiceImpl implements UserDetailsService, SecurityUserRefresh {
 
 //    final private BaseSysUserService baseSysUserService;
     final private BaseSysPermsService baseSysPermsService;
     final private RadeCache radeCache;
 
-    final private UserApi userApi;
+    final private UserProvider userProvider;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         /*BaseSysUserEntity sysUserEntity = baseSysUserService.getMapper().selectOneByQuery(
                 QueryWrapper.create().eq(BaseSysUserEntity::getUsername, username)
                         .eq(BaseSysUserEntity::getStatus, 1));*/
-        UserInfo sysUserEntity = userApi.getUserInfoByUsername(username);
+        SecurityUser sysUserEntity = userProvider.getUserInfoByUsername(username);
 
         if (ObjectUtil.isEmpty(sysUserEntity)) {
             throw new UsernameNotFoundException("用户名不存在");

@@ -4,8 +4,11 @@ import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.core.enums.UserTypeEnum;
+import org.dows.core.security.SecurityProvider;
 import org.dows.modules.rbac.service.BaseSysPermsService;
-import org.dows.security.RadeSecurityUtil;
+//import org.dows.security.DefaultSecurityProvider;
+//import org.springframework.beans.factory.annotation.Qualifier;
+//import org.springframework.context.annotation.Conditional;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -25,7 +28,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MySecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
+
     final private BaseSysPermsService baseSysPermsService;
+
+    final private SecurityProvider securityProvider;
 
     private Map<String, Collection<ConfigAttribute>> map = null;
 
@@ -57,7 +63,9 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
      */
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
-        UserTypeEnum userTypeEnum = RadeSecurityUtil.getCurrentUserType();
+
+        UserTypeEnum userTypeEnum = securityProvider.getCurrentUserType();
+//        UserTypeEnum userTypeEnum = DefaultSecurityProvider.getCurrentUserType();
         if (ObjectUtil.equal(userTypeEnum, UserTypeEnum.APP)) {
             // app用户不需要权限拦截
             return null;

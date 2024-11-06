@@ -3,12 +3,12 @@ package org.dows.modules.uat.user.service;
 import cn.hutool.core.lang.Dict;
 import org.dows.core.crud.BaseService;
 import org.dows.modules.uat.user.entity.BaseSysUserEntity;
-import org.dows.uat.UserApi;
+import org.dows.core.uat.UserProvider;
 
 /**
  * 系统用户
  */
-public interface BaseSysUserService extends BaseService<BaseSysUserEntity>, UserApi {
+public interface BaseSysUserService extends BaseService<BaseSysUserEntity>, UserProvider {
     /**
      * 修改用户信息
      *

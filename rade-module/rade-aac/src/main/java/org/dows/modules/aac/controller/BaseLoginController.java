@@ -1,15 +1,16 @@
 package org.dows.modules.aac.controller;
 
 import cn.hutool.core.lang.Dict;
+import cn.hutool.system.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.dows.core.annotation.RadeController;
+import org.dows.core.security.SecurityUser;
 import org.dows.core.web.Response;
 import org.dows.modules.aac.service.BaseSysLoginService;
 import org.dows.modules.rbac.service.BaseSysPermsService;
-import org.dows.uat.UserApi;
-import org.dows.uat.UserInfo;
+import org.dows.core.uat.UserProvider;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -33,14 +34,14 @@ public class BaseLoginController {
     final private BaseSysLoginService baseSysLoginService;
 
 
-    final private UserApi userApi;
+    final private UserProvider userProvider;
 
 
     @Operation(summary = "个人信息")
     @GetMapping("/person")
     public Response person(@RequestAttribute() Long adminUserId) {
 
-        UserInfo userInfo = userApi.getUserInfoById(adminUserId);
+        SecurityUser userInfo = userProvider.getUserInfoById(adminUserId);
         userInfo.setPassword(null);
         userInfo.setPasswordV(null);
         return Response.ok(userInfo);
@@ -49,7 +50,7 @@ public class BaseLoginController {
     @Operation(summary = "修改个人信息")
     @PostMapping("/personUpdate")
     public Response personUpdate(@RequestAttribute Long adminUserId, @RequestBody Dict body) {
-        userApi.personUpdate(adminUserId, body);
+        userProvider.personUpdate(adminUserId, body);
         return Response.ok();
     }
 

@@ -1,14 +1,15 @@
 package org.dows.modules.rbac.service;
 
+import org.dows.core.rbac.RbacProvider;
+import org.dows.core.security.SecurityUser;
 import org.dows.modules.rbac.entity.BaseSysMenuEntity;
-import org.dows.uat.UserInfo;
 
 import java.util.List;
 
 /**
  * 权限菜单
  */
-public interface BaseSysPermsService {
+public interface BaseSysPermsService extends RbacProvider {
     /**
      * 获得权限缓存
      *
@@ -79,7 +80,7 @@ public interface BaseSysPermsService {
      * @param userInfo 用户
      * @return 返回角色数组
      */
-    Long[] getRoles(UserInfo userInfo);
+    Long[] getRoles(SecurityUser userInfo);
 
     /**
      * 获得登录用户的部门权限

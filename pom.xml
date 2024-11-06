@@ -23,6 +23,7 @@
         <module>rade-handler</module>
         <module>rade-security</module>
         <module>rade-api</module>
+        <module>rade-oauth</module>
     </modules>
 
 

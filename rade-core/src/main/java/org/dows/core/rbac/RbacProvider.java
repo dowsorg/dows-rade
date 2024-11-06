@@ -1,4 +1,4 @@
-package org.dows.rbac;
+package org.dows.core.rbac;
 
 /**
  * @description: </br>
@@ -8,7 +8,7 @@ package org.dows.rbac;
  * <author>      <time>      <version>    <desc>
  * 修改人姓名      修改时间        版本号       描述
  */
-public interface RbacApi {
+public interface RbacProvider {
     /**
      * 获取用户角色ID
      *

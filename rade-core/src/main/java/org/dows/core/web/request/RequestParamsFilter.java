@@ -7,8 +7,9 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWT;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.dows.core.enums.UserTypeEnum;
-//import org.dows.core.security.RadeSecurityUtil;
+import org.dows.core.security.SecurityProvider;
 import org.dows.core.util.BodyReaderHttpServletRequestWrapper;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,12 @@ import java.util.Map;
 /**
  * 封装请求参数 URL参数 和 body JSON 到同一个 JSONObject 方便读取
  */
+@RequiredArgsConstructor
 @Component
 @Order(2)
 public class RequestParamsFilter implements Filter {
+
+    final private SecurityProvider securityProvider;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -64,7 +68,7 @@ public class RequestParamsFilter implements Filter {
     }
 
     private void setUserId(JSONObject requestParams) {
-        /*UserTypeEnum userTypeEnum = RadeSecurityUtil.getCurrentUserType();
+        UserTypeEnum userTypeEnum = securityProvider.getCurrentUserType();
         switch (userTypeEnum) {
             // 只有登录了，才有用户类型， 不然为 UNKNOWN 状态
             case ADMIN -> {
@@ -73,11 +77,11 @@ public class RequestParamsFilter implements Filter {
                 if (ObjUtil.isNotEmpty(o)) {
                     return;
                 }
-                requestParams.set("userId", RadeSecurityUtil.getCurrentUserId());
+                requestParams.set("userId", securityProvider.getCurrentUserId());
             }
             // app端，userId 为当前登录的用户id
-            case APP -> requestParams.set("userId", RadeSecurityUtil.getCurrentUserId());
-        }*/
+            case APP -> requestParams.set("userId", securityProvider.getCurrentUserId());
+        }
     }
 
     /**

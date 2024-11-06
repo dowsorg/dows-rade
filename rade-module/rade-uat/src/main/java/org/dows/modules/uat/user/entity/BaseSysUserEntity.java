@@ -8,12 +8,12 @@ import com.tangzc.mybatisflex.autotable.annotation.ColumnDefine;
 import lombok.Getter;
 import lombok.Setter;
 import org.dows.core.crud.BaseEntity;
-import org.dows.core.security.SecurityDetail;
+import org.dows.core.security.SecurityUser;
 
 @Getter
 @Setter
 @Table(value = "base_sys_user", comment = "系统用户表")
-public class BaseSysUserEntity extends BaseEntity<BaseSysUserEntity> implements SecurityDetail {
+public class BaseSysUserEntity extends BaseEntity<BaseSysUserEntity> implements SecurityUser {
     @Index
     @ColumnDefine(comment = "部门ID", type = "bigint")
     private Long departmentId;

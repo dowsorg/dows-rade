@@ -1,4 +1,4 @@
-package org.dows.security;
+package org.dows.core.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

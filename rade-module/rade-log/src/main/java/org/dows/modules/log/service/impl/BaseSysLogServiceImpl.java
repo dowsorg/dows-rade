@@ -8,17 +8,16 @@ import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.dows.core.config.IgnoredUrlsProperties;
 import org.dows.core.config.LogProperties;
 import org.dows.core.crud.BaseServiceImpl;
+import org.dows.core.security.SecurityProvider;
 import org.dows.core.util.IPUtils;
 import org.dows.core.util.PathUtils;
 import org.dows.modules.log.entity.BaseSysLogEntity;
-import org.dows.modules.log.entity.table.BaseSysLogEntityTableDef;
 import org.dows.modules.log.mapper.BaseSysLogMapper;
 import org.dows.modules.log.service.BaseSysLogService;
 import org.dows.modules.sys.service.BaseSysConfService;
-import org.dows.security.IgnoredUrlsProperties;
-import org.dows.security.RadeSecurityUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -41,6 +40,9 @@ public class BaseSysLogServiceImpl extends BaseServiceImpl<BaseSysLogMapper, Bas
     private final LogProperties logProperties;
 
     private final Executor logTaskExecutor;
+
+
+    private final SecurityProvider securityProvider;
 
     @Override
     public Object page(JSONObject requestParams, Page<BaseSysLogEntity> page, QueryWrapper queryWrapper) {
@@ -78,11 +80,12 @@ public class BaseSysLogServiceImpl extends BaseServiceImpl<BaseSysLogMapper, Bas
 
     private boolean isIgnoreUrl(String requestURI) {
         return PathUtils.isMatch(ignoredUrlsProperties.getLogUrls(), requestURI);
+//        return PathUtils.isMatch(securityProvider.getLogUrls(), requestURI);
     }
 
     public void recordAsync(String ipAddr, String requestURI, JSONObject requestParams) {
         logTaskExecutor.execute(() -> {
-            JSONObject userInfo = RadeSecurityUtil.getAdminUserInfo(requestParams);
+            JSONObject userInfo = securityProvider.getAdminUserInfo(requestParams);
 
             Long userId = null;
             if (userInfo != null) {

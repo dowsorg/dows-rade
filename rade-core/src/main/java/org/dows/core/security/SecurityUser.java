@@ -8,7 +8,7 @@ package org.dows.core.security;
  * <author>      <time>      <version>    <desc>
  * 修改人姓名      修改时间        版本号       描述
  */
-public interface SecurityDetail {
+public interface SecurityUser {
 
     Long getId();
     void setId(Long id);

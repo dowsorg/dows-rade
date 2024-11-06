@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.dows.aac.AacApi;
+import org.dows.core.security.SecurityProvider;
 import org.dows.core.annotation.RadeController;
 import org.dows.core.crud.BaseController;
 import org.dows.core.web.Response;
@@ -26,18 +26,18 @@ import static org.dows.modules.uat.user.entity.table.UserAddressEntityTableDef.U
 @RadeController(api = {"add", "delete", "update", "page", "list", "info"})
 public class AppUserAddressController extends BaseController<UserAddressService, UserAddressEntity> {
 
-    final private AacApi aacApi;
+    final private SecurityProvider securityProvider;
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
         QueryWrapper queryWrapper = QueryWrapper.create()
-                .and(USER_ADDRESS_ENTITY.USER_ID.eq(aacApi.getCurrentUserId()))
+                .and(USER_ADDRESS_ENTITY.USER_ID.eq(securityProvider.getCurrentUserId()))
                 .orderBy(USER_ADDRESS_ENTITY.IS_DEFAULT.getName(), false);
 
         setPageOption(createOp().queryWrapper(queryWrapper));
 
         QueryWrapper queryWrapper1 = QueryWrapper.create()
-                .and(USER_ADDRESS_ENTITY.USER_ID.eq(aacApi.getCurrentUserId()))
+                .and(USER_ADDRESS_ENTITY.USER_ID.eq(securityProvider.getCurrentUserId()))
                 .orderBy(USER_ADDRESS_ENTITY.IS_DEFAULT.getName(), false);
         setListOption(createOp().queryWrapper(queryWrapper1));
     }
@@ -45,7 +45,7 @@ public class AppUserAddressController extends BaseController<UserAddressService,
     @Operation(summary = "默认地址", description = "默认地址")
     @GetMapping("/default")
     public Response getDefault() {
-        Long userId = aacApi.getCurrentUserId();
+        Long userId = securityProvider.getCurrentUserId();
         return Response.ok(this.service.getDefault(userId));
     }
 }

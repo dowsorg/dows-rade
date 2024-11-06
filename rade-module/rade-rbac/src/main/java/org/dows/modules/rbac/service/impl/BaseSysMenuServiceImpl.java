@@ -6,7 +6,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONObject;
 import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
-import org.dows.aac.AacApi;
+import org.dows.core.security.SecurityProvider;
 import org.dows.core.aid.RadeAid;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
@@ -39,11 +39,11 @@ public class BaseSysMenuServiceImpl
 
     final private RadeAid radeAid;
 
-    final private AacApi aacApi;
+    final private SecurityProvider securityProvider;
 
     @Override
     public Object list(JSONObject requestParams, QueryWrapper queryWrapper) {
-        List<BaseSysMenuEntity> list = baseSysPermsService.getMenus(aacApi.getAdminUsername());
+        List<BaseSysMenuEntity> list = baseSysPermsService.getMenus(securityProvider.getAdminUsername());
         list.forEach(e -> {
             List<BaseSysMenuEntity> parent = list.stream()
                     .filter(sysMenuEntity -> e.getParentId() != null && e.getParentId()

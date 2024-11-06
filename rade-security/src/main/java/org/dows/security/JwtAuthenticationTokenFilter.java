@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.dows.core.cache.RadeCache;
+import org.dows.core.config.IgnoredUrlsProperties;
 import org.dows.core.enums.UserTypeEnum;
 import org.dows.security.jwt.JwtTokenUtil;
 import org.dows.security.jwt.JwtUser;

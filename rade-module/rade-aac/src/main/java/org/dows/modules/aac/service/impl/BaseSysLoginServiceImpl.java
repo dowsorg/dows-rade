@@ -9,17 +9,19 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWT;
+import cn.hutool.system.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.dows.core.cache.RadeCache;
 import org.dows.core.enums.UserTypeEnum;
 import org.dows.core.exception.RadePreconditions;
+import org.dows.core.security.SecurityProvider;
+import org.dows.core.security.SecurityUser;
 import org.dows.modules.aac.BaseSysLoginDto;
 import org.dows.modules.aac.service.BaseSysLoginService;
 import org.dows.modules.rbac.service.BaseSysPermsService;
-import org.dows.security.RadeSecurityUtil;
+//import org.dows.security.DefaultSecurityProvider;
 import org.dows.security.jwt.JwtTokenUtil;
-import org.dows.uat.UserApi;
-import org.dows.uat.UserInfo;
+import org.dows.core.uat.UserProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,7 +45,9 @@ public class BaseSysLoginServiceImpl implements BaseSysLoginService {
     private final BaseSysPermsService baseSysPermsService;
 
 
-    private final UserApi userApi;
+    private final UserProvider userProvider;
+
+    private final SecurityProvider securityProvider;
 
     @Override
     public Object captcha(UserTypeEnum userTypeEnum, String type, Integer width, Integer height) {
@@ -88,7 +92,7 @@ public class BaseSysLoginServiceImpl implements BaseSysLoginService {
         Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 查询用户信息并生成token
-        UserInfo userInfo = userApi.getUserInfoByUsername(baseSysLoginDto.getUsername());
+        SecurityUser userInfo = userProvider.getUserInfoByUsername(baseSysLoginDto.getUsername());
         /*BaseSysUserEntity baseSysUserEntity =
                 baseSysUserMapper.selectOneByQuery(
                         QueryWrapper.create()
@@ -101,7 +105,7 @@ public class BaseSysLoginServiceImpl implements BaseSysLoginService {
 
     @Override
     public void logout(Long adminUserId, String username) {
-        RadeSecurityUtil.adminLogout(adminUserId, username);
+        securityProvider.adminLogout(adminUserId, username);
     }
 
     @Override
@@ -109,14 +113,14 @@ public class BaseSysLoginServiceImpl implements BaseSysLoginService {
         RadePreconditions.check(!jwtTokenUtil.validateRefreshToken(refreshToken), "错误的refreshToken");
         JWT jwt = jwtTokenUtil.getTokenInfo(refreshToken);
         RadePreconditions.check(jwt == null || !(Boolean) jwt.getPayload("isRefresh"), "错误的refreshToken");
-        UserInfo userInfo = userApi.getUserInfoById(Convert.toLong(jwt.getPayload("userId")));
+        SecurityUser userInfo = userProvider.getUserInfoById(Convert.toLong(jwt.getPayload("userId")));
         /*BaseSysUserEntity baseSysUserEntity =
                 baseSysUserMapper.selectOneById(Convert.toLong(jwt.getPayload("userId")));*/
         Long[] roleIds = baseSysPermsService.getRoles(userInfo);
         return generateToken(roleIds, userInfo, refreshToken);
     }
 
-    private Dict generateToken(Long[] roleIds, UserInfo userInfo, String refreshToken) {
+    private Dict generateToken(Long[] roleIds, SecurityUser userInfo, String refreshToken) {
         Dict tokenInfo =
                 Dict.create()
                         .set("userType", UserTypeEnum.ADMIN.name())

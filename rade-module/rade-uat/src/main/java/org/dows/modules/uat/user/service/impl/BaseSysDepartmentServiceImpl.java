@@ -4,7 +4,8 @@ import cn.hutool.json.JSONObject;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import lombok.RequiredArgsConstructor;
-import org.dows.aac.AacApi;
+import org.dows.core.rbac.RbacProvider;
+import org.dows.core.security.SecurityProvider;
 import org.dows.core.crud.BaseServiceImpl;
 //import org.dows.core.security.RadeSecurityUtil;
 import org.dows.modules.uat.user.entity.BaseSysDepartmentEntity;
@@ -12,8 +13,7 @@ import org.dows.modules.uat.user.entity.BaseSysUserEntity;
 import org.dows.modules.uat.user.mapper.BaseSysDepartmentMapper;
 import org.dows.modules.uat.user.mapper.BaseSysUserMapper;
 import org.dows.modules.uat.user.service.BaseSysDepartmentService;
-import org.dows.rbac.RbacApi;
-import org.dows.uat.UserApi;
+import org.dows.core.uat.UserProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,10 +29,9 @@ public class BaseSysDepartmentServiceImpl extends
         implements BaseSysDepartmentService {
 
     final private BaseSysUserMapper baseSysUserMapper;
-    //final private BaseSysPermsService baseSysPermsService;
-    final private RbacApi rbacApi;
-    final private AacApi aacApi;
-    final private UserApi userApi;
+    final private RbacProvider rbacProvider;
+    final private SecurityProvider securityProvider;
+    final private UserProvider userProvider;
 
     @Override
     public void order(List<BaseSysDepartmentEntity> list) {
@@ -46,8 +45,8 @@ public class BaseSysDepartmentServiceImpl extends
 
     @Override
     public List<BaseSysDepartmentEntity> list(JSONObject requestParams, QueryWrapper queryWrapper) {
-        String username = aacApi.getAdminUsername();
-        Long[] loginDepartmentIds = userApi.loginDepartmentIds();
+        String username = securityProvider.getAdminUsername();
+        Long[] loginDepartmentIds = userProvider.loginDepartmentIds();
         if (loginDepartmentIds != null && loginDepartmentIds.length == 0) {
             return new ArrayList<>();
         }

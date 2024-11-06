@@ -12,100 +12,54 @@ import java.util.Map;
  */
 public interface PluginDetail {
 
-    /*private Long id;
-
-    @ColumnDefine(comment = "名称")
-    private String name;
-
-    @ColumnDefine(comment = "简介")
-    private String description;
-
-    @UniIndex
-    @ColumnDefine(comment = "实例对象")
-    private String key;
-
-    @Index
-    @ColumnDefine(comment = "Hook", length = 50)
-    private String hook;
-
-    @ColumnDefine(comment = "描述", type = "text")
-    private String readme;
-
-    @ColumnDefine(comment = "版本")
-    private String version;
-
-    @ColumnDefine(comment = "Logo(base64)", type = "text", notNull = true)
-    private String logo;
-
-    @ColumnDefine(comment = "作者")
-    private String author;
-
-    @ColumnDefine(comment = "状态 0-禁用 1-启用", defaultValue = "1")
-    private Integer status;
-
-    @ColumnDefine(comment = "插件的plugin.json", type = "json", notNull = true)
-    @Column(typeHandler = Fastjson2TypeHandler.class)
-    private PluginJson pluginJson;
-
-    @ColumnDefine(comment = "配置", type = "json")
-    @Column(typeHandler = JacksonTypeHandler.class)
-    private Map<String, Object> config;
-
-    @Ignore
-    @Column(ignore = true)
-    public String keyName;*/
-
-
     Long getId();
-
     void setId(Long id);
 
+    //名称
     String getName();
-
     void setName(String name);
 
+    //简介
     String getDescription();
-
     void setDescription(String description);
 
+    //实例对象
     String getKey();
-
     void setKey(String key);
 
+    //Hook
     String getHook();
-
     void setHook(String hook);
 
+    //描述
     String getReadme();
-
     void setReadme(String readme);
 
+    // 版本
     String getVersion();
-
     void setVersion(String version);
 
+    //Logo(base64)
     String getLogo();
-
     void setLogo(String logo);
 
+    // 作者
     String getAuthor();
-
     void setAuthor(String author);
 
+    // 状态 0-禁用 1-启用
     Integer getStatus();
-
     void setStatus(Integer status);
 
+    //插件的plugin.json
     PluginJson getPluginJson();
-
     void setPluginJson(PluginJson pluginJson);
 
+    //配置
     Map<String, Object> getConfig();
-
     void setConfig(Map<String, Object> config);
 
     String getKeyName();
-
     void setKeyName(String keyName);
 }
 

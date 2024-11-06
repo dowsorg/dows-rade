@@ -13,6 +13,9 @@ server:
       worker: 32
 
 spring:
+  main:
+#    allow-bean-definition-overriding: true
+    allow-circular-references: true
   application:
     name: rade-admin
   profiles:

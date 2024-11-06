@@ -22,7 +22,7 @@ import java.util.List;
 @EnableAutoTable // 开启自动建表
 @EnableAsync // 开启异步处理
 @EnableCaching // 开启缓存
-@SpringBootApplication(scanBasePackages = {"org.dows.core", "org.dows.modules"})
+@SpringBootApplication(scanBasePackages = {"org.dows.core", "org.dows.modules", "org.dows.security"})
 @MapperScan("org.dows.**.mapper") // 扫描指定包中的MyBatis映射器
 public class RadeApplication implements AppInstance {
 

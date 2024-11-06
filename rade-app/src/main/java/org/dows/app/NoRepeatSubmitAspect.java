@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.dows.aac.AacApi;
+import org.dows.core.security.SecurityProvider;
 import org.dows.core.annotation.NoRepeatSubmit;
 import org.dows.core.exception.RadePreconditions;
 import org.dows.core.lock.RadeLock;
@@ -23,13 +23,13 @@ public class NoRepeatSubmitAspect {
 
     private final RadeLock radeLock;
 
-    private final AacApi aacApi;
+    private final SecurityProvider securityProvider;
 
     @Around("@annotation(noRepeatSubmit)")
     public Object around(ProceedingJoinPoint joinPoint, NoRepeatSubmit noRepeatSubmit) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(
                 RequestContextHolder.getRequestAttributes())).getRequest();
-        String key = request.getRequestURI() + ":" + aacApi.getCurrentUserId();
+        String key = request.getRequestURI() + ":" + securityProvider.getCurrentUserId();
         // 加锁
         RadePreconditions.check(!radeLock.tryLock(key, Duration.ofMillis(noRepeatSubmit.expireTime())), "请勿重复操作");
         try {

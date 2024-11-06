@@ -3,6 +3,7 @@ package org.dows.security;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.core.annotation.TokenIgnore;
+import org.dows.core.config.IgnoredUrlsProperties;
 import org.dows.core.enums.UserTypeEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

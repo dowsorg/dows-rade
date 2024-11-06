@@ -6,12 +6,15 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.system.UserInfo;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.row.Row;
 import lombok.RequiredArgsConstructor;
-import org.dows.aac.AacApi;
+import org.dows.core.rbac.RbacProvider;
+import org.dows.core.security.SecurityProvider;
 import org.dows.core.cache.RadeCache;
-import org.dows.core.security.UserDetailsRefresh;
+import org.dows.core.security.SecurityUser;
+import org.dows.core.security.SecurityUserRefresh;
 import org.dows.core.util.SpringContextUtils;
 import org.dows.modules.rbac.entity.BaseSysMenuEntity;
 import org.dows.modules.rbac.entity.BaseSysRoleDepartmentEntity;
@@ -30,10 +33,8 @@ import org.dows.modules.rbac.service.BaseSysPermsService;
 //import org.dows.modules.uat.user.mapper.BaseSysDepartmentMapper;
 //import org.dows.modules.uat.user.mapper.BaseSysUserMapper;
 //import org.dows.modules.uat.user.mapper.BaseSysUserRoleMapper;
-import org.dows.rbac.RbacApi;
 //import org.dows.security.RadeSecurityUtil;
-import org.dows.uat.UserApi;
-import org.dows.uat.UserInfo;
+import org.dows.core.uat.UserProvider;
 import org.springframework.scheduling.annotation.Async;
 //import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -57,17 +58,15 @@ public class BaseSysPermsServiceImpl implements BaseSysPermsService {
 
     final private ExecutorService cachedThreadPool;
 
-    final private AacApi aacApi;
+    final private SecurityProvider securityProvider;
 
-    final private RbacApi rbacApi;
-
-    final private UserApi userApi;
+    final private UserProvider userProvider;
     @Override
     public Long[] loginDepartmentIds() {
-        String username = aacApi.getAdminUsername();
+        String username = securityProvider.getAdminUsername();
         if (username.equals("admin")) {
-            return userApi.loginDepartmentIds();
-//            return rbacApi.loginDepartmentIds();
+            return userProvider.loginDepartmentIds();
+//            return rbacProvider.loginDepartmentIds();
 //            return baseSysDepartmentMapper.selectAll().stream().map(BaseSysDepartmentEntity::getId).toArray(Long[]::new);
         } else {
             Long[] roleIds = getRoles(username);
@@ -114,20 +113,20 @@ public class BaseSysPermsServiceImpl implements BaseSysPermsService {
 
     @Override
     public Long[] getRoles(Long userId) {
-        UserInfo userInfo = userApi.getUserInfoById(userId);
+        SecurityUser userInfo = userProvider.getUserInfoById(userId);
         return getRoles(userInfo);
 //        return getRoles(baseSysUserMapper.selectOneById(userId));
     }
 
     @Override
     public Long[] getRoles(String username) {
-        UserInfo userInfo = userApi.getUserInfoByUsername(username);
+        SecurityUser userInfo = userProvider.getUserInfoByUsername(username);
         //Long userId = baseSysUserMapper.selectOneByQuery(QueryWrapper.create().eq(BaseSysUserEntity::getUsername, username));
         return getRoles(userInfo.getId());
     }
 
     @Override
-    public Long[] getRoles(UserInfo userInfo) {
+    public Long[] getRoles(SecurityUser userInfo) {
         Long[] roleIds = null;
         if (!userInfo.getUsername().equals("admin")) {
             List<BaseSysUserRoleEntity> list = baseSysUserRoleMapper
@@ -182,7 +181,7 @@ public class BaseSysPermsServiceImpl implements BaseSysPermsService {
     public List<BaseSysMenuEntity> getMenus(String username) {
         /*BaseSysUserEntity sysUserEntity = baseSysUserMapper
                 .selectOneByQuery(QueryWrapper.create().eq(BaseSysUserEntity::getUsername, username));*/
-        UserInfo userInfo = userApi.getUserInfoByUsername(username);
+        SecurityUser userInfo = userProvider.getUserInfoByUsername(username);
         return getMenus(userInfo.getId());
     }
 
@@ -250,13 +249,13 @@ public class BaseSysPermsServiceImpl implements BaseSysPermsService {
 
     @Override
     public void refreshPerms(Long userId) {
-        UserInfo userInfo = userApi.getUserInfoById(userId);
+        SecurityUser userInfo = userProvider.getUserInfoById(userId);
 //        BaseSysUserEntity baseSysUserEntity = baseSysUserMapper.selectOneById(userId);
         if (userInfo != null && userInfo.getStatus() != 0) {
-            SpringContextUtils.getBean(UserDetailsRefresh.class).refreshUserDetails(userInfo.getUsername());
+            SpringContextUtils.getBean(SecurityUserRefresh.class).refreshUserDetails(userInfo.getUsername());
         }
         if (userInfo != null && userInfo.getStatus() == 0) {
-            aacApi.adminLogout(userInfo.getId(), userInfo.getUsername());
+            securityProvider.adminLogout(userInfo.getId(), userInfo.getUsername());
         }
     }
 
@@ -266,7 +265,7 @@ public class BaseSysPermsServiceImpl implements BaseSysPermsService {
         // 刷新超管权限、 找出这个菜单的所有用户、 刷新用户权限
         /*BaseSysUserEntity admin = baseSysUserMapper
                 .selectOneByQuery(QueryWrapper.create().eq(BaseSysUserEntity::getUsername, "admin"));*/
-        UserInfo admin = userApi.getUserInfoByUsername("admin");
+        SecurityUser admin = userProvider.getUserInfoByUsername("admin");
         refreshPerms(admin.getId());
 
         QueryWrapper queryWrapper = QueryWrapper.create()

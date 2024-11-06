@@ -14,7 +14,7 @@ import org.dows.core.crud.service.MapperProviderService;
 import org.dows.modules.recycle.entity.RecycleDataEntity;
 import org.dows.modules.recycle.mapper.RecycleDataMapper;
 import org.dows.modules.recycle.service.RecycleDataService;
-import org.dows.uat.UserApi;
+import org.dows.core.uat.UserProvider;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
@@ -33,14 +33,14 @@ public class RecycleDataServiceImpl extends BaseServiceImpl<RecycleDataMapper, R
 
     //final private BaseSysUserService baseSysUserService;
 
-    final private UserApi userApi;
+    final private UserProvider userProvider;
     final private MapperProviderService mapperProviderService;
 
     @Override
     public Object page(JSONObject requestParams, Page<RecycleDataEntity> page, QueryWrapper queryWrapper) {
         String keyWord = requestParams.getStr("keyWord");
         if (ObjUtil.isNotEmpty(keyWord)) {
-            List<Long> list = userApi.selectUserIdByKeywordWithLike(keyWord);
+            List<Long> list = userProvider.selectUserIdByKeywordWithLike(keyWord);
             /*List<Long> list = baseSysUserService
                     .list(queryWrapper
                             .select(BaseSysUserEntity::getId)
@@ -58,7 +58,7 @@ public class RecycleDataServiceImpl extends BaseServiceImpl<RecycleDataMapper, R
                 .filter(ObjUtil::isNotEmpty).toList();
 
         if (ObjUtil.isNotEmpty(list)) {
-            Map<Long, String> map = userApi.selectUserNameByUserId(list);
+            Map<Long, String> map = userProvider.selectUserNameByUserId(list);
            /* Map<Long, String> map = baseSysUserService
                     .list(QueryWrapper.create()
                             .select(BaseSysUserEntity::getId, BaseSysUserEntity::getName)

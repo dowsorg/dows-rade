@@ -21,8 +21,20 @@
 
         <dependency>
             <groupId>org.dows.cloud</groupId>
+            <artifactId>rade-aac</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>rade-security</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
             <artifactId>rade-base</artifactId>
         </dependency>
+
 
 
         <!--########################################################-->
@@ -91,6 +103,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
+
 
     </dependencies>
 

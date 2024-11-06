@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONObject;
 import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
-import org.dows.aac.AacApi;
+import org.dows.core.security.SecurityProvider;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
 import org.dows.core.exception.RadeException;
@@ -37,7 +37,7 @@ public class BaseSysRoleServiceImpl extends BaseServiceImpl<BaseSysRoleMapper, B
     final private BaseSysPermsService baseSysPermsService;
 
 
-    final private AacApi aacApi;
+    final private SecurityProvider securityProvider;
 
     @Override
     public Object add(JSONObject requestParams, BaseSysRoleEntity entity) {
@@ -45,7 +45,7 @@ public class BaseSysRoleServiceImpl extends BaseServiceImpl<BaseSysRoleMapper, B
         if (checkLabel != null) {
             throw new RadeException("标识已存在");
         }
-        entity.setUserId((aacApi.getAdminUserInfo(requestParams).getLong("userId")));
+        entity.setUserId((securityProvider.getAdminUserInfo(requestParams).getLong("userId")));
         return super.add(requestParams, entity);
     }
 
@@ -84,10 +84,10 @@ public class BaseSysRoleServiceImpl extends BaseServiceImpl<BaseSysRoleMapper, B
     @Override
     public Object list(JSONObject requestParams, QueryWrapper queryWrapper) {
         return baseSysRoleMapper.selectListByQuery(queryWrapper.ne(BaseSysRoleEntity::getId, 1L).and(qw -> {
-            JSONObject object = aacApi.getAdminUserInfo(requestParams);
+            JSONObject object = securityProvider.getAdminUserInfo(requestParams);
             qw.eq(BaseSysRoleEntity::getUserId, object.get("userId")).or(w -> {
                 w.in(BaseSysRoleEntity::getId, (Object) object.get("roleIds", Long[].class));
             });
-        }, !aacApi.getAdminUsername().equals("admin")));
+        }, !securityProvider.getAdminUsername().equals("admin")));
     }
 }

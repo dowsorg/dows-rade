@@ -6,12 +6,10 @@
         <artifactId>dows-rade</artifactId>
         <version>${revision}</version>
     </parent>
-    <artifactId>rade-api</artifactId>
+    <artifactId>rade-oauth</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
+
     </dependencies>
+
 </project>

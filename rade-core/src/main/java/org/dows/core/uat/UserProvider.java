@@ -1,6 +1,7 @@
-package org.dows.uat;
+package org.dows.core.uat;
 
 import cn.hutool.core.lang.Dict;
+import org.dows.core.security.SecurityUser;
 
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Map;
 /**
  * 系统用户
  */
-public interface UserApi {
+public interface UserProvider {
     /**
      * 修改用户信息
      *
@@ -49,16 +50,14 @@ public interface UserApi {
     Long[] loginDepartmentIds();
 
     /**
-     *
      * @param username
      * @return
      */
-    UserInfo getUserInfoByUsername(String username);
+    SecurityUser getUserInfoByUsername(String username);
 
     /**
-     *
      * @param userId
      * @return
      */
-    UserInfo getUserInfoById(Long userId);
+    SecurityUser getUserInfoById(Long userId);
 }

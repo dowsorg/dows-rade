@@ -10,21 +10,20 @@ import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.core.util.ArrayUtil;
 import com.tangzc.autotable.core.constants.DatabaseDialect;
 import lombok.RequiredArgsConstructor;
-import org.dows.aac.AacApi;
 import org.dows.core.cache.RadeCache;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
 import org.dows.core.exception.RadePreconditions;
+import org.dows.core.rbac.RbacProvider;
+import org.dows.core.security.SecurityProvider;
+import org.dows.core.security.SecurityUser;
 import org.dows.core.util.DatabaseDialectUtils;
 import org.dows.modules.uat.user.entity.BaseSysDepartmentEntity;
 import org.dows.modules.uat.user.entity.BaseSysUserEntity;
 import org.dows.modules.uat.user.entity.table.BaseSysUserEntityTableDef;
-//import org.dows.modules.uat.user.entity.table.BaseSysUserRoleEntityTableDef;
 import org.dows.modules.uat.user.mapper.BaseSysDepartmentMapper;
 import org.dows.modules.uat.user.mapper.BaseSysUserMapper;
 import org.dows.modules.uat.user.service.BaseSysUserService;
-import org.dows.rbac.RbacApi;
-import org.dows.uat.UserInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,22 +43,20 @@ public class BaseSysUserServiceImpl
         extends BaseServiceImpl<BaseSysUserMapper, BaseSysUserEntity>
         implements BaseSysUserService {
 
+    final private BaseSysDepartmentMapper baseSysDepartmentMapper;
     final private RadeCache radeCache;
-
-    final private RbacApi rbacApi;
-
-    final private AacApi aacApi;
-
     //final private BaseSysPermsService baseSysPermsService;
 
-    final private BaseSysDepartmentMapper baseSysDepartmentMapper;
+    final private RbacProvider rbacProvider;
+    final private SecurityProvider securityProvider;
+
 
     @Override
     public Object page(JSONObject requestParams, Page<BaseSysUserEntity> page, QueryWrapper qw) {
         String keyWord = requestParams.getStr("keyWord");
         Integer status = requestParams.getInt("status");
         Long[] departmentIds = requestParams.get("departmentIds", Long[].class);
-        JSONObject tokenInfo = aacApi.getAdminUserInfo(requestParams);
+        JSONObject tokenInfo = securityProvider.getAdminUserInfo(requestParams);
         // 用户的部门权限
         Long[] permsDepartmentArr = radeCache.get("admin:department:" + tokenInfo.get("userId"),
                 Long[].class);
@@ -102,7 +99,7 @@ public class BaseSysUserServiceImpl
         // 过滤部门权限
         qw.and(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.DEPARTMENT_ID.in(
                 permsDepartmentArr == null || permsDepartmentArr.length == 0 ?
-                        new Long[]{null} : permsDepartmentArr, !aacApi.getAdminUsername().equals("admin")));
+                        new Long[]{null} : permsDepartmentArr, !securityProvider.getAdminUsername().equals("admin")));
         if (databaseDialect.equals(DatabaseDialect.PostgreSQL)) {
             // 兼容postgresql
             qw.groupBy("base_sys_user.id", "base_sys_user.create_time", "base_sys_user.department_id",
@@ -165,7 +162,7 @@ public class BaseSysUserServiceImpl
         }
         // 被禁用
         if (entity.getStatus() == 0) {
-           // RadeSecurityUtil.adminLogout(entity);
+            securityProvider.adminLogout(entity.getId(), entity.getUsername());
         }
         return super.update(requestParams, entity);
     }
@@ -175,19 +172,19 @@ public class BaseSysUserServiceImpl
                             ModifyEnum type) {
         if (type != ModifyEnum.DELETE && requestParams.get("roleIdList", Long[].class) != null) {
             // 刷新权限
-            rbacApi.updateUserRole(baseSysUserEntity.getId(), requestParams.get("roleIdList", Long[].class));
+            rbacProvider.updateUserRole(baseSysUserEntity.getId(), requestParams.get("roleIdList", Long[].class));
         }
     }
 
     @Override
     public Object info(Long id) {
         BaseSysUserEntity userEntity = getById(id);
-        Long[] roleIdList = rbacApi.getRoles(id);
-        BaseSysDepartmentEntity departmentEntity = baseSysDepartmentMapper.selectOneById(
-                userEntity.getDepartmentId());
         userEntity.setPassword(null);
-        return Dict.parse(userEntity).set("roleIdList", roleIdList).set("departmentName",
-                departmentEntity != null ? departmentEntity.getName() : null);
+        BaseSysDepartmentEntity departmentEntity = baseSysDepartmentMapper.selectOneById(userEntity.getDepartmentId());
+        Long[] roleIdList = rbacProvider.getRoles(id);
+        return Dict.parse(userEntity)
+                .set("roleIdList", roleIdList)
+                .set("departmentName", departmentEntity != null ? departmentEntity.getName() : null);
     }
 
 
@@ -218,12 +215,12 @@ public class BaseSysUserServiceImpl
     }
 
     @Override
-    public UserInfo getUserInfoByUsername(String username) {
+    public SecurityUser getUserInfoByUsername(String username) {
         return null;
     }
 
     @Override
-    public UserInfo getUserInfoById(Long userId) {
+    public SecurityUser getUserInfoById(Long userId) {
         return null;
     }
 
