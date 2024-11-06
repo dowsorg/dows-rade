@@ -18,4 +18,7 @@ public interface AacApi {
     Long getCurrentUserId();
 
 
+    void adminLogout(Long id, String userName);
+
+
 }

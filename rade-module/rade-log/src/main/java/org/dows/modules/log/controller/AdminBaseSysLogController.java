@@ -10,6 +10,7 @@ import org.dows.core.crud.BaseController;
 import org.dows.core.crud.CrudOption;
 import org.dows.core.web.Response;
 import org.dows.modules.log.entity.BaseSysLogEntity;
+import org.dows.modules.log.entity.table.BaseSysLogEntityTableDef;
 import org.dows.modules.log.service.BaseSysLogService;
 import org.dows.modules.sys.service.BaseSysConfService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +28,10 @@ public class AdminBaseSysLogController extends BaseController<BaseSysLogService,
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
-        CrudOption<BaseSysLogEntity> option = createOp()
-                .keyWordLikeFields(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.NAME, BaseSysLogEntityTableDef.BASE_SYS_LOG_ENTITY.PARAMS);
-        setPageOption(option);
+        /*CrudOption<BaseSysLogEntity> option = createOp()
+                .keyWordLikeFields(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.NAME,
+                        BaseSysLogEntityTableDef.BASE_SYS_LOG_ENTITY.PARAMS);
+        setPageOption(option);*/
     }
 
     @Operation(summary = "清理日志")

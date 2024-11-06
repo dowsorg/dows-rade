@@ -4,10 +4,10 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONObject;
 import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
+import org.dows.aac.AacApi;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
 import org.dows.core.exception.RadeException;
-import org.dows.core.security.RadeSecurityUtil;
 import org.dows.modules.rbac.entity.BaseSysRoleDepartmentEntity;
 import org.dows.modules.rbac.entity.BaseSysRoleEntity;
 import org.dows.modules.rbac.entity.BaseSysRoleMenuEntity;
@@ -36,13 +36,16 @@ public class BaseSysRoleServiceImpl extends BaseServiceImpl<BaseSysRoleMapper, B
 
     final private BaseSysPermsService baseSysPermsService;
 
+
+    final private AacApi aacApi;
+
     @Override
     public Object add(JSONObject requestParams, BaseSysRoleEntity entity) {
         BaseSysRoleEntity checkLabel = getOne(QueryWrapper.create().eq(BaseSysRoleEntity::getLabel, entity.getLabel()));
         if (checkLabel != null) {
             throw new RadeException("标识已存在");
         }
-        entity.setUserId((RadeSecurityUtil.getAdminUserInfo(requestParams).getLong("userId")));
+        entity.setUserId((aacApi.getAdminUserInfo(requestParams).getLong("userId")));
         return super.add(requestParams, entity);
     }
 
@@ -81,11 +84,10 @@ public class BaseSysRoleServiceImpl extends BaseServiceImpl<BaseSysRoleMapper, B
     @Override
     public Object list(JSONObject requestParams, QueryWrapper queryWrapper) {
         return baseSysRoleMapper.selectListByQuery(queryWrapper.ne(BaseSysRoleEntity::getId, 1L).and(qw -> {
-            JSONObject object = RadeSecurityUtil.getAdminUserInfo(requestParams);
+            JSONObject object = aacApi.getAdminUserInfo(requestParams);
             qw.eq(BaseSysRoleEntity::getUserId, object.get("userId")).or(w -> {
-                w.in(BaseSysRoleEntity::getId,
-                        (Object) object.get("roleIds", Long[].class));
+                w.in(BaseSysRoleEntity::getId, (Object) object.get("roleIds", Long[].class));
             });
-        }, !RadeSecurityUtil.getAdminUsername().equals("admin")));
+        }, !aacApi.getAdminUsername().equals("admin")));
     }
 }

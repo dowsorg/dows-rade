@@ -41,4 +41,10 @@ public interface UserApi {
      * @return 用户ID集合
      */
     List<Long> selectUserIdByKeywordWithLike(String keyword);
+
+    Long[] loginDepartmentIds();
+
+    UserInfo getUserInfoByUsername(String username);
+
+    UserInfo getUserInfoById(Long userId);
 }

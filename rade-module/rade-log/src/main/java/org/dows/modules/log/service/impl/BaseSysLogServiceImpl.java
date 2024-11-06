@@ -13,6 +13,7 @@ import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.util.IPUtils;
 import org.dows.core.util.PathUtils;
 import org.dows.modules.log.entity.BaseSysLogEntity;
+import org.dows.modules.log.entity.table.BaseSysLogEntityTableDef;
 import org.dows.modules.log.mapper.BaseSysLogMapper;
 import org.dows.modules.log.service.BaseSysLogService;
 import org.dows.modules.sys.service.BaseSysConfService;
@@ -43,11 +44,11 @@ public class BaseSysLogServiceImpl extends BaseServiceImpl<BaseSysLogMapper, Bas
 
     @Override
     public Object page(JSONObject requestParams, Page<BaseSysLogEntity> page, QueryWrapper queryWrapper) {
-        queryWrapper
+        /*queryWrapper
                 .select(BaseSysLogEntityTableDef.BASE_SYS_LOG_ENTITY.ALL_COLUMNS, BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.NAME)
                 .from(BaseSysLogEntityTableDef.BASE_SYS_LOG_ENTITY)
                 .leftJoin(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY)
-                .on(BaseSysLogEntity::getUserId, BaseSysUserEntity::getId);
+                .on(BaseSysLogEntity::getUserId, BaseSysUserEntity::getId);*/
         return mapper.paginate(page, queryWrapper);
     }
 

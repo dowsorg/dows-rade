@@ -10,7 +10,14 @@
     <name>rade-app</name>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>rade-uat</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>rade-rbac</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.dows.cloud</groupId>
@@ -84,7 +91,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
-
 
     </dependencies>
 

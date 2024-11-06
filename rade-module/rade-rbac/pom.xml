@@ -9,12 +9,18 @@
     <artifactId>rade-rbac</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>rade-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rade-core</artifactId>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rade-uat</artifactId>
         </dependency>
@@ -22,7 +28,7 @@
         <dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rade-security</artifactId>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 </project>

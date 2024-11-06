@@ -1,6 +1,7 @@
 package org.dows.modules.rbac.service;
 
 import org.dows.modules.rbac.entity.BaseSysMenuEntity;
+import org.dows.uat.UserInfo;
 
 import java.util.List;
 
@@ -73,6 +74,14 @@ public interface BaseSysPermsService {
     Long[] getRoles(String username);
 
     /**
+     * 获得角色数组
+     *
+     * @param userInfo 用户
+     * @return 返回角色数组
+     */
+    Long[] getRoles(UserInfo userInfo);
+
+    /**
      * 获得登录用户的部门权限
      *
      * @return 部门ID集合
@@ -95,13 +104,7 @@ public interface BaseSysPermsService {
      */
     Long[] getDepartmentIdsByRoleIds(Long userId);
 
-    /**
-     * 获得角色数组
-     *
-     * @param userEntity 用户
-     * @return 返回角色数组
-     */
-   // Long[] getRoles(BaseSysUserEntity userEntity);
+
 
     /**
      * 所有的操作权限

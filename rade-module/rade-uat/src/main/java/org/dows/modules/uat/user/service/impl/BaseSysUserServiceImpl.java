@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONObject;
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.core.util.ArrayUtil;
@@ -19,13 +18,13 @@ import org.dows.core.exception.RadePreconditions;
 import org.dows.core.util.DatabaseDialectUtils;
 import org.dows.modules.uat.user.entity.BaseSysDepartmentEntity;
 import org.dows.modules.uat.user.entity.BaseSysUserEntity;
-import org.dows.modules.uat.user.entity.table.BaseSysDepartmentEntityTableDef;
 import org.dows.modules.uat.user.entity.table.BaseSysUserEntityTableDef;
-import org.dows.modules.uat.user.entity.table.BaseSysUserRoleEntityTableDef;
+//import org.dows.modules.uat.user.entity.table.BaseSysUserRoleEntityTableDef;
 import org.dows.modules.uat.user.mapper.BaseSysDepartmentMapper;
 import org.dows.modules.uat.user.mapper.BaseSysUserMapper;
 import org.dows.modules.uat.user.service.BaseSysUserService;
 import org.dows.rbac.RbacApi;
+import org.dows.uat.UserInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -211,6 +210,21 @@ public class BaseSysUserServiceImpl
                 .stream()
                 .map(BaseSysUserEntity::getId)
                 .toList();
+    }
+
+    @Override
+    public Long[] loginDepartmentIds() {
+        return new Long[0];
+    }
+
+    @Override
+    public UserInfo getUserInfoByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public UserInfo getUserInfoById(Long userId) {
+        return null;
     }
 
 }

@@ -1,4 +1,4 @@
-package org.dows.modules.uat.user.entity;
+package org.dows.modules.rbac.entity;
 
 import com.mybatisflex.annotation.Table;
 import com.tangzc.autotable.annotation.Index;

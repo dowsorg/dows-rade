@@ -1,4 +1,4 @@
-package org.dows.modules.uat.user.controller.app.params;
+package org.dows.modules.aac.params;
 
 import lombok.Getter;
 import lombok.Setter;

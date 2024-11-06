@@ -6,11 +6,12 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONObject;
 import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
+import org.dows.aac.AacApi;
 import org.dows.core.aid.RadeAid;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
 import org.dows.core.init.AppInstance;
-import org.dows.core.security.RadeSecurityUtil;
+//import org.dows.core.security.RadeSecurityUtil;
 import org.dows.core.util.CompilerUtils;
 import org.dows.core.util.PathUtils;
 import org.dows.core.util.SpringContextUtils;
@@ -30,16 +31,19 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class BaseSysMenuServiceImpl extends BaseServiceImpl<BaseSysMenuMapper, BaseSysMenuEntity>
+public class BaseSysMenuServiceImpl
+        extends BaseServiceImpl<BaseSysMenuMapper, BaseSysMenuEntity>
         implements BaseSysMenuService {
 
     final private BaseSysPermsService baseSysPermsService;
 
     final private RadeAid radeAid;
 
+    final private AacApi aacApi;
+
     @Override
     public Object list(JSONObject requestParams, QueryWrapper queryWrapper) {
-        List<BaseSysMenuEntity> list = baseSysPermsService.getMenus(RadeSecurityUtil.getAdminUsername());
+        List<BaseSysMenuEntity> list = baseSysPermsService.getMenus(aacApi.getAdminUsername());
         list.forEach(e -> {
             List<BaseSysMenuEntity> parent = list.stream()
                     .filter(sysMenuEntity -> e.getParentId() != null && e.getParentId()
