@@ -16,6 +16,7 @@ import org.dows.core.cache.RadeCache;
 import org.dows.core.enums.UserTypeEnum;
 import org.dows.core.exception.RadePreconditions;
 import org.dows.core.sms.SendSceneEnum;
+import org.dows.core.sms.SmsProvider;
 import org.dows.core.uat.UatUser;
 import org.dows.core.uat.UatUserProvider;
 import org.dows.core.uat.WeiXinUser;
@@ -23,7 +24,6 @@ import org.dows.core.uat.WeiXinUserProvider;
 import org.dows.modules.aac.proxy.WxProxy;
 import org.dows.modules.aac.service.BaseSysLoginService;
 import org.dows.modules.aac.service.UserLoginService;
-import org.dows.core.sms.UserSmsUtil;
 import org.dows.security.jwt.JwtTokenUtil;
 import org.dows.security.jwt.JwtUser;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,7 +41,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     private final JwtTokenUtil jwtTokenUtil;
     private final BaseSysLoginService baseSysLoginService;
 
-    private final UserSmsUtil userSmsUtil;
+    private final SmsProvider smsProvider;
     private final WxProxy wxProxy;
 
 //    private final UserInfoService userInfoService;
@@ -54,14 +54,14 @@ public class UserLoginServiceImpl implements UserLoginService {
     public void smsCode(String phone, String captchaId, String code) {
         // 校验图片验证码，不通过直接抛异常
         baseSysLoginService.captchaCheck(captchaId, code);
-        userSmsUtil.sendVerifyCode(phone, SendSceneEnum.ALL);
+        smsProvider.sendVerifyCode(phone, SendSceneEnum.ALL);
         radeCache.del("verify:img:" + captchaId);
     }
 
     @Override
     public Object phoneVerifyCode(String phone, String smsCode) {
         // 校验短信验证码，不通过直接抛异常
-        userSmsUtil.checkVerifyCode(phone, smsCode, SendSceneEnum.ALL);
+        smsProvider.checkVerifyCode(phone, smsCode, SendSceneEnum.ALL);
         return generateTokenByPhone(phone);
     }
 

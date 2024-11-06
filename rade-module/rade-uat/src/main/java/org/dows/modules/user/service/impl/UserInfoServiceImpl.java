@@ -5,13 +5,13 @@ import com.mybatisflex.core.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.sms.SendSceneEnum;
-import org.dows.core.sms.UserSmsUtil;
+import org.dows.core.sms.SmsProvider;
 import org.dows.core.uat.UatUser;
 import org.dows.modules.user.entity.UserInfoEntity;
 import org.dows.modules.user.mapper.UserInfoMapper;
 import org.dows.modules.user.service.UserInfoService;
-//import org.dows.modules.user.util.UserSmsUtil;
-//import org.dows.modules.user.util.UserSmsUtil.SendSceneEnum;
+//import org.dows.modules.user.util.SmsProvider;
+//import org.dows.modules.user.util.SmsProvider.SendSceneEnum;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class UserInfoServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInfoEntity> implements
         UserInfoService {
 
-    private final UserSmsUtil userSmsUtil;
+    private final SmsProvider smsProvider;
 
     @Override
     public UserInfoEntity person(Long userId) {
@@ -31,7 +31,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInf
     @Override
     public void updatePassword(Long userId, String password, String code) {
         UserInfoEntity info = getById(userId);
-        userSmsUtil.checkVerifyCode(info.getPhone(), code, SendSceneEnum.ALL);
+        smsProvider.checkVerifyCode(info.getPhone(), code, SendSceneEnum.ALL);
         info.setPassword(MD5.create().digestHex(password));
         info.updateById();
     }
@@ -47,7 +47,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl<UserInfoMapper, UserInf
 
     @Override
     public void bindPhone(Long userId, String phone, String code) {
-        userSmsUtil.checkVerifyCode(phone, code, SendSceneEnum.ALL);
+        smsProvider.checkVerifyCode(phone, code, SendSceneEnum.ALL);
         UserInfoEntity info = new UserInfoEntity();
         info.setId(userId);
         info.setPhone(phone);

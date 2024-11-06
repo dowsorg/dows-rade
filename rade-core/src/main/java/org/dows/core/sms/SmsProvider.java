@@ -2,29 +2,31 @@ package org.dows.core.sms;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.dows.core.cache.RadeCache;
 import org.dows.core.exception.RadePreconditions;
-import org.dows.core.plugin.service.RadePluginService;
 import org.dows.core.plugin.RadePluginInvokers;
+import org.dows.core.plugin.service.RadePluginService;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 /**
- * UserSmsUtil - 用户短信工具类
- * 该类用于发送短信验证码。
+ * @description: 发送短信验证码</ br>
+ * @author: lait.zhang@gmail.com
+ * @date: 11/6/2024 6:10 PM
+ * @history: </br>
+ * <author>      <time>      <version>    <desc>
+ * 修改人姓名      修改时间        版本号       描述
  */
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class UserSmsUtil {
-
+public class SmsProvider {
     private final RadePluginService radePluginService;
     private final RadeCache radeCache;
 
@@ -83,3 +85,4 @@ public class UserSmsUtil {
         }
     }
 }
+
