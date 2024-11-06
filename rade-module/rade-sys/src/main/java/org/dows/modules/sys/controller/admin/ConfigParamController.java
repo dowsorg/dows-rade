@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Tag(name = "系统参数配置", description = "系统参数配置")
 @RadeController(api = {"add", "delete", "update", "page", "info"})
-public class AdminBaseSysParamController extends BaseController<BaseSysParamService, BaseSysParamEntity> {
+public class ConfigParamController extends BaseController<BaseSysParamService, BaseSysParamEntity> {
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {

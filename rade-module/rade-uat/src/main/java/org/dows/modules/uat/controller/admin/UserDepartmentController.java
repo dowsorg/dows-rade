@@ -1,4 +1,4 @@
-package org.dows.modules.user.controller.admin;
+package org.dows.modules.uat.controller.admin;
 
 import cn.hutool.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Tag(name = "系统部门", description = "系统部门")
 @RadeController(api = {"add", "delete", "update", "list"})
-public class AdminBaseSysDepartmentController
+public class UserDepartmentController
         extends BaseController<BaseSysDepartmentService, BaseSysDepartmentEntity> {
 
     @Override

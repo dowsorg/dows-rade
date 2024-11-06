@@ -1,4 +1,4 @@
-package org.dows.modules.user.controller.admin;
+package org.dows.modules.uat.controller.admin;
 
 import cn.hutool.json.JSONObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +13,7 @@ import static org.dows.modules.user.entity.table.UserInfoEntityTableDef.USER_INF
 
 @Tag(name = "用户信息", description = "用户信息")
 @RadeController(api = {"add", "delete", "update", "page", "list", "info"})
-public class AdminUserInfoController extends BaseController<UserInfoService, UserInfoEntity> {
+public class UserInfoController extends BaseController<UserInfoService, UserInfoEntity> {
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {

@@ -1,4 +1,4 @@
-package org.dows.modules.user.controller.app;
+package org.dows.modules.uat.controller.app;
 
 import cn.hutool.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;

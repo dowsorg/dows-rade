@@ -1,4 +1,4 @@
-package org.dows.modules.user.controller.admin;
+package org.dows.modules.uat.controller.admin;
 
 import cn.hutool.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
  */
 @Tag(name = "系统用户", description = "系统用户")
 @RadeController(api = {"add", "delete", "update", "page", "info"})
-public class AdminBaseSysUserController extends BaseController<BaseSysUserService, BaseSysUserEntity> {
+public class UserController extends BaseController<BaseSysUserService, BaseSysUserEntity> {
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
