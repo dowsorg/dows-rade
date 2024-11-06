@@ -12,7 +12,7 @@ import org.dows.core.annotation.TokenIgnore;
 import org.dows.core.exception.RadePreconditions;
 import org.dows.core.plugin.upload.FileUploadStrategyFactory;
 import org.dows.core.web.Response;
-import org.dows.modules.base.service.sys.BaseSysParamService;
+import org.dows.modules.sys.service.BaseSysParamService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

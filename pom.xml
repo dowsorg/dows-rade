@@ -22,6 +22,7 @@
         <module>rade-biz</module>
         <module>rade-handler</module>
         <module>rade-security</module>
+        <module>rade-api</module>
     </modules>
 
 
@@ -52,6 +53,13 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rade-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.dows.cloud</groupId>
                 <artifactId>rade-core</artifactId>
@@ -100,7 +108,11 @@
                 <artifactId>rade-quartz</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.dows.cloud</groupId>
+                <artifactId>rade-sys</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
 
             <dependency>

@@ -11,10 +11,6 @@ import org.dows.core.annotation.RadeController;
 import org.dows.core.annotation.TokenIgnore;
 import org.dows.core.plugin.upload.FileUploadStrategyFactory;
 import org.dows.core.web.Response;
-import org.dows.modules.base.entity.sys.BaseSysUserEntity;
-import org.dows.modules.base.service.sys.BaseSysLoginService;
-import org.dows.modules.base.service.sys.BaseSysPermsService;
-import org.dows.modules.base.service.sys.BaseSysUserService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,24 +23,18 @@ import org.springframework.web.multipart.MultipartFile;
 @RadeController()
 public class AdminBaseCommController {
 
-    final private BaseSysPermsService baseSysPermsService;
-
-    final private BaseSysUserService baseSysUserService;
-
-    final private BaseSysLoginService baseSysLoginService;
+//    final private BaseSysPermsService baseSysPermsService;
+//
+//    final private BaseSysUserService baseSysUserService;
+//
+//    final private BaseSysLoginService baseSysLoginService;
 
     final private RadeAid radeAid;
 
     final private FileUploadStrategyFactory fileUploadStrategyFactory;
 
-    @TokenIgnore
-    @Operation(summary = "实体信息与路径", description = "系统所有的实体信息与路径，供前端自动生成代码与服务")
-    @GetMapping("/aid")
-    public Response aid() {
-        return Response.ok(radeAid.getAdmin());
-    }
 
-    @Operation(summary = "个人信息")
+    /*@Operation(summary = "个人信息")
     @GetMapping("/person")
     public Response person(@RequestAttribute() Long adminUserId) {
         BaseSysUserEntity baseSysUserEntity = baseSysUserService.getById(adminUserId);
@@ -66,9 +56,32 @@ public class AdminBaseCommController {
         return Response.ok(baseSysPermsService.permmenu(adminUserId));
     }
 
+
+    @Operation(summary = "退出")
+    @PostMapping("/logout")
+    public Response logout(@RequestAttribute Long adminUserId, @RequestAttribute String adminUsername) {
+        baseSysLoginService.logout(adminUserId, adminUsername);
+        return Response.ok();
+    }*/
+
+
+    @TokenIgnore
+    @Operation(summary = "实体信息与路径", description = "系统所有的实体信息与路径，供前端自动生成代码与服务")
+    @GetMapping("/aid")
+    public Response aid() {
+        return Response.ok(radeAid.getAdmin());
+    }
+
+    @TokenIgnore
+    @Operation(summary = "编程")
+    @GetMapping("/program")
+    public Response program() {
+        return Response.ok("Java");
+    }
+
+
     @Operation(summary = "文件上传")
-    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
-            MediaType.ALL_VALUE})
+    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.ALL_VALUE})
     public Response upload(
             @RequestPart(value = "upload", required = false) @Parameter(description = "文件") MultipartFile[] files,
             HttpServletRequest request) {
@@ -79,19 +92,5 @@ public class AdminBaseCommController {
     @GetMapping("/uploadMode")
     public Response uploadMode() {
         return Response.ok(fileUploadStrategyFactory.getMode());
-    }
-
-    @Operation(summary = "退出")
-    @PostMapping("/logout")
-    public Response logout(@RequestAttribute Long adminUserId, @RequestAttribute String adminUsername) {
-        baseSysLoginService.logout(adminUserId, adminUsername);
-        return Response.ok();
-    }
-
-    @TokenIgnore
-    @Operation(summary = "编程")
-    @GetMapping("/program")
-    public Response program() {
-        return Response.ok("Java");
     }
 }

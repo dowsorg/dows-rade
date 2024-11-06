@@ -14,7 +14,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.dows.core.annotation.IgnoreRecycleData;
 import org.dows.core.crud.BaseController;
 import org.dows.core.crud.BaseService;
-import org.dows.core.security.RadeSecurityUtil;
 import org.dows.modules.recycle.entity.RecycleDataEntity;
 import org.dows.modules.recycle.service.RecycleDataService;
 import org.springframework.stereotype.Component;
@@ -70,10 +69,16 @@ public class DeleteAspect {
         if (ObjUtil.isNotEmpty(list)) {
             RecycleDataEntity recycleDataEntity = new RecycleDataEntity();
             recycleDataEntity.setUrl(request.getRequestURI());
-            recycleDataEntity.setUserName(RadeSecurityUtil.getAdminUsername());
-            recycleDataEntity
-                    .setUserId(Long.parseLong(
-                            String.valueOf(RadeSecurityUtil.getAdminUserInfo(requestParams).get("userId"))));
+
+            /*
+             * 获取当前请求的用户信息
+             * recycleDataEntity.setUserName(RadeSecurityUtil.getAdminUsername());
+             * long userId = Long.parseLong(String.valueOf(RadeSecurityUtil.getAdminUserInfo(requestParams).get("userId")));
+             * recycleDataEntity.setUserId(RadeSecurityUtil.getUserInfo(requestParams));
+             * 如下方式:
+             * RadeSecurityUtil.getUserInfo(requestParams);
+             */
+
             recycleDataEntity.setParams(params);
             recycleDataEntity.setData(list);
             recycleDataEntity.setParams(params);

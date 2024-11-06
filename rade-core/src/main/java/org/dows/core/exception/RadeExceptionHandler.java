@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.core.web.Response;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.authentication.BadCredentialsException;
+//import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -37,11 +37,11 @@ public class RadeExceptionHandler {
         return Response.error("已存在该记录或值不能重复");
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
+    /*@ExceptionHandler(BadCredentialsException.class)
     public Response handleBadCredentialsException(BadCredentialsException e) {
         log.error(e.getMessage(), e);
         return Response.error("账户密码不正确");
-    }
+    }*/
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public Response handleHttpRequestMethodNotSupportedException(

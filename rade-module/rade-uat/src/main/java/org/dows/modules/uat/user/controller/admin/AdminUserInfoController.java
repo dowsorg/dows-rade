@@ -8,6 +8,8 @@ import org.dows.core.crud.BaseController;
 import org.dows.modules.uat.user.entity.UserInfoEntity;
 import org.dows.modules.uat.user.service.UserInfoService;
 
+import static org.dows.modules.uat.user.entity.table.UserInfoEntityTableDef.USER_INFO_ENTITY;
+
 
 @Tag(name = "用户信息", description = "用户信息")
 @RadeController(api = {"add", "delete", "update", "page", "list", "info"})
@@ -15,9 +17,9 @@ public class AdminUserInfoController extends BaseController<UserInfoService, Use
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
-
-        setPageOption(createOp().fieldEq(USER_INFO_ENTITY.STATUS, USER_INFO_ENTITY.GENDER,
-                        USER_INFO_ENTITY.LOGIN_TYPE)
-                .keyWordLikeFields(USER_INFO_ENTITY.NICK_NAME, USER_INFO_ENTITY.PHONE));
+        setPageOption(createOp()
+                .fieldEq(USER_INFO_ENTITY.STATUS, USER_INFO_ENTITY.GENDER, USER_INFO_ENTITY.LOGIN_TYPE)
+                .keyWordLikeFields(USER_INFO_ENTITY.NICK_NAME, USER_INFO_ENTITY.PHONE)
+        );
     }
 }

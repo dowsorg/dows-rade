@@ -11,18 +11,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.service.MapperProviderService;
-import org.dows.modules.base.entity.sys.BaseSysUserEntity;
-import org.dows.modules.base.service.sys.BaseSysUserService;
 import org.dows.modules.recycle.entity.RecycleDataEntity;
 import org.dows.modules.recycle.mapper.RecycleDataMapper;
 import org.dows.modules.recycle.service.RecycleDataService;
+import org.dows.uat.UserApi;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 数据回收站
@@ -33,19 +31,23 @@ import java.util.stream.Collectors;
 public class RecycleDataServiceImpl extends BaseServiceImpl<RecycleDataMapper, RecycleDataEntity>
         implements RecycleDataService {
 
-    final private BaseSysUserService baseSysUserService;
+    //final private BaseSysUserService baseSysUserService;
 
+    final private UserApi userApi;
     final private MapperProviderService mapperProviderService;
 
     @Override
-    public Object page(JSONObject requestParams, Page<RecycleDataEntity> page,
-                       QueryWrapper queryWrapper) {
+    public Object page(JSONObject requestParams, Page<RecycleDataEntity> page, QueryWrapper queryWrapper) {
         String keyWord = requestParams.getStr("keyWord");
         if (ObjUtil.isNotEmpty(keyWord)) {
-            List<Long> list = baseSysUserService
-                    .list(queryWrapper.select(BaseSysUserEntity::getId)
+            List<Long> list = userApi.selectUserIdByKeywordWithLike(keyWord);
+            /*List<Long> list = baseSysUserService
+                    .list(queryWrapper
+                            .select(BaseSysUserEntity::getId)
                             .like(BaseSysUserEntity::getName, keyWord))
-                    .stream().map(BaseSysUserEntity::getId).toList();
+                    .stream()
+                    .map(BaseSysUserEntity::getId)
+                    .toList();*/
             queryWrapper.like(RecycleDataEntity::getUrl, keyWord).or(w -> {
                 w.in(RecycleDataEntity::getUserId, list, ObjUtil.isNotEmpty(list));
             });
@@ -56,12 +58,13 @@ public class RecycleDataServiceImpl extends BaseServiceImpl<RecycleDataMapper, R
                 .filter(ObjUtil::isNotEmpty).toList();
 
         if (ObjUtil.isNotEmpty(list)) {
-            Map<Long, String> map = baseSysUserService
+            Map<Long, String> map = userApi.selectUserNameByUserId(list);
+           /* Map<Long, String> map = baseSysUserService
                     .list(QueryWrapper.create()
                             .select(BaseSysUserEntity::getId, BaseSysUserEntity::getName)
                             .in(BaseSysUserEntity::getId, list))
                     .stream()
-                    .collect(Collectors.toMap(BaseSysUserEntity::getId, BaseSysUserEntity::getName));
+                    .collect(Collectors.toMap(BaseSysUserEntity::getId, BaseSysUserEntity::getName));*/
             records.forEach(o -> {
                 if (map.containsKey(o.getUserId())) {
                     o.setUserName(map.get(o.getUserId()));

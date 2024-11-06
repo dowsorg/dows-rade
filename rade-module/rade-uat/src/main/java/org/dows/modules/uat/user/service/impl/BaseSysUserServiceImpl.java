@@ -1,29 +1,36 @@
 package org.dows.modules.uat.user.service.impl;
 
 import cn.hutool.core.lang.Dict;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONObject;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
+import com.mybatisflex.core.util.ArrayUtil;
 import com.tangzc.autotable.core.constants.DatabaseDialect;
 import lombok.RequiredArgsConstructor;
+import org.dows.aac.AacApi;
 import org.dows.core.cache.RadeCache;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
 import org.dows.core.exception.RadePreconditions;
-//import org.dows.core.security.RadeSecurityUtil;
 import org.dows.core.util.DatabaseDialectUtils;
 import org.dows.modules.uat.user.entity.BaseSysDepartmentEntity;
 import org.dows.modules.uat.user.entity.BaseSysUserEntity;
+import org.dows.modules.uat.user.entity.table.BaseSysDepartmentEntityTableDef;
+import org.dows.modules.uat.user.entity.table.BaseSysUserEntityTableDef;
+import org.dows.modules.uat.user.entity.table.BaseSysUserRoleEntityTableDef;
 import org.dows.modules.uat.user.mapper.BaseSysDepartmentMapper;
 import org.dows.modules.uat.user.mapper.BaseSysUserMapper;
 import org.dows.modules.uat.user.service.BaseSysUserService;
+import org.dows.rbac.RbacApi;
 import org.springframework.stereotype.Service;
 
-import static com.mybatisflex.core.query.QueryMethods.groupConcat;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 //import static org.dows.modules.base.entity.sys.table.BaseSysDepartmentEntityTableDef.BASE_SYS_DEPARTMENT_ENTITY;
 //import static org.dows.modules.base.entity.sys.table.BaseSysRoleEntityTableDef.BASE_SYS_ROLE_ENTITY;
 //import static org.dows.modules.base.entity.sys.table.BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY;
@@ -34,10 +41,15 @@ import static com.mybatisflex.core.query.QueryMethods.groupConcat;
  */
 @Service
 @RequiredArgsConstructor
-public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, BaseSysUserEntity>
+public class BaseSysUserServiceImpl
+        extends BaseServiceImpl<BaseSysUserMapper, BaseSysUserEntity>
         implements BaseSysUserService {
 
     final private RadeCache radeCache;
+
+    final private RbacApi rbacApi;
+
+    final private AacApi aacApi;
 
     //final private BaseSysPermsService baseSysPermsService;
 
@@ -45,10 +57,10 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
 
     @Override
     public Object page(JSONObject requestParams, Page<BaseSysUserEntity> page, QueryWrapper qw) {
-        /*String keyWord = requestParams.getStr("keyWord");
+        String keyWord = requestParams.getStr("keyWord");
         Integer status = requestParams.getInt("status");
         Long[] departmentIds = requestParams.get("departmentIds", Long[].class);
-        JSONObject tokenInfo = RadeSecurityUtil.getAdminUserInfo(requestParams);
+        JSONObject tokenInfo = aacApi.getAdminUserInfo(requestParams);
         // 用户的部门权限
         Long[] permsDepartmentArr = radeCache.get("admin:department:" + tokenInfo.get("userId"),
                 Long[].class);
@@ -63,18 +75,18 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
                     "base_sys_department.name AS departmentName"
             );
         } else {
-            qw.select(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.ALL_COLUMNS,
-                    groupConcat(BaseSysRoleEntityTableDef.BASE_SYS_ROLE_ENTITY.NAME).as("roleName"),
+            /*qw.select(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.ALL_COLUMNS,
+                    QueryMethods.groupConcat(BaseSysRoleEntityTableDef.BASE_SYS_ROLE_ENTITY.NAME).as("roleName"),
                     BaseSysDepartmentEntityTableDef.BASE_SYS_DEPARTMENT_ENTITY.NAME.as("departmentName")
-            );
+            );*/
         }
 
-        qw.from(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY).leftJoin(BaseSysUserRoleEntityTableDef.BASE_SYS_USER_ROLE_ENTITY)
+        /*qw.from(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY).leftJoin(BaseSysUserRoleEntityTableDef.BASE_SYS_USER_ROLE_ENTITY)
                 .on(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.ID.eq(BaseSysUserRoleEntityTableDef.BASE_SYS_USER_ROLE_ENTITY.USER_ID))
                 .leftJoin(BaseSysRoleEntityTableDef.BASE_SYS_ROLE_ENTITY)
                 .on(BaseSysUserRoleEntityTableDef.BASE_SYS_USER_ROLE_ENTITY.ROLE_ID.eq(BaseSysRoleEntityTableDef.BASE_SYS_ROLE_ENTITY.ID))
                 .leftJoin(BaseSysDepartmentEntityTableDef.BASE_SYS_DEPARTMENT_ENTITY)
-                .on(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.DEPARTMENT_ID.eq(BaseSysDepartmentEntityTableDef.BASE_SYS_DEPARTMENT_ENTITY.ID));
+                .on(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.DEPARTMENT_ID.eq(BaseSysDepartmentEntityTableDef.BASE_SYS_DEPARTMENT_ENTITY.ID));*/
 
         // 不显示admin用户
         qw.and(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.USERNAME.ne("admin"));
@@ -90,9 +102,8 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
         }
         // 过滤部门权限
         qw.and(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.DEPARTMENT_ID.in(
-                permsDepartmentArr == null || permsDepartmentArr.length == 0 ? new Long[]{null}
-                        : permsDepartmentArr,
-                !RadeSecurityUtil.getAdminUsername().equals("admin")));
+                permsDepartmentArr == null || permsDepartmentArr.length == 0 ?
+                        new Long[]{null} : permsDepartmentArr, !aacApi.getAdminUsername().equals("admin")));
         if (databaseDialect.equals(DatabaseDialect.PostgreSQL)) {
             // 兼容postgresql
             qw.groupBy("base_sys_user.id", "base_sys_user.create_time", "base_sys_user.department_id",
@@ -102,7 +113,7 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
                     "base_sys_department.name");
         } else {
             qw.groupBy(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.ID);
-        }*/
+        }
         return mapper.paginate(page, qw);
     }
 
@@ -127,6 +138,7 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
                 .set(BaseSysUserEntity::getDepartmentId, departmentId)
                 .in(BaseSysUserEntity::getId, (Object) userIds).update();
     }
+
 
     @Override
     public Long add(JSONObject requestParams, BaseSysUserEntity entity) {
@@ -164,20 +176,41 @@ public class BaseSysUserServiceImpl extends BaseServiceImpl<BaseSysUserMapper, B
                             ModifyEnum type) {
         if (type != ModifyEnum.DELETE && requestParams.get("roleIdList", Long[].class) != null) {
             // 刷新权限
-            /*baseSysPermsService.updateUserRole(baseSysUserEntity.getId(),
-                    requestParams.get("roleIdList", Long[].class));*/
+            rbacApi.updateUserRole(baseSysUserEntity.getId(), requestParams.get("roleIdList", Long[].class));
         }
     }
 
     @Override
     public Object info(Long id) {
-        /*BaseSysUserEntity userEntity = getById(id);
-        Long[] roleIdList = baseSysPermsService.getRoles(id);
+        BaseSysUserEntity userEntity = getById(id);
+        Long[] roleIdList = rbacApi.getRoles(id);
         BaseSysDepartmentEntity departmentEntity = baseSysDepartmentMapper.selectOneById(
                 userEntity.getDepartmentId());
         userEntity.setPassword(null);
         return Dict.parse(userEntity).set("roleIdList", roleIdList).set("departmentName",
-                departmentEntity != null ? departmentEntity.getName() : null);*/
-        return null;
+                departmentEntity != null ? departmentEntity.getName() : null);
     }
+
+
+    @Override
+    public Map<Long, String> selectUserNameByUserId(List<Long> userIds) {
+        QueryWrapper in = QueryWrapper.create()
+                .select(BaseSysUserEntity::getId, BaseSysUserEntity::getName)
+                .in(BaseSysUserEntity::getId, userIds);
+        return list(in)
+                .stream()
+                .collect(Collectors.toMap(BaseSysUserEntity::getId, BaseSysUserEntity::getName));
+    }
+
+    @Override
+    public List<Long> selectUserIdByKeywordWithLike(String keyword) {
+        QueryWrapper like = QueryWrapper.create()
+                .select(BaseSysUserEntity::getId)
+                .like(BaseSysUserEntity::getName, keyword);
+        return list(like)
+                .stream()
+                .map(BaseSysUserEntity::getId)
+                .toList();
+    }
+
 }

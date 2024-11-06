@@ -4,10 +4,11 @@ import cn.hutool.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.dows.aac.AacApi;
 import org.dows.core.annotation.RadeController;
 import org.dows.core.web.Response;
 import org.dows.core.crud.EntityUtils;
-import org.dows.core.security.RadeSecurityUtil;
+//import org.dows.core.security.RadeSecurityUtil;
 import org.dows.modules.uat.user.entity.UserInfoEntity;
 import org.dows.modules.uat.user.service.UserInfoService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +22,12 @@ public class AppUserInfoController {
 
     private final UserInfoService userInfoService;
 
+    final private AacApi aacApi;
+
     @Operation(summary = "用户个人信息", description = "获得App、小程序或者其他应用的用户个人信息")
     @GetMapping("/person")
     public Response person() {
-        Long userId = RadeSecurityUtil.getCurrentUserId();
+        Long userId = aacApi.getCurrentUserId();
         UserInfoEntity userInfoEntity = userInfoService.person(userId);
         return Response.ok(EntityUtils.toMap(userInfoEntity,
                 "password"));
@@ -34,7 +37,7 @@ public class AppUserInfoController {
     @PostMapping("/updatePerson")
     public Response updatePerson(@RequestAttribute JSONObject requestParams) {
         UserInfoEntity infoEntity = requestParams.toBean(UserInfoEntity.class);
-        infoEntity.setId(RadeSecurityUtil.getCurrentUserId());
+        infoEntity.setId(aacApi.getCurrentUserId());
         return Response.ok(
                 userInfoService.updateById(infoEntity)
         );
@@ -47,14 +50,14 @@ public class AppUserInfoController {
     ) {
         String password = requestParams.get("password", String.class);
         String code = requestParams.get("code", String.class);
-        userInfoService.updatePassword(RadeSecurityUtil.getCurrentUserId(), password, code);
+        userInfoService.updatePassword(aacApi.getCurrentUserId(), password, code);
         return Response.ok();
     }
 
     @Operation(summary = "注销")
     @PostMapping("/logoff")
     public Response logoff() {
-        userInfoService.logoff(RadeSecurityUtil.getCurrentUserId());
+        userInfoService.logoff(aacApi.getCurrentUserId());
         return Response.ok();
     }
 
@@ -64,7 +67,7 @@ public class AppUserInfoController {
             @RequestAttribute JSONObject requestParams) {
         String phone = requestParams.get("phone", String.class);
         String code = requestParams.get("code", String.class);
-        userInfoService.bindPhone(RadeSecurityUtil.getCurrentUserId(), phone, code);
+        userInfoService.bindPhone(aacApi.getCurrentUserId(), phone, code);
         return Response.ok();
     }
 }

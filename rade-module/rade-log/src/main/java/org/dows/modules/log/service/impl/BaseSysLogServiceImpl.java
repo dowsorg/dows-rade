@@ -10,14 +10,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.dows.core.config.LogProperties;
 import org.dows.core.crud.BaseServiceImpl;
-import org.dows.core.security.IgnoredUrlsProperties;
-import org.dows.core.security.RadeSecurityUtil;
 import org.dows.core.util.IPUtils;
 import org.dows.core.util.PathUtils;
-import org.dows.modules.base.service.sys.BaseSysConfService;
 import org.dows.modules.log.entity.BaseSysLogEntity;
 import org.dows.modules.log.mapper.BaseSysLogMapper;
 import org.dows.modules.log.service.BaseSysLogService;
+import org.dows.modules.sys.service.BaseSysConfService;
+import org.dows.security.IgnoredUrlsProperties;
+import org.dows.security.RadeSecurityUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -42,12 +42,9 @@ public class BaseSysLogServiceImpl extends BaseServiceImpl<BaseSysLogMapper, Bas
     private final Executor logTaskExecutor;
 
     @Override
-    public Object page(
-            JSONObject requestParams, Page<BaseSysLogEntity> page, QueryWrapper queryWrapper) {
+    public Object page(JSONObject requestParams, Page<BaseSysLogEntity> page, QueryWrapper queryWrapper) {
         queryWrapper
-                .select(
-                        BaseSysLogEntityTableDef.BASE_SYS_LOG_ENTITY.ALL_COLUMNS,
-                        BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.NAME)
+                .select(BaseSysLogEntityTableDef.BASE_SYS_LOG_ENTITY.ALL_COLUMNS, BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY.NAME)
                 .from(BaseSysLogEntityTableDef.BASE_SYS_LOG_ENTITY)
                 .leftJoin(BaseSysUserEntityTableDef.BASE_SYS_USER_ENTITY)
                 .on(BaseSysLogEntity::getUserId, BaseSysUserEntity::getId);
