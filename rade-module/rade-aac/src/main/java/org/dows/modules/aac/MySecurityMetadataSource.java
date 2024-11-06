@@ -4,11 +4,8 @@ import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.core.enums.UserTypeEnum;
+import org.dows.core.rbac.RbacProvider;
 import org.dows.core.security.SecurityProvider;
-import org.dows.modules.rbac.service.BaseSysPermsService;
-//import org.dows.security.DefaultSecurityProvider;
-//import org.springframework.beans.factory.annotation.Qualifier;
-//import org.springframework.context.annotation.Conditional;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -28,10 +25,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MySecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
-
-    final private BaseSysPermsService baseSysPermsService;
-
     final private SecurityProvider securityProvider;
+
+    final private RbacProvider rbacProvider;
 
     private Map<String, Collection<ConfigAttribute>> map = null;
 
@@ -42,7 +38,7 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
         map = new HashMap<>();
         Collection<ConfigAttribute> configAttributes;
         ConfigAttribute cfg;
-        String[] perms = baseSysPermsService.getAllPerms();
+        String[] perms = rbacProvider.getAllPerms();
         // 获取启用的权限操作请求
         for (String perm : perms) {
             configAttributes = new ArrayList<>();
@@ -65,7 +61,6 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
 
         UserTypeEnum userTypeEnum = securityProvider.getCurrentUserType();
-//        UserTypeEnum userTypeEnum = DefaultSecurityProvider.getCurrentUserType();
         if (ObjectUtil.equal(userTypeEnum, UserTypeEnum.APP)) {
             // app用户不需要权限拦截
             return null;

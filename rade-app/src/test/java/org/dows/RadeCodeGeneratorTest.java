@@ -4,7 +4,7 @@ import com.mybatisflex.annotation.Table;
 import org.dows.core.code.CodeGenerator;
 import org.dows.core.code.CodeModel;
 import org.dows.core.code.CodeTypeEnum;
-import org.dows.modules.uat.user.entity.UserWxEntity;
+import org.dows.modules.user.entity.UserWxEntity;
 
 import java.util.List;
 

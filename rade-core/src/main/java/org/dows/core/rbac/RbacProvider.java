@@ -23,4 +23,7 @@ public interface RbacProvider {
      * @param roleIds
      */
     void updateUserRole(Long userId, Long[] roleIds);
+
+    String[] getAllPerms();
+
 }

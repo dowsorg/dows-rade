@@ -28,7 +28,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtSecurityUserServiceImpl implements UserDetailsService, SecurityUserRefresh {
 
-//    final private BaseSysUserService baseSysUserService;
     final private BaseSysPermsService baseSysPermsService;
     final private RadeCache radeCache;
 
