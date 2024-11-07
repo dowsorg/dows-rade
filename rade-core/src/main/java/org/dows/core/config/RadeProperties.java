@@ -20,4 +20,9 @@ public class RadeProperties {
     // 文件配置
     @NestedConfigurationProperty
     private FileProperties file;
+    // 初始化
+    @NestedConfigurationProperty
+    private InitializerProperties initializer;
+
+
 }

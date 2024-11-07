@@ -21,8 +21,12 @@ import java.util.Locale;
 @Component
 public class CustomOpenApiResource extends OpenApiResource {
 
-    public CustomOpenApiResource(ObjectFactory<OpenAPIService> openAPIBuilderObjectFactory, AbstractRequestService requestBuilder, GenericResponseService responseBuilder, OperationService operationParser, SpringDocConfigProperties springDocConfigProperties, SpringDocProviders springDocProviders, SpringDocCustomizers springDocCustomizers) {
-        super("springdocDefault", openAPIBuilderObjectFactory, requestBuilder, responseBuilder, operationParser, springDocConfigProperties, springDocProviders, springDocCustomizers);
+    public CustomOpenApiResource(ObjectFactory<OpenAPIService> openAPIBuilderObjectFactory,
+                                 AbstractRequestService requestBuilder, GenericResponseService responseBuilder,
+                                 OperationService operationParser, SpringDocConfigProperties springDocConfigProperties,
+                                 SpringDocProviders springDocProviders, SpringDocCustomizers springDocCustomizers) {
+        super("springdocDefault", openAPIBuilderObjectFactory, requestBuilder, responseBuilder,
+                operationParser, springDocConfigProperties, springDocProviders, springDocCustomizers);
     }
 
     @Override

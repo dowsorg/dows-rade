@@ -7,7 +7,7 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.JWTValidator;
 import lombok.RequiredArgsConstructor;
-import org.dows.core.config.ConfigRepository;
+import org.dows.core.config.ConfigProvider;
 import org.dows.core.config.RadeProperties;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class JwtTokenUtil implements Serializable {
     final String tokenKey = "JWT_SECRET_TOKEN";
     final String refreshTokenKey = "JWT_SECRET_REFRESH_TOKEN";
     final private RadeProperties radeProperties;
-    final private ConfigRepository configRepository;
+    final private ConfigProvider configProvider;
 
     public long getExpire() {
         return this.radeProperties.getToken().getExpire();
@@ -36,19 +36,19 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String getTokenSecret() {
-        String secret = configRepository.getValueWithCache(tokenKey);
+        String secret = configProvider.getValueWithCache(tokenKey);
         if (StrUtil.isBlank(secret)) {
             secret = StrUtil.uuid().replaceAll("-", "");
-            configRepository.setValue(tokenKey, secret);
+            configProvider.setValue(tokenKey, secret);
         }
         return secret;
     }
 
     public String getRefreshTokenSecret() {
-        String secret = configRepository.getValueWithCache(refreshTokenKey);
+        String secret = configProvider.getValueWithCache(refreshTokenKey);
         if (StrUtil.isBlank(secret)) {
             secret = StrUtil.uuid().replaceAll("-", "");
-            configRepository.setValue(refreshTokenKey, secret);
+            configProvider.setValue(refreshTokenKey, secret);
         }
         return secret;
     }
