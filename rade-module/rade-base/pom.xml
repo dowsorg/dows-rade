@@ -20,12 +20,10 @@
             <artifactId>rade-core</artifactId>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.dows.cloud</groupId>
             <artifactId>rade-sys</artifactId>
-        </dependency>
-
-
+        </dependency>-->
 
     </dependencies>
 </project>

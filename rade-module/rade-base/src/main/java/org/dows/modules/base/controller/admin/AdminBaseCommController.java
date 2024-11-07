@@ -1,6 +1,5 @@
 package org.dows.modules.base.controller.admin;
 
-import cn.hutool.core.lang.Dict;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,7 +11,9 @@ import org.dows.core.annotation.TokenIgnore;
 import org.dows.core.plugin.upload.FileUploadStrategyFactory;
 import org.dows.core.web.Response;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -65,12 +66,12 @@ public class AdminBaseCommController {
     }*/
 
 
-    @TokenIgnore
+   /* @TokenIgnore
     @Operation(summary = "实体信息与路径", description = "系统所有的实体信息与路径，供前端自动生成代码与服务")
     @GetMapping("/aid")
     public Response aid() {
         return Response.ok(radeAid.getAdmin());
-    }
+    }*/
 
     @TokenIgnore
     @Operation(summary = "编程")
@@ -80,11 +81,10 @@ public class AdminBaseCommController {
     }
 
 
-    @Operation(summary = "文件上传")
+/*    @Operation(summary = "文件上传")
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.ALL_VALUE})
-    public Response upload(
-            @RequestPart(value = "upload", required = false) @Parameter(description = "文件") MultipartFile[] files,
-            HttpServletRequest request) {
+    public Response upload(@RequestPart(value = "upload", required = false)
+                           @Parameter(description = "文件") MultipartFile[] files, HttpServletRequest request) {
         return Response.ok(fileUploadStrategyFactory.upload(files, request));
     }
 
@@ -92,5 +92,5 @@ public class AdminBaseCommController {
     @GetMapping("/uploadMode")
     public Response uploadMode() {
         return Response.ok(fileUploadStrategyFactory.getMode());
-    }
+    }*/
 }
