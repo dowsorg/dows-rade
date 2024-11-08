@@ -29,6 +29,11 @@
             <artifactId>rade-security</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.dows.cloud</groupId>
+            <artifactId>rade-sys</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>org.dows.cloud</groupId>
