@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @Tag(name = "系统菜单", description = "系统菜单")
 @RadeController(api = {"add", "delete", "update", "page", "list", "info"})
-public class AdminBaseSysMenuController extends
+public class AdminMenuController extends
         BaseController<BaseSysMenuService, BaseSysMenuEntity> {
 
     @Override

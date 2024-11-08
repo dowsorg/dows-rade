@@ -29,18 +29,10 @@ public class AppParamController {
 
     private final BaseSysParamService baseSysParamService;
 
-    private final RadeAid radeAid;
-
-    @TokenIgnore
-    @Operation(summary = "实体信息与路径", description = "系统所有的实体信息与路径，供前端自动生成代码与服务")
-    @GetMapping("/aid")
-    public Response aid() {
-        return Response.ok(radeAid.getApp());
-    }
 
     @TokenIgnore
     @Operation(summary = "参数配置")
-    @GetMapping("/param")
+    @GetMapping("/config")
     public Response param(@RequestAttribute() JSONObject requestParams) {
         String key = requestParams.get("key", String.class);
         RadePreconditions.check(!allowKeys.contains(key), "非法操作");

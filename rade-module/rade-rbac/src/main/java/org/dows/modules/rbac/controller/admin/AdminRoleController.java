@@ -17,7 +17,7 @@ import org.dows.modules.rbac.service.BaseSysRoleService;
  */
 @Tag(name = "系统角色", description = "系统角色")
 @RadeController(api = {"add", "delete", "update", "page", "list", "info"})
-public class AdminBaseSysRoleController extends BaseController<BaseSysRoleService, BaseSysRoleEntity> {
+public class AdminRoleController extends BaseController<BaseSysRoleService, BaseSysRoleEntity> {
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {

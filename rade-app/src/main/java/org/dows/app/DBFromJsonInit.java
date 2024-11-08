@@ -32,10 +32,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 数据库初始数据初始化 在 classpath:rade/data/db 目录下创建.json文件 并定义表数据， 由该类统一执行初始化
@@ -83,7 +80,7 @@ public class DBFromJsonInit implements ApplicationRunner {
         if (StrUtil.startWith(dataDir, "file://")) {
             File file = new FileSystemResourceLoader().getResource(dataDir).getFile();
             if (file.isDirectory()) {
-                files.addAll(Arrays.asList(file.listFiles()));
+                files.addAll(Arrays.asList(Objects.requireNonNull(file.listFiles())));
             } else {
                 files.add(file);
             }

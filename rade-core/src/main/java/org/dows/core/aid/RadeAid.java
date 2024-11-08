@@ -196,13 +196,15 @@ public class RadeAid {
                             try {
                                 return m.invoke(annotation);
                             } catch (Exception e) {
-                                throw new IllegalStateException("Failed to access annotation attribute",
-                                        e);
+                                throw new IllegalStateException("Failed to access annotation attribute", e);
                             }
                         }));
-
                 if (attributes.containsKey("value")) {
-                    url = ((String[]) attributes.get("value"))[0];
+                    if (((String[]) attributes.get("value")).length < 1) {
+                        log.info("方法{}没有配置url地址", JSONUtil.toJsonStr(handlerMethod));
+                    } else {
+                        url = ((String[]) attributes.get("value"))[0];
+                    }
                 }
                 break;
             }

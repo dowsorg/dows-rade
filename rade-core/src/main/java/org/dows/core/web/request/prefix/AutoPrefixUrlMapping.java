@@ -3,6 +3,7 @@ package org.dows.core.web.request.prefix;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dows.core.annotation.RadeController;
 import org.dows.core.util.ConvertUtil;
@@ -80,6 +81,12 @@ public class AutoPrefixUrlMapping extends RequestMappingHandlerMapping {
         name = names[names.length - 1];
         cname = name.replace(ConvertUtil.pathToClassName(prefix), "")
                 .replace("Controller", "");
+
+        String[] split = prefix.split("/");
+        if(split.length>=2){
+            // todo 此处可以动态化映射
+            cname = cname.replace(StrUtil.upperFirst(split[1]), "");
+        }
         return ConvertUtil.classNameToPath(cname);
     }
 

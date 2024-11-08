@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Tag(name = "系统部门", description = "系统部门")
 @RadeController(api = {"add", "delete", "update", "list"})
-public class UserDepartmentController
+public class AdminUserDepartmentController
         extends BaseController<BaseSysDepartmentService, BaseSysDepartmentEntity> {
 
     @Override

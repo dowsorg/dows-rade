@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @Tag(name = "系统参数配置", description = "系统参数配置")
 @RadeController(api = {"add", "delete", "update", "page", "info"})
-public class ConfigParamController extends BaseController<BaseSysParamService, BaseSysParamEntity> {
+public class AdminParamController extends BaseController<BaseSysParamService, BaseSysParamEntity> {
 
-    private final RadeAid radeAid;
+
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
@@ -39,10 +39,5 @@ public class ConfigParamController extends BaseController<BaseSysParamService, B
     }
 
 
-    @TokenIgnore
-    @Operation(summary = "实体信息与路径", description = "系统所有的实体信息与路径，供前端自动生成代码与服务")
-    @GetMapping("/aid")
-    public Response aid() {
-        return Response.ok(radeAid.getAdmin());
-    }
+
 }

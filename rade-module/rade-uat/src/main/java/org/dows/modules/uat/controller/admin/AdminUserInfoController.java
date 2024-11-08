@@ -13,7 +13,7 @@ import static org.dows.modules.user.entity.table.UserInfoEntityTableDef.USER_INF
 
 @Tag(name = "用户信息", description = "用户信息")
 @RadeController(api = {"add", "delete", "update", "page", "list", "info"})
-public class UserInfoController extends BaseController<UserInfoService, UserInfoEntity> {
+public class AdminUserInfoController extends BaseController<UserInfoService, UserInfoEntity> {
 
     @Override
     protected void init(HttpServletRequest request, JSONObject requestParams) {
