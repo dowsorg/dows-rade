@@ -45,7 +45,7 @@ public class AutoPrefixUrlMapping extends RequestMappingHandlerMapping {
      * @return 是否需要构建路由
      */
     private boolean checkApis(RadeController[] annotations, RequestMappingInfo info) {
-        String[] apis = new String[]{"add", "delete", "update", "page", "list", "info"};
+        String[] apis = new String[]{"add", "delete", "remove", "update", "page", "list", "info"};
         if (info.getPathPatternsCondition() == null) {
             return true;
         }

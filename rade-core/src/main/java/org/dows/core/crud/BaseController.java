@@ -116,6 +116,21 @@ public abstract class BaseController<S extends BaseService<T>, T extends BaseEnt
         return Response.ok();
     }
 
+
+    /**
+     * 删除
+     *
+     * @param params 请求参数 ids 数组 或者按","隔开
+     */
+    @Operation(summary = "逻辑删除", description = "支持批量删除 请求参数 ids 数组 或者按\",\"隔开")
+    @PostMapping("/remove")
+    protected Response remove(HttpServletRequest request, @RequestBody Map<String, Object> params,
+                              @RequestAttribute() JSONObject requestParams) {
+        service.delete(requestParams, Convert.toLongArray(getIds(params)));
+        return Response.ok();
+    }
+
+
     /**
      * 修改
      *
