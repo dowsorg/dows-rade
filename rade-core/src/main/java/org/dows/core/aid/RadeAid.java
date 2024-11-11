@@ -85,11 +85,19 @@ public class RadeAid {
             HandlerMethod method = methodEntry.getValue();
             String module = getModule(method);
             if (StrUtil.isNotEmpty(module)) {
-                String entityName = getEntity(method.getBeanType());
+
+                Class<?> entity = getEntity(method.getBeanType());
+                if (entity == null) {
+                    continue;
+                }
+                String entityName = entity.getSimpleName();
                 String methodPath = getMethodUrl(method);
-                String escapedMethodPath = methodPath.replace("{", "\\{").replace("}", "\\}");
+                String escapedMethodPath = methodPath
+                        .replace("{", "\\{")
+                        .replace("}", "\\}");
                 String prefix = Objects.requireNonNull(getUrl(info))
                         .replaceFirst("(?s)(.*)" + escapedMethodPath, "$1");
+
                 Dict result = Dict.create();
                 int type = 0;
                 if (prefix.startsWith("/admin")) {
@@ -106,9 +114,8 @@ public class RadeAid {
                 List<Dict> urls = result.getBean(module);
                 Dict item = CollUtil.findOne(urls, dict -> {
                     if (dict != null) {
-                        return dict.getStr("module").equals(module)
-                                && dict.getStr("controller")
-                                .equals(method.getBeanType().getSimpleName());
+                        return dict.getStr("module").equals(module) &&
+                                dict.getStr("controller").equals(method.getBeanType().getSimpleName());
                     } else {
                         return false;
                     }
@@ -132,11 +139,15 @@ public class RadeAid {
                 if (type == 1) {
                     app.set(module, urls);
                 }
-
+                // 重新设值
+                //swaggerInfo.get("")
             }
+
+
         }
         this.admin = admin;
         this.app = app;
+
 
     }
 
@@ -261,14 +272,15 @@ public class RadeAid {
      * @param controller Controller类
      * @return 实体名称
      */
-    private String getEntity(Class<?> controller) {
+    private Class<?> getEntity(Class<?> controller) {
         try {
             ParameterizedType parameterizedType = (ParameterizedType) controller.getGenericSuperclass();
-            Class<?> entityClass = (Class<?>) parameterizedType.getActualTypeArguments()[1];
-            return entityClass.getSimpleName();
+            return (Class<?>) parameterizedType.getActualTypeArguments()[1];
+            //return entityClass.getSimpleName();
         } catch (Exception e) {
-            return "";
+            //return "";
         }
+        return null;
     }
 
     private void entity() {

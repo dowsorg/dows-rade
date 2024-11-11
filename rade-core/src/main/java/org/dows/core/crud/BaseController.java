@@ -44,8 +44,7 @@ public abstract class BaseController<S extends BaseService<T>, T extends BaseEnt
     protected Class<T> entityClass;
 
     @ModelAttribute
-    protected void preHandle(HttpServletRequest request,
-                             @RequestAttribute JSONObject requestParams) {
+    protected void preHandle(HttpServletRequest request, @RequestAttribute JSONObject requestParams) {
         String requestPath = ((ServletRequestAttributes) Objects.requireNonNull(
                 RequestContextHolder.getRequestAttributes())).getRequest().getRequestURI();
         if (!requestPath.endsWith("/page") && !requestPath.endsWith("/list")) {
@@ -154,8 +153,7 @@ public abstract class BaseController<S extends BaseService<T>, T extends BaseEnt
      */
     @Operation(summary = "信息", description = "根据ID查询单个信息")
     @GetMapping("/info")
-    protected Response info(@RequestAttribute() JSONObject requestParams,
-                            @RequestParam() Long id) {
+    protected Response info(@RequestAttribute() JSONObject requestParams, @RequestParam() Long id) {
         return Response.ok(service.info(requestParams, id));
     }
 
