@@ -325,10 +325,19 @@ public class RadePluginService {
         return pluginRepository.getPluginInfoByHook(hook);
     }
 
+
     /**
-     * 获取插件实例对象
+     * 获取插件实例对象,插件未找到，抛出异常
      */
     public Object getInstance(String key) {
         return dynamicJarLoaderService.getBeanInstance(key);
     }
+
+    /**
+     * 获取插件实例对象,插件未找到，不抛出异常
+     */
+    public Object getInstanceWithoutCheck(String key) {
+        return dynamicJarLoaderService.getInstanceWithoutCheck(key);
+    }
+
 }

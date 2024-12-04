@@ -73,10 +73,10 @@ public class SmsProvider {
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
         // 插件key sms-tx、sms-ali，哪个实例存在就调用哪个
-        if (radePluginService.getInstance("sms-tx") != null) {
+        if (radePluginService.getInstanceWithoutCheck("sms-tx") != null) {
             // 调用腾讯短信插件
             RadePluginInvokers.invoke("sms-tx", "send", phones, params);
-        } else if (radePluginService.getInstance("sms-ali") != null) {
+        } else if (radePluginService.getInstanceWithoutCheck("sms-ali") != null) {
             // 调用阿里短信插件
             RadePluginInvokers.invoke("sms-ali", "send", phones, params);
         } else {

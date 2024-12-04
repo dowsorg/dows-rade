@@ -5,7 +5,9 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.mybatisflex.annotation.Table;
@@ -39,19 +41,19 @@ import java.util.stream.Collectors;
 public class RadeAid {
 
     final private RequestMappingHandlerMapping requestMappingHandlerMapping;
-    final private CustomOpenApiResource customOpenApiResource;
     public Dict admin;
     public Dict app;
     @Value("${server.port}")
     private int serverPort;
     private Dict entityInfo;
     private JSONObject swaggerInfo;
-    @Value("${springdoc.api-docs.enabled}")
+    @Value("${springdoc.api-docs.enabled:false}")
     private boolean apiDocsEnabled;
 
     @Async
     public void init() {
         if (!apiDocsEnabled) {
+            log.info("服务启动成功，端口：{}", serverPort);
             return;
         }
         entityInfo = Dict.create();
@@ -195,7 +197,7 @@ public class RadeAid {
      * @return 方法url地址
      */
     private String getMethodUrl(HandlerMethod handlerMethod) {
-        String url = null;
+        String url = "";
         Method method = handlerMethod.getMethod();
         Annotation[] annotations = method.getDeclaredAnnotations();
 
@@ -210,13 +212,16 @@ public class RadeAid {
                                 throw new IllegalStateException("Failed to access annotation attribute", e);
                             }
                         }));
-                if (attributes.containsKey("value")) {
+                if (attributes.containsKey("value") && ObjUtil.isNotEmpty(attributes.get("value"))) {
+                    url = ((String[]) attributes.get("value"))[0];
+                }
+                /*if (attributes.containsKey("value")) {
                     if (((String[]) attributes.get("value")).length < 1) {
                         log.info("方法{}没有配置url地址", JSONUtil.toJsonStr(handlerMethod));
                     } else {
                         url = ((String[]) attributes.get("value"))[0];
                     }
-                }
+                }*/
                 break;
             }
         }
@@ -259,7 +264,8 @@ public class RadeAid {
      */
     private JSONObject swaggerInfo() {
         try {
-            byte[] bytes = customOpenApiResource.getOpenApiJson();
+            //byte[] bytes = customOpenApiResource.getOpenApiJson();
+            byte[] bytes = SpringUtil.getBean(CustomOpenApiResource.class).getOpenApiJson();
             return JSONUtil.parseObj(new String(bytes));
         } catch (Exception e) {
             return new JSONObject();
@@ -304,8 +310,7 @@ public class RadeAid {
         List<Dict> dictList = new ArrayList<>();
         for (Field field : fields) {
             Dict dict = Dict.create();
-            ColumnDefine columnInfo = AnnotatedElementUtils.findMergedAnnotation(field,
-                    ColumnDefine.class);
+            ColumnDefine columnInfo = AnnotatedElementUtils.findMergedAnnotation(field, ColumnDefine.class);
             if (columnInfo == null) {
                 continue;
             }

@@ -55,7 +55,7 @@ public class AdminTaskInfoController extends BaseController<TaskInfoService, Tas
     public Response log(@RequestAttribute JSONObject requestParams) {
         Integer page = requestParams.getInt("page", 0);
         Integer size = requestParams.getInt("size", 20);
-        return Response.ok(pageResult((Page<TaskInfoEntity>) service.log(new Page<>(page, size), requestParams.getLong("id"),
+        return Response.ok(pageResult((Page) service.log(new Page<>(page, size), requestParams.getLong("id"),
                 requestParams.getInt("status"))));
     }
 }

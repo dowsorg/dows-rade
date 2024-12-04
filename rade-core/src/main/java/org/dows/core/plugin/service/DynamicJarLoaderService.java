@@ -167,14 +167,21 @@ public class DynamicJarLoaderService {
     }
 
     /**
-     * 获取插件实例对象
+     * 获取插件实例对象，插件未找到，抛出异常
      */
     public Object getBeanInstance(String key) {
+        Object instance = getInstanceWithoutCheck(key);
+        RadePreconditions.checkEmpty(instance,"插件 {} 未找到", key);
+        return instance;
+    }
+    /**
+     * 获取插件实例对象,插件未找到，不抛出异常
+     */
+    public Object getInstanceWithoutCheck(String key) {
         RadePreconditions.checkEmpty(key, "插件key is null");
         if (pluginMap.containsKey(key)) {
             return pluginMap.get(key);
         }
-        RadePreconditions.alwaysThrow("插件 {} 未找到", key);
         return null;
     }
 
