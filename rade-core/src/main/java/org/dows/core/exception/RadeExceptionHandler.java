@@ -5,9 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.dows.core.web.Response;
 import org.springframework.dao.DuplicateKeyException;
 //import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 异常处理器
@@ -16,6 +21,28 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class RadeExceptionHandler {
 
+    // validator参数校验异常处理
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Response handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+        Response response = new Response();
+        BindingResult result = exception.getBindingResult();
+
+
+        Map<String, String> errorMap = new HashMap<>();
+        result.getFieldErrors().forEach(fieldError -> {
+            String field = fieldError.getField();
+            String message = fieldError.getDefaultMessage();
+            errorMap.put(field, message);
+        });
+        //return Response.error(errorMap);
+        return response;
+    }
+
+    /**
+     * 业务异常处理
+     * @param e
+     * @return
+     */
     @ExceptionHandler(RadeException.class)
     public Response handleRRException(RadeException e) {
         Response response = new Response();

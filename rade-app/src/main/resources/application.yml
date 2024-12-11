@@ -42,7 +42,9 @@ spring:
       add-mappings: true
       static-locations: classpath*:/static/,file:./assets/public/
 
-
+  messages:
+    encoding: utf-8
+    basename:
 
 
 # 忽略url

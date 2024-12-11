@@ -163,6 +163,13 @@
                 <version>${springdoc-openapi.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>4.4.0</version>
+            </dependency>
+
             <!--##################### 数据库缓存相关 ##########################-->
             <!--<dependency>
                 <groupId>com.github.ben-manes.caffeine</groupId>

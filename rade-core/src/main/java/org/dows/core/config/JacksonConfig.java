@@ -1,15 +1,13 @@
 package org.dows.core.config;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.NumberSerializer;
+import org.dows.core.enums.RadeEnum;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -17,8 +15,18 @@ import java.text.SimpleDateFormat;
 
 @Configuration
 public class JacksonConfig {
-
     @Bean
+    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer(){
+        return jacksonObjectMapperBuilder->{
+            // 配置日期格式为 yyyy-MM-dd HH:mm:ss
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            jacksonObjectMapperBuilder.serializerByType(Long.TYPE, BigNumberSerializer.INSTANCE)
+                    .serializerByType(BigInteger.class, BigNumberSerializer.INSTANCE)
+                    .dateFormat(dateFormat)
+                    .serializerByType(RadeEnum.class,new EnumSerializer());
+        };
+    }
+   /* @Bean
     public MappingJackson2HttpMessageConverter jackson2HttpMessageConverter() {
         final Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
         final ObjectMapper objectMapper = builder.build();
@@ -32,7 +40,7 @@ public class JacksonConfig {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         objectMapper.setDateFormat(dateFormat);
         return new MappingJackson2HttpMessageConverter(objectMapper);
-    }
+    }*/
 
     /**
      * 超出 JS 最大最小值 处理
