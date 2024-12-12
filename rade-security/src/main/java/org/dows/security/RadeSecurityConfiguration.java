@@ -10,22 +10,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
-import org.springframework.security.config.http.SessionCreationPolicy;
-//import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.savedrequest.NullRequestCache;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.HandlerMethod;
@@ -35,6 +32,7 @@ import org.springframework.web.util.pattern.PathPattern;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -48,19 +46,25 @@ public class RadeSecurityConfiguration {
     //final private UserDetailsService userDetailsService;
 
     final private UserDetailsManager userDetailsManager;
-
+    // jwt 过滤
     final private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    // 全局异常过滤
+    final private RadeSecurityExceptionFilter radeSecurityExceptionFilter;
+
     // 401
     final private RadeUnauthorizedEntryPoint radeUnauthorizedEntryPoint;
     // 403
     final private RadeAccessDeniedHandler radeAccessDeniedHandler;
+
     // 忽略权限控制的地址
     final private IgnoredUrlsProperties ignoredUrlsProperties;
 
     final private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
 
-    /** 禁用不必要的默认filter，处理异常响应内容 */
+    /**
+     * 禁用不必要的默认filter，处理异常响应内容
+     */
     private void commonHttpSetting(HttpSecurity http) throws Exception {
         // 禁用SpringSecurity默认filter。这些filter都是非前后端分离项目的产物，用不上.
         // yml配置文件将日志设置DEBUG模式，就能看到加载了哪些filter
@@ -91,7 +95,6 @@ public class RadeSecurityConfiguration {
         // 其他未知异常. 尽量提前加载。
         http.addFilterBefore(globalSpringSecurityExceptionHandler, SecurityContextHolderFilter.class);*/
     }
-
 
 
     /** 登录api */
@@ -169,7 +172,9 @@ public class RadeSecurityConfiguration {
         return http.build();
     }*/
 
-    /** 不鉴权的api */
+    /**
+     * 不鉴权的api
+     */
     @Bean
     public SecurityFilterChain publicApiFilterChain(HttpSecurity http) throws Exception {
         commonHttpSetting(http);
@@ -185,23 +190,54 @@ public class RadeSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         // 动态获取忽略的URL
         configureIgnoredUrls();
+        // 请求授权设置
+        httpSecurity.authorizeHttpRequests(
+                conf -> {
+                    conf.requestMatchers(ignoredUrlsProperties.getAdminAuthUrls().toArray(String[]::new)).permitAll();
+                    conf.requestMatchers("/admin/**").authenticated();
+                    conf.requestMatchers("/app/**").hasRole(UserTypeEnum.APP.name());
+                });
+        // 请求头设置
+        httpSecurity.headers(config -> config.frameOptions(FrameOptionsConfig::disable));
+        // 登录设置
+        httpSecurity.formLogin(from -> {
+            from.loginPage("login")
+                    .passwordParameter("")
+                    .usernameParameter("")
+                    // 失败页面或登录页面的错误表示如login?后的failure,前端页面可以拿到该字段做处理
+                    .failureUrl("login?failure")
+                    .successHandler(new RadeAuthenticationSuccessHandler())
+                    .failureHandler(new RadeAuthenticationFailureHandler());
+        });
 
-        return httpSecurity
-                .authorizeHttpRequests(
-                        conf -> {
-                            conf.requestMatchers(ignoredUrlsProperties.getAdminAuthUrls().toArray(String[]::new)).permitAll();
-                            conf.requestMatchers("/admin/**").authenticated();
-                            conf.requestMatchers("/app/**").hasRole(UserTypeEnum.APP.name());
-                        })
-                .headers(config -> config.frameOptions(FrameOptionsConfig::disable))
-                // 允许网页iframe
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(conf -> conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(config -> {
-                    config.authenticationEntryPoint(radeUnauthorizedEntryPoint);
-                    config.accessDeniedHandler(radeAccessDeniedHandler);
-                }).build();
+        // 允许网页iframe
+
+        // 异常处理
+        httpSecurity.exceptionHandling(exception -> {
+            // 未登录
+            exception.authenticationEntryPoint(radeUnauthorizedEntryPoint);
+            // 拒绝访问
+            exception.accessDeniedHandler(radeAccessDeniedHandler);
+        });
+        // 并发会话控制 httpSecurity.sessionManagement(conf -> conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        httpSecurity.sessionManagement(session -> {
+            session.maximumSessions(1)
+                    .expiredSessionStrategy(new RadSessionExpiredStrategy());
+        });
+        //注销成功时的处理
+        httpSecurity.logout(logout -> {
+            logout.logoutSuccessHandler(new RadeLogoutHandler());
+        });
+        // 跨域
+        httpSecurity.cors(Customizer.withDefaults());
+        // csrf攻击防御
+        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+
+        // 其他未知异常. 尽量提前加载
+        httpSecurity.addFilterBefore(radeSecurityExceptionFilter, SecurityContextHolderFilter.class)
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return httpSecurity.build();
     }
 
     private void configureIgnoredUrls() {
@@ -216,9 +252,7 @@ public class RadeSecurityConfiguration {
                     String[] prefixs = pathPattern.getPatternString().split("/");
                     // 去除最后一个路径
                     List<String> urls = new ArrayList<>();
-                    for (int i = 0; i < prefixs.length - 1; i++) {
-                        urls.add(prefixs[i]);
-                    }
+                    urls.addAll(Arrays.asList(prefixs).subList(0, prefixs.length - 1));
                     // 遍历 tokenIgnoreCtr.value()
                     for (String path : tokenIgnoreCtr.value()) {
                         ignoredUrlsProperties.getAdminAuthUrls().add(String.join("/", urls) + "/" + path);
