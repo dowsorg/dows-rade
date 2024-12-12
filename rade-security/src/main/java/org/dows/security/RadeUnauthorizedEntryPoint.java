@@ -14,7 +14,7 @@ import java.util.HashMap;
  * 自定401返回值
  */
 @Component
-public class EntryPointUnauthorizedHandler implements AuthenticationEntryPoint {
+public class RadeUnauthorizedEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)

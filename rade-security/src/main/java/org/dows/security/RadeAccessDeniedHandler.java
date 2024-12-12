@@ -14,7 +14,7 @@ import java.util.HashMap;
  * 自定403返回值
  */
 @Component
-public class RestAccessDeniedHandler implements AccessDeniedHandler {
+public class RadeAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e)

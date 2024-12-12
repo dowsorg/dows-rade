@@ -6,15 +6,14 @@ import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.system.UserInfo;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.row.Row;
 import lombok.RequiredArgsConstructor;
-import org.dows.core.rbac.RbacProvider;
-import org.dows.core.security.SecurityProvider;
 import org.dows.core.cache.RadeCache;
+import org.dows.core.security.SecurityProvider;
 import org.dows.core.security.SecurityUser;
 import org.dows.core.security.SecurityUserRefresh;
+import org.dows.core.uat.UserProvider;
 import org.dows.core.util.SpringContextUtils;
 import org.dows.modules.rbac.entity.BaseSysMenuEntity;
 import org.dows.modules.rbac.entity.BaseSysRoleDepartmentEntity;
@@ -28,15 +27,7 @@ import org.dows.modules.rbac.mapper.BaseSysRoleDepartmentMapper;
 import org.dows.modules.rbac.mapper.BaseSysRoleMenuMapper;
 import org.dows.modules.rbac.mapper.BaseSysUserRoleMapper;
 import org.dows.modules.rbac.service.BaseSysPermsService;
-//import org.dows.modules.uat.user.entity.BaseSysUserEntity;
-//import org.dows.modules.uat.user.entity.BaseSysUserRoleEntity;
-//import org.dows.modules.uat.user.mapper.BaseSysDepartmentMapper;
-//import org.dows.modules.uat.user.mapper.BaseSysUserMapper;
-//import org.dows.modules.uat.user.mapper.BaseSysUserRoleMapper;
-//import org.dows.security.RadeSecurityUtil;
-import org.dows.core.uat.UserProvider;
 import org.springframework.scheduling.annotation.Async;
-//import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -61,6 +52,7 @@ public class BaseSysPermsServiceImpl implements BaseSysPermsService {
     final private SecurityProvider securityProvider;
 
     final private UserProvider userProvider;
+
     @Override
     public Long[] loginDepartmentIds() {
         String username = securityProvider.getAdminUsername();

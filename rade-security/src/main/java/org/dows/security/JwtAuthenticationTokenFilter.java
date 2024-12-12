@@ -39,8 +39,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     final private IgnoredUrlsProperties ignoredUrlsProperties;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String requestURI = request.getRequestURI();
         if (PathUtils.isMatch(ignoredUrlsProperties.getAdminAuthUrls(), requestURI)) {

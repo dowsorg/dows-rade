@@ -1,5 +1,7 @@
 package org.dows.core.rbac;
 
+import org.dows.core.security.SecurityUser;
+
 /**
  * @description: </br>
  * @author: lait.zhang@gmail.com
@@ -18,6 +20,23 @@ public interface RbacProvider {
     Long[] getRoles(Long userId);
 
     /**
+     * 获得角色数组
+     *
+     * @param userInfo 用户
+     * @return 返回角色数组
+     */
+    Long[] getRoles(SecurityUser userInfo);
+
+
+    /**
+     * 获得权限
+     *
+     * @param userId 用户ID
+     * @return 返回用户相关的权限信息
+     */
+    String[] getPerms(Long userId);
+
+    /**
      * 更新用户角色
      * @param userId
      * @param roleIds
@@ -25,5 +44,23 @@ public interface RbacProvider {
     void updateUserRole(Long userId, Long[] roleIds);
 
     String[] getAllPerms();
+
+
+
+    /**
+     * 根据角色获得部门ID
+     *
+     * @param roleIds 角色ID数组
+     * @return 部门ID数组
+     */
+    Long[] getDepartmentIdsByRoleIds(Long[] roleIds);
+
+    /**
+     * 根据用户ID获得部门ID
+     *
+     * @param userId 角色ID数组
+     * @return 部门ID数组
+     */
+    Long[] getDepartmentIdsByRoleIds(Long userId);
 
 }
