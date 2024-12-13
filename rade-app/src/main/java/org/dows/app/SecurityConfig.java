@@ -1,7 +1,7 @@
 package org.dows.app;
 
 import org.dows.core.security.SecurityProvider;
-import org.dows.security.DefaultSecurityProvider;
+import org.dows.security.provider.DefaultSecurityProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

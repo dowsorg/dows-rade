@@ -1,4 +1,4 @@
-package org.dows.security;
+package org.dows.security.filter;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
@@ -32,7 +32,7 @@ import java.util.Objects;
 @Order(1)
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+public class AuthenticationJwtTokenFilter extends OncePerRequestFilter {
 
     final private JwtTokenUtil jwtTokenUtil;
     final private RadeCache radeCache;

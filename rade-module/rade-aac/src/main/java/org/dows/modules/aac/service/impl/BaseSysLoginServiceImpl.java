@@ -19,7 +19,7 @@ import org.dows.core.security.SecurityUser;
 import org.dows.modules.aac.BaseSysLoginDto;
 import org.dows.modules.aac.service.BaseSysLoginService;
 import org.dows.modules.rbac.service.BaseSysPermsService;
-//import org.dows.security.DefaultSecurityProvider;
+//import org.dows.security.provider.DefaultSecurityProvider;
 import org.dows.security.jwt.JwtTokenUtil;
 import org.dows.core.uat.UserProvider;
 import org.springframework.security.authentication.AuthenticationManager;

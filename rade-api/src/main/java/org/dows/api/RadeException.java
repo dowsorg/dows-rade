@@ -1,4 +1,4 @@
-package org.dows.core.exception;
+package org.dows.api;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

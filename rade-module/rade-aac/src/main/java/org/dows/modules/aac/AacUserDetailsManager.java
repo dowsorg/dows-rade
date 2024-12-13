@@ -1,4 +1,4 @@
-package org.dows.security;
+package org.dows.modules.aac;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +16,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class RadeUserDetailsManager implements UserDetailsManager , SecurityUserRefresh {
+public class AacUserDetailsManager implements UserDetailsManager , SecurityUserRefresh {
 
     final private RadeCache radeCache;
 

@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.dows.core.security.SecurityProvider;
 import org.dows.core.crud.BaseServiceImpl;
 import org.dows.core.crud.ModifyEnum;
-import org.dows.core.exception.RadeException;
+import org.dows.api.RadeException;
 import org.dows.modules.rbac.entity.BaseSysRoleDepartmentEntity;
 import org.dows.modules.rbac.entity.BaseSysRoleEntity;
 import org.dows.modules.rbac.entity.BaseSysRoleMenuEntity;

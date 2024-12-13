@@ -30,6 +30,71 @@ rade:
     # 队列容量的倍数
     queue-capacity-multiplier: 3
 
+
+  # 认证授权忽略url
+  aac:
+    login:
+      type: single
+      loginUrl: /v1/api/aac/login
+    #忽略后台鉴权url
+    whitelist:
+      - /
+      - /upload/**
+      - /actuator/**
+      - /download/**
+      - /static/**
+      - /favicon.ico
+      - /v3/api-docs/**
+      - /swagger
+      - /swagger-ui/**
+      - /css/*
+      - /js/*
+      - /druid/**
+      - /admin/base/open/**
+      - /v1/api/aac/login/enable
+      - /v1/api/aac/captcha
+      - /v1/api/aac/login
+      - /v1/api/aac/logout
+      - /swagger-ui/**
+      - /webjars/**
+      - /templates/**
+      - /doc
+      - /api-docs/**
+      - /favicon.ico
+      - /ws
+    jwt-setting:
+      # 令牌自定义标识
+      header: Authorization
+      # 令牌密钥
+      secret-key: Yx7GcP3UY194v8U.fLyhBiFZFxKOagQZt1baEhKlTfMW
+      # 令牌过期时间
+      expiration: 86400000 # a day
+      # 刷新令牌过期时间
+      refresh-expiration: 604800000 # 7 days
+    # 忽略后台鉴权url
+    adminAuthUrls:
+      - /
+      - /upload/**
+      - /actuator/**
+      - /download/**
+      - /static/**
+      - /favicon.ico
+      - /v3/api-docs/**
+      - /swagger
+      - /swagger-ui/**
+      - /css/*
+      - /js/*
+      - /druid/**
+      - /admin/base/open/**
+    # 忽略记录请求日志url
+    logUrls:
+      - /
+      - /**/aid
+      - /app/**
+      - /css/*
+      - /js/*
+      - /favicon.ico
+
 ---
 #开发环境
 spring:

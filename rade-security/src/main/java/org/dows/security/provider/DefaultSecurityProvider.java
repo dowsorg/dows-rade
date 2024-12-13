@@ -1,4 +1,4 @@
-package org.dows.security;
+package org.dows.security.provider;
 
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;

@@ -2,6 +2,8 @@ package org.dows.core.rbac;
 
 import org.dows.core.security.SecurityUser;
 
+import java.util.List;
+
 /**
  * @description: </br>
  * @author: lait.zhang@gmail.com
@@ -62,5 +64,11 @@ public interface RbacProvider {
      * @return 部门ID数组
      */
     Long[] getDepartmentIdsByRoleIds(Long userId);
+
+
+
+    default List<String> getRoleUri(){
+        return null;
+    };
 
 }

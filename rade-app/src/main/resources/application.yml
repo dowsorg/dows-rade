@@ -47,31 +47,7 @@ spring:
     basename:
 
 
-# 忽略url
-ignored:
-  # 忽略后台鉴权url
-  adminAuthUrls:
-    - /
-    - /upload/**
-    - /actuator/**
-    - /download/**
-    - /static/**
-    - /favicon.ico
-    - /v3/api-docs/**
-    - /swagger
-    - /swagger-ui/**
-    - /css/*
-    - /js/*
-    - /druid/**
-    - /admin/base/open/**
-  # 忽略记录请求日志url
-  logUrls:
-    - /
-    - /**/aid
-    - /app/**
-    - /css/*
-    - /js/*
-    - /favicon.ico
+
 
 
 # 分布式唯一ID组件
