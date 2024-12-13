@@ -18,6 +18,7 @@
         <module>rade-quartz</module>
         <module>rade-log</module>
         <module>rade-sys</module>
+        <module>rade-uri</module>
     </modules>
 
 

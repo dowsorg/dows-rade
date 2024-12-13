@@ -25,6 +25,7 @@
         <module>rade-api</module>
         <module>rade-oauth</module>
         <module>rade-dsl</module>
+        <module>rede-aic</module>
     </modules>
 
 
