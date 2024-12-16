@@ -17,14 +17,14 @@
 
     <modules>
         <module>rade-core</module>
-        <module>rade-module</module>
+        <module>rade-bfm</module>
         <module>rade-app</module>
         <module>rade-biz</module>
         <module>rade-handler</module>
         <module>rade-security</module>
         <module>rade-api</module>
         <module>rade-oauth</module>
-        <module>rade-dsl</module>
+        <module>rade-dbo</module>
         <module>rede-aic</module>
         <module>rade-sbi</module>
     </modules>
@@ -196,6 +196,18 @@
             </dependency>
 
 
+            <dependency>
+                <groupId>io.debezium</groupId>
+                <artifactId>debezium-api</artifactId>
+                <version>2.7.0.Final</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.debezium</groupId>
+                <artifactId>debezium-embedded</artifactId>
+                <version>2.7.0.Final</version>
+            </dependency>
+
             <!--################# 辅助相关 #################-->
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -251,6 +263,11 @@
                 <artifactId>class-winter-maven-plugin</artifactId>
                 <version>2.9.6</version>
             </dependency>
+
+
+
+
+
 
         </dependencies>
 
