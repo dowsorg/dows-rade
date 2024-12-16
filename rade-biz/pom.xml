@@ -7,6 +7,11 @@
         <version>${revision}</version>
     </parent>
     <artifactId>rade-biz</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>rade-handler</module>
+    </modules>
 
     <dependencies>
 

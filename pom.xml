@@ -20,12 +20,11 @@
         <module>rade-bfm</module>
         <module>rade-app</module>
         <module>rade-biz</module>
-        <module>rade-handler</module>
         <module>rade-security</module>
         <module>rade-api</module>
         <module>rade-oauth</module>
         <module>rade-dbo</module>
-        <module>rede-aic</module>
+        <module>rade-aic</module>
         <module>rade-sbi</module>
     </modules>
 
