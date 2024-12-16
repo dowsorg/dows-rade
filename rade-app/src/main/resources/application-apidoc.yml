@@ -14,15 +14,32 @@ springdoc:
     operations-sorter: alpha
   api-docs:
     path: /v3/api-docs
-  group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
-      packages-to-scan: org.dows.web
+#  group-configs:
+#    - group: admin
+#      paths-to-match: '/**'
+#      packages-to-scan: org.dows.modules.*.*.admin
+#    - group: tenant
+#      paths-to-match: '/**'
+#      packages-to-scan: org.dows.modules.*.*.tenant
+#    - group: user
+#      paths-to-match: '/**'
+#      packages-to-scan: org.dows.modules.*.*.user
+#    - group: app
+#      paths-to-match: '/**'
+#      packages-to-scan: org.dows.modules.*.*.app
+#    - group: open
+#      paths-to-match: '/**'
+#      packages-to-scan: org.dows.modules.*.*.open
 # knife4j的增强配置，不需要增强可以不配
 knife4j:
   enable: true
   setting:
     language: zh_cn
+    enable-group: true
+
+
+
+
 ---
 #开发环境
 spring:

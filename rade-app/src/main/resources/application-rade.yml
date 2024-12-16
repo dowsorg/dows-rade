@@ -60,7 +60,7 @@ rade:
       - /templates/**
       - /doc
       - /api-docs/**
-      - /favicon.ico
+      #- /favicon.ico
       - /ws
     jwt-setting:
       # 令牌自定义标识
@@ -86,6 +86,7 @@ rade:
       - /js/*
       - /druid/**
       - /admin/base/open/**
+     # - /favicon.ico
     # 忽略记录请求日志url
     logUrls:
       - /
@@ -93,7 +94,7 @@ rade:
       - /app/**
       - /css/*
       - /js/*
-      - /favicon.ico
+      #- /favicon.ico
 
 ---
 #开发环境

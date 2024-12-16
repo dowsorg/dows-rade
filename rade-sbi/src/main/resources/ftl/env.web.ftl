@@ -1,0 +1,9 @@
+VITE_API_DIR = "api"
+VITE_API = "/dev/api/sks"
+VITE_WEB_URL = "/dev/web/sks"
+VITE_ASSETS_URL = "/dev/assets/sks"
+# VITE_ASSETS_URL = ""
+VITE_WEBSOCKET_URL = "http://192.168.111.103:10003/ws"
+# VITE_WEBSOCKET_URL = "http://192.168.23.34:88/dev/api/sks/ws"
+# VITE_WEBSOCKET_URL = "http://192.168.111.106:8080/ws"
+VITE_APP_ID = 12345

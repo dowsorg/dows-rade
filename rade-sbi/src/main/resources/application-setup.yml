@@ -1,0 +1,61 @@
+dows:
+  sbi:
+    dcfs:
+      - application.yml
+      - application-cdc.yml
+      - application-datasource.yml
+      - application-depends.yml
+      - application-log.yml
+      - application-mongo.yml
+      - application-mysql.yml
+     # - application-postgresql.yml
+     # - application-redis.yml
+    setup:
+      jdk:
+        install:
+          platform: win
+          architecture: x64
+          name: jdk
+          version: 17.0.10
+          ext: zip
+          baseDir: jre
+      mariadb:
+        install:
+          name: mariadb
+          version: 11.4.4
+          ext: zip
+          platform: win
+          architecture: x64
+          baseDir: database
+      mongo:
+        install:
+          name: mongodb
+          version: 8.0.3
+          ext: zip
+          platform: win
+          architecture: x64
+          baseDir: mongo
+      nginx:
+        install:
+          name: nginx
+          version: 1.26.2
+          ext: zip
+          platform: win
+          architecture: x86_64
+          baseDir: proxy
+      app:
+        install:
+          name: acre-api
+          version: 1.0.0
+          ext: jar
+          platform: win
+          architecture: x64
+          baseDir: bin
+      web:
+        install:
+          name: acre-web
+          version: 1.0.0
+          ext: zip
+          platform: win
+          architecture: x64
+          baseDir: proxy

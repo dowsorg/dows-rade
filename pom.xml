@@ -26,6 +26,7 @@
         <module>rade-oauth</module>
         <module>rade-dsl</module>
         <module>rede-aic</module>
+        <module>rade-sbi</module>
     </modules>
 
 
@@ -234,6 +235,21 @@
                 <groupId>org.perf4j</groupId>
                 <artifactId>perf4j</artifactId>
                 <version>${perf4j.version}</version>
+            </dependency>
+
+
+
+
+
+            <dependency>
+                <groupId>net.roseboy</groupId>
+                <artifactId>classfinal-maven-plugin</artifactId>
+                <version>1.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.idea-aedi</groupId>
+                <artifactId>class-winter-maven-plugin</artifactId>
+                <version>2.9.6</version>
             </dependency>
 
         </dependencies>

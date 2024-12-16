@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Slf4j
-@Component
+//@Component
 public class MyAccessDecisionManager implements AccessDecisionManager {
     // 忽略权限控制的地址
     final private IgnoredUrlsProperties ignoredUrlsProperties;

@@ -19,10 +19,10 @@ import java.util.List;
 public class AacProperties {
 
     private Login login;
-    private String[] whitelist;
+    private List<String>  whitelist = new ArrayList<>();
     private JwtSetting jwtSetting;
     // 忽略后台校验权限列表
-    private List<String> adminAuthUrls = new ArrayList<>();
+    //private List<String> adminAuthUrls = new ArrayList<>();
     // 忽略记录请求日志列表
     private List<String> logUrls = new ArrayList<>();
     @Data

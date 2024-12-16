@@ -1,0 +1,24 @@
+server:
+  port: 8090
+  undertow:
+    buffer-size: 1024
+    direct-buffers: true
+    threads:
+      io: 4
+      worker: 32
+  #  servlet:
+  #    context-path: /${spring.application.name}
+spring:
+  application:
+    name: SBI
+  profiles:
+    include: apidoc,setup
+    active: dev
+
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false

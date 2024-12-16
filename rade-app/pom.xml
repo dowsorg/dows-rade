@@ -144,6 +144,16 @@
             </resource>
         </resources>-->
         <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>@</delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -157,6 +167,29 @@
                     <execution>
                         <goals>
                             <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>com.idea-aedi</groupId>
+                <artifactId>class-winter-maven-plugin</artifactId>
+                <configuration>
+                    <includePrefix>org.dows.sbi</includePrefix>
+                    <includeLibs>
+                        sbi-handler-${revision}.jar,
+                        sbi-rest-${revision}.jar,
+                        sbi-pojo-${revision}.jar
+                    </includeLibs>
+                    <finalName>sbi</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>class-winter</goal>
                         </goals>
                     </execution>
                 </executions>

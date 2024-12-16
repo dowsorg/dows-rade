@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>应用程序安装引导</title>
+    <style>
+        /* 整体页面布局和样式 */
+        body {
+            font-family: Arial, sans -serif;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 步骤导航样式 */
+        ul.steps {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            background-color: #e9e9e9;
+            border-radius: 5px;
+        }
+
+        ul.steps li {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+        }
+
+        ul.steps li:after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            /*height: 2px;*/
+            background-color: #ccc;
+            top: 50%;
+            right: 0;
+        }
+
+        ul.steps li:last-child:after {
+            content: none;
+        }
+
+        ul.steps li.active {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        ul.steps li.active:after {
+            background-color: #007BFF;
+        }
+
+        /* 进度条样式 */
+        progress {
+            width: 100%;
+            height: 20px;
+            -webkit-appearance: none;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 5px;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: #007BFF;
+            border-radius: 5px;
+        }
+
+        #progressBar {
+            width: 500px;
+            height: 30px;
+            background-color: lightgray;
+            border-radius: 5px;
+        }
+
+        #progress {
+            width: 0;
+            height: 100%;
+            background-color: blue;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: block;
+        }
+    </style>
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+    <script th:src="@{${contextPath} + '/js/jquery-3.6.0.min.js'}"></script>
+    <!-- 引用SockJS
+    <script src="js/sockjs.min.js"></script>
+    &lt;!&ndash; 引用STOMP &ndash;&gt;
+    <script src="js/stomp.min.js"></script>-->
+    <script th:src="@{${contextPath} + '/js/sockjs.min.js'}"></script>
+    <!-- 引用STOMP -->
+    <script th:src="@{${contextPath} + '/js/stomp.min.js'}"></script>
+</head>
+<body>
+<h1>应用程序安装引导</h1>
+
+<!-- 步骤导航 -->
+<ul class="steps">
+    <li th:class="${step =='mysql' || step =='mongo' || step == 'app'? 'active' : ''}">依赖设置</li>
+    <li th:class="${step =='init'? 'active' : ''}">初始化数据</li>
+    <li th:class="${step == 'startup'? 'active' : ''}">启动服务</li>
+</ul>
+
+<!-- MySQL安装表单 -->
+<div th:if="${step =='mysql'}">
+    <form th:action="@{/install/mysql}" method="post">
+        <h2>Mariadb setting</h2>
+        <input type="text" th:field="*{mysqlInstallForm.appId}" hidden="hidden">
+        <input type="text" id="mysql-preSetupName" th:field="*{mysqlInstallForm.preSetupName}" hidden="hidden">
+        <label for="mysql-username">数据库用户名:</label>
+        <input type="text" id="mysql-username" th:attr="disabled=${mysqlInstallForm.isUsernameSet()}"
+               th:field="*{mysqlInstallForm.username}" required><br>
+        <label for="mysql-password">数据库密码:</label>
+        <input type="password" id="mysql-password" th:field="*{mysqlInstallForm.password}" required><br>
+        <label for="mysql-host">数据库地址:</label>
+        <input type="text" id="mysql-host" th:attr="readonly=${mysqlInstallForm.isHostSet()}"
+               th:field="*{mysqlInstallForm.host}" required><br>
+        <label for="mysql-port">数据库端口:</label>
+        <input type="text" id="mysql-port" th:field="*{mysqlInstallForm.port}" required><br>
+        <!--<label for="mysql-databaseName">数据库名称:</label>
+        <input type="text" id="mysql-databaseName" th:field="*{mysqlInstallForm.databaseName}" required><br>-->
+        <button type="button" class="preStep" id="mysql" th:if="${step =='mysql'}" onclick="location.href='/preview';">
+            上一步
+        </button>
+        <button type="submit">下一步</button>
+    </form>
+</div>
+
+<!-- SqlServer 配置表单 -->
+<div th:if="${step =='mssql'}">
+    <form th:action="@{/install/mssql}" method="post">
+        <h2>SqlServer setting</h2>
+        <input type="text" th:field="*{mssqlInstallForm.appId}" hidden="hidden">
+        <input type="text" id="mssql-preSetupName" th:field="*{mssqlInstallForm.preSetupName}" hidden="hidden">
+        <label for="mssql-username">数据库用户名:</label>
+        <input type="text" id="mssql-username" th:attr="disabled=${mssqlInstallForm.isUsernameSet()}"
+               th:field="*{mssqlInstallForm.username}" required><br>
+        <label for="mssql-password">数据库密码:</label>
+        <input type="password" id="mssql-password" th:field="*{mssqlInstallForm.password}" required><br>
+        <label for="mssql-host">数据库地址:</label>
+        <input type="text" id="mssql-host" th:field="*{mssqlInstallForm.host}" required><br>
+        <label for="mssql-port">数据库端口:</label>
+        <input type="text" id="mssql-port" th:field="*{mssqlInstallForm.port}" required><br>
+        <label for="mssql-databaseName">数据库名称:</label>
+        <input type="text" id="mssql-databaseName" th:field="*{mssqlInstallForm.databaseName}" required><br>
+        <!--<label for="mysql-databaseName">数据库名称:</label>databaseName
+        <input type="text" id="mysql-databaseName" th:field="*{mysqlInstallForm.databaseName}" required><br>-->
+
+        <!--<button type="button" th:if="${step =='mssql'}" th:onclick="'location.href=/install?preStep='*${mssqlInstallForm.preStep}">上一步</button>-->
+        <button type="button" class="preStep" id="mssql" th:if="${step =='mssql'}"
+                th:attr="appId=${mssqlInstallForm.appId}"
+                onclick="goToPreStep(this.getAttribute('appId'),'mssql')">上一步
+        </button>
+        <button type="submit">下一步</button>
+    </form>
+</div>
+
+<!-- Mongo安装表单 -->
+<div th:if="${step =='mongo'}">
+    <form th:action="@{/install/mongo}" method="post">
+        <h2>Mongo setting</h2>
+        <input type="text" th:field="*{mongoInstallForm.appId}" hidden="hidden">
+        <input type="text" id="mongo-preSetupName" th:field="*{mongoInstallForm.preSetupName}" hidden="hidden">
+        <label for="mongo-username">数据库用户名:</label>
+        <input type="text" id="mongo-username" th:field="*{mongoInstallForm.username}" required><br>
+        <label for="mongo-password">数据库密码:</label>
+        <input type="password" id="mongo-password" th:field="*{mongoInstallForm.password}" required><br>
+        <label for="mongo-host">数据库地址:</label>
+        <input type="text" id="mongo-host" th:attr="readonly=${mongoInstallForm.isHostSet()}"
+               th:field="*{mongoInstallForm.host}" required><br>
+        <label for="mongo-port">数据库端口:</label>
+        <input type="text" id="mongo-port" th:field="*{mongoInstallForm.port}" required><br>
+        <label for="mongo-databaseName">数据库名称:</label>
+        <input type="text" id="mongo-databaseName" th:field="*{mongoInstallForm.databaseName}" required><br>
+        <!--<button type="button" th:if="${step =='mongo'}" onclick="location.href='/install?preStep=mssql';">上一步</button>-->
+        <button type="button" class="preStep" id="mongo" th:if="${step =='mongo'}"
+                th:attr="appId=${mongoInstallForm.appId}"
+                onclick="goToPreStep(this.getAttribute('appId'),'mongo')">上一步
+        </button>
+        <button type="submit">下一步</button>
+    </form>
+</div>
+
+
+<!-- Nginx安装表单 -->
+<!--<div th:if="${step =='nginx'}">
+    <form th:action="@{/install/nginx}" method="post">
+        <h2>Nginx安装</h2>
+        <button type="button" th:if="${step =='nginx'}" onclick="location.href='/install?preStep=mongo';">上一步
+        </button>
+        <button type="submit">下一步</button>
+    </form>
+</div>-->
+
+<!-- 应用程序安装表单 -->
+<div th:if="${step == 'app'}">
+    <form th:action="@{/install/app}" method="post">
+        <h2>应用程序安装</h2>
+        <input type="text" id="app-id" th:field="*{appInstallForm.appId}" hidden="hidden">
+        <input type="text" id="app-preSetupName" th:field="*{appInstallForm.preSetupName}" hidden="hidden">
+        <label for="app-host">应用地址:</label>
+        <input type="text" id="app-host" th:attr="readonly=${appInstallForm.isHostSet()}"
+               th:field="*{appInstallForm.host}" required><br>
+        <label for="app-port">应用程序端口:</label>
+        <input type="text" id="app-port" th:field="*{appInstallForm.port}" required><br>
+        <!--<label for="app-id">应用ID:</label>
+        <input type="text" id="app-id" th:field="*{appInstallForm.appId}" required><br>-->
+        <!--<button type="button" th:if="${step == 'app'}" onclick="location.href='/install?preStep=mongo';">上一步</button>-->
+        <button type="button" class="preStep" id="app" th:if="${step =='app'}"
+                th:attr="appId=${appInstallForm.appId}"
+                onclick="goToPreStep(this.getAttribute('appId'),'app')">上一步
+        </button>
+        <button type="submit">下一步</button>
+    </form>
+</div>
+
+<!-- 数据导入表单 -->
+<div th:if="${step == 'init'}">
+    <form th:action="@{/install/init}" method="post">
+        <h2>mariadb/mongo数据导入</h2>
+        <!--<label for="schema">正在导入业务数据:</label>
+        <input type="text" id="schema" th:field="*{dataImportForm.schema}" readonly><br>-->
+        <label for="progress">进度:</label>
+
+        <div id="progressBar">
+            <!--<div id="progress"></div>-->
+            <progress id="progress" value="0" max="100"></progress>
+        </div>
+        <!--<input type="text"  th:field="*{appInstallForm.host}" hidden="hidden">
+        <input type="text"  th:field="*{appInstallForm.port}" hidden="hidden">
+        <input type="text"  th:field="*{appInstallForm.appId}" hidden="hidden">-->
+        <!--<progress id="progress" value="0" max="100"></progress><br>
+        <input type="text" id="progress" th:field="*{dataImportForm.progress}" readonly><br>
+        <label for="sqlStatement">SQL语句:</label>
+        <textarea id="sqlStatement" th:field="*{dataImportForm.sqlStatement}" readonly></textarea><br>-->
+        <button class="preStep" id="init" type="button" th:if="${step == 'init'}"
+                onclick="location.href='/install?preStep=app';">上一步
+        </button>
+<!--        <button id="startButton" type="submit" disabled onclick="startNg()">启动</button>-->
+        <button id="startButton" type="submit" disabled >启动</button>
+        <!--<button id="startButton" type="submit" disabled th:attr="ngStartUrl=${appInstallForm.ngStartUrl}" onclick="startNg(this.getAttribute('ngStartUrl'))">启动</button>-->
+        <!--<button id="startButton" type="submit" onclick="if (installationCompleted) { location.href='/install?nextStep=app'; } else { return false; }">导入数据</button>-->
+        <!--<button id="startButton" type="submit" onclick="if (installationCompleted) { location.href='/install?nextStep=app'; } else { return false; }">启动</button>-->
+    </form>
+</div>
+
+<!-- 应用服务 -->
+<div th:if="${step =='startup'}">
+    <form>
+        <!-- <form th:action="@{/install/app}" method="post">-->
+        <h2>应用服务</h2>
+<!--        <label for="appPorts">应用端口:</label>-->
+<!--        <input type="text" id="appPorts" value="3306, 27017, 8080" readonly><br>-->
+<!--        <p>* 如端口冲突请输入其他端口</p>-->
+        <label for="mariadbProgress">mariadb进度:</label>
+        <progress id="mariadbProgress" value="100" max="100"></progress>
+        <br>
+        <label for="mongoProgress">mongo进度:</label>
+        <progress id="mongoProgress" value="100" max="100"></progress>
+        <br>
+        <label for="appProgress">应用进度:</label>
+
+        <div id="appProgressBar">
+            <!--<div id="progress"></div>-->
+            <progress id="appProgress" value="0" max="100"></progress>
+        </div>
+<!--        // todo 添加一个大的日志展示框，实时展示推送过来的日志-->
+<!--        <label for="appProgress">应用进度:</label>-->
+<!--        <progress id="appProgress" value="0" max="100"></progress>-->
+        <br>
+        <br>
+        <a id="appIndex" th:href="${startup.index}" display="none"
+           style="text-align: center;color: blue; font-size: 23px; display: block" >应用安装成功，跳转到登录页面 (go)</a>
+<!--        <button type="button" th:if="${step == 'startup'}" onclick="location.href='/install?preStep=init';">上一步-->
+<!--        </button>-->
+        <br>
+        <br>
+        <div id="logArea" style="height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 5px;">
+            <!-- 日志内容将被动态添加到这里 -->
+        </div>
+        <button type="button">关闭</button>
+    </form>
+</div>
+
+
+</body>
+
+<script>
+
+    // 创建SockJS连接
+    const sock = new SockJS('/ws');
+    // 创建Stomp客户端
+    const stomp = Stomp.over(sock);
+
+    $(document).ready(function() {
+
+        /*$("#appIndex").onclick = function () {
+            location.href = '/install?nextStep=app';
+        }*/
+
+
+
+        /*var appId =
+        // 绑定按钮点击事件
+        $('.preStep').click(function() {
+            var currentStep = $(this).attr("id");
+            // 发送 AJAX 请求
+            $.ajax({
+                url: '/preStepName?appId=step='+encodeURIComponent(currentStep), // 服务器端点
+                type: 'GET', // 请求类型
+                dataType: 'json', // 期望的响应数据类型
+                success: function(data) {
+                    // 请求成功，处理返回的数据
+                    window.location.href = '/install?preStep=' + encodeURIComponent(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // 请求失败，处理错误
+                    //$('#dataContainer').html('Error: ' + textStatus);
+                }
+            });
+        });*/
+    });
+
+
+    function startNg(ngStartUrl) {
+        $.ajax({
+            url: '/startNg', // 服务器端点
+            type: 'GET', // 请求类型
+            dataType: 'text', // 期望的响应数据类型
+            success: function (data) {
+                // 请求成功，处理返回的数据
+                //location.href = '/install?preStep=' + encodeURIComponent(data);
+                console.log("============="+ngStartUrl)
+                ngStartUrl.submit();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // 请求失败，处理错误
+                //$('#dataContainer').html('Error: ' + textStatus);
+            }
+        });
+        //window.location.href = '/install?preStep=' + encodeURIComponent(preSetupName);
+    }
+
+    function goToPreStep(appId,setupName) {
+        $.ajax({
+            url: '/preStep?appId=' + appId + '&step=' + encodeURIComponent(setupName), // 服务器端点
+            type: 'GET', // 请求类型
+            dataType: 'text', // 期望的响应数据类型
+            success: function (data) {
+                // 请求成功，处理返回的数据
+                location.href = '/install?preStep=' + encodeURIComponent(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // 请求失败，处理错误
+                //$('#dataContainer').html('Error: ' + textStatus);
+            }
+        });
+        //window.location.href = '/install?preStep=' + encodeURIComponent(preSetupName);
+    }
+
+    //const startButton = document.getElementById('startButton');
+
+    stomp.connect({}, function () {
+        console.log('已连接到WebSocket服务器');
+        // 订阅主题，接收安装进度消息
+        stomp.subscribe('/topic/progress', function (message) {
+            const percentage = JSON.parse(message.body).percentage;
+            const progressBar = document.getElementById('progress');
+            progressBar.style.width = percentage + "%";
+            progressBar.textContent = percentage + "%";
+            updateProgress(percentage);
+        });
+        stomp.subscribe('/topic/app', function (message) {
+            let percentage = JSON.parse(message.body).percentage;
+            let appProgress = document.getElementById('appProgress');
+            appProgress.value = percentage;
+            appProgress.style.width = percentage + "%";
+            appProgress.textContent = percentage + "%";
+            // 控制链接的显示
+            const link = document.getElementById('appIndex');
+            console.log(percentage)
+            if (Number(percentage) === 100) {
+                console.log('安装完成');
+                link.style.display = 'block'; // 显示链接
+            } else {
+                link.style.display = 'none'; // 隐藏链接
+            }
+        });
+
+        stomp.subscribe('/topic/log', function (message) {
+            const log = JSON.parse(message.body).log;
+            // 将日志追加到日志区域
+            // 获取日志显示框元素
+            const logArea = document.getElementById('logArea');
+            // 创建一个新的段落元素来显示日志
+            const p = document.createElement('p');
+            p.textContent = log; // 设置段落文本为日志内容
+            // 将段落元素追加到日志显示框中
+            logArea.appendChild(p);
+            // 可选：自动滚动到日志显示框的底部
+            logArea.scrollTop = logArea.scrollHeight;
+        });
+
+        stomp.subscribe('/topic/error', function (message) {
+            const error = JSON.parse(message.body).error;
+            alert(error);
+        });
+    });
+    /*var socket = new SockJS('/ws');
+    var stompClient = Stomp.over(socket);
+    stompClient.connect({}, function(frame) {
+        stompClient.subscribe('/topic/progress', function(progress) {
+            console.log(progress);
+            var progressValue = parseFloat(progress.body);
+            console.log(progressValue);
+            document.getElementById('mariadbProgress').value = progressValue;
+            document.getElementById('mariadbProgress').innerText = progressValue + '%';
+            // document.getElementById('progress').innerText = progress.body;
+        });
+    });*/
+
+    // 用于标识安装是否完成的全局变量，初始值设为false
+    //let installationCompleted = false;
+
+    // 函数用于根据接收到的进度更新进度条以及判断安装是否完成
+    function updateProgress(percentage) {
+        const progressBar = document.getElementById('progress');
+        progressBar.value = percentage;
+        console.log("percentage = " + percentage);
+        // 如果进度达到100%，则设置安装完成标识为true
+        if (percentage == 100) {
+            //installationCompleted = true;
+            let startButton = document.getElementById('startButton');
+            startButton.disabled = false;
+            startButton.removeAttribute("disabled");
+            console.log('安装完成');
+            // 这里也可以进行一些其他操作，比如显示安装完成的提示信息等
+        }
+    }
+
+    // 函数用于在页面加载时禁用启动按钮
+    function disableStartButton() {
+        var link = document.getElementById('appIndex');
+
+        link.classList.remove('visible');
+        link.classList.add('hidden');
+        startButton.disabled = false;
+    }
+
+    // 在页面加载时调用函数禁用启动按钮
+    window.onload = disableStartButton;
+
+</script>
+
+</html>

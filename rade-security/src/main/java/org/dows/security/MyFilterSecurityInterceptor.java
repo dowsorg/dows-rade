@@ -17,7 +17,7 @@ import java.io.IOException;
  * 权限管理拦截器 监控用户行为
  */
 @Slf4j
-@Component
+//@Component
 @RequiredArgsConstructor
 public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
 

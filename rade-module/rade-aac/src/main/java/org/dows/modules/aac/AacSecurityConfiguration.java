@@ -2,22 +2,24 @@ package org.dows.modules.aac;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.api.aac.AuthStatusCode;
+import org.dows.core.aac.AuthStatusCode;
 import org.dows.core.annotation.TokenIgnore;
 import org.dows.core.enums.UserTypeEnum;
 import org.dows.core.rbac.RbacProvider;
-import org.dows.security.*;
-import org.dows.security.filter.HandlerExceptionResolverFilter;
+import org.dows.security.RadSessionExpiredStrategy;
+import org.dows.security.RadeUnauthorizedEntryPoint;
 import org.dows.security.filter.AuthenticationJwtTokenFilter;
+import org.dows.security.filter.HandlerExceptionResolverFilter;
 import org.dows.security.handler.RadeAccessDeniedHandler;
-import org.dows.security.handler.RadeAuthenticationFailureHandler;
-import org.dows.security.handler.RadeAuthenticationSuccessHandler;
 import org.dows.security.handler.RadeLogoutHandler;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
@@ -25,6 +27,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -195,7 +198,7 @@ public class AacSecurityConfiguration {
      *
      * @return
      */
-    public String[] getWhitelist() {
+    public List<String> getWhitelist() {
         return aacProperties.getWhitelist();
     }
 
@@ -224,7 +227,7 @@ public class AacSecurityConfiguration {
         // 请求授权设置
         httpSecurity.authorizeHttpRequests(
                 conf -> {
-                    conf.requestMatchers(aacProperties.getWhitelist()).permitAll();
+                    conf.requestMatchers(aacProperties.getWhitelist().toArray(String[]::new)).permitAll();
                     conf.requestMatchers("/admin/**").authenticated();
                     conf.requestMatchers("/app/**").hasRole(UserTypeEnum.APP.name());
                     conf.anyRequest() .access((authentication, object) -> {
@@ -278,7 +281,8 @@ public class AacSecurityConfiguration {
         // 请求头设置
         httpSecurity.headers(config -> config.frameOptions(FrameOptionsConfig::disable));
         // 登录设置
-        httpSecurity.formLogin(from -> {
+        httpSecurity.formLogin(FormLoginConfigurer::disable);
+        /*httpSecurity.formLogin(from -> {
             from.loginPage("login")
                     .passwordParameter("")
                     .usernameParameter("")
@@ -286,7 +290,7 @@ public class AacSecurityConfiguration {
                     .failureUrl("login?failure")
                     .successHandler(new RadeAuthenticationSuccessHandler())
                     .failureHandler(new RadeAuthenticationFailureHandler());
-        });
+        });*/
 
         // 允许网页iframe
 
@@ -333,11 +337,11 @@ public class AacSecurityConfiguration {
                     urls.addAll(Arrays.asList(prefixs).subList(0, prefixs.length - 1));
                     // 遍历 tokenIgnoreCtr.value()
                     for (String path : tokenIgnoreCtr.value()) {
-                        aacProperties.getAdminAuthUrls().add(String.join("/", urls) + "/" + path);
+                        aacProperties.getWhitelist().add(String.join("/", urls) + "/" + path);
                     }
                     if (tokenIgnoreCtr.value().length == 0) {
                         // 通配
-                        aacProperties.getAdminAuthUrls().add(String.join("/", urls) + "/**");
+                        aacProperties.getWhitelist().add(String.join("/", urls) + "/**");
                     }
                     handlerCtr.add(handlerMethod.getBeanType().getName());
                 });
@@ -356,7 +360,7 @@ public class AacSecurityConfiguration {
                 for (PathPattern path : requestMappingInfo.getPathPatternsCondition().getPatterns()) {
                     url.append(path);
                 }
-                aacProperties.getAdminAuthUrls().add(url.toString());
+                aacProperties.getWhitelist().add(url.toString());
             }
         });
     }
