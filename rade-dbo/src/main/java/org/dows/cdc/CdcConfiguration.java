@@ -6,8 +6,8 @@ import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.dows.framework.datasource.DatasourceContext;
-import org.dows.framework.datasource.DatasourceProperties;
+import org.dows.dds.DatasourceContext;
+import org.dows.dds.DatasourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

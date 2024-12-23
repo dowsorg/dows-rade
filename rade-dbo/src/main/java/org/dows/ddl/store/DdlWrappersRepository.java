@@ -1,7 +1,6 @@
 package org.dows.ddl.store;
 
 import org.dows.ddl.api.ddl.*;
-import org.dows.framework.ddl.api.ddl.*;
 import org.dows.ddl.model.DbWrappers;
 
 public final class DdlWrappersRepository {

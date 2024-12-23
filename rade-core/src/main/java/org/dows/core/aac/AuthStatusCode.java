@@ -3,7 +3,8 @@ package org.dows.core.aac;
 import org.dows.core.status.StatusCode;
 
 public enum AuthStatusCode implements StatusCode {
-    UNAUTHORIZED();
+    UNAUTHORIZED(),
+    FORBIDDEN;
 
     @Override
     public String getCode() {

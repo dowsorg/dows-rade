@@ -2,7 +2,6 @@ package org.dows.ddl.api.db;
 
 import org.dows.ddl.api.AbstractDdl;
 import org.dows.ddl.api.ddl.*;
-import org.dows.framework.ddl.api.ddl.*;
 import org.dows.ddl.init.FactoryBuilder;
 
 public class OracleDdl extends AbstractDdl {

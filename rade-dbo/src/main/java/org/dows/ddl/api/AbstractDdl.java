@@ -1,7 +1,6 @@
 package org.dows.ddl.api;
 
 import org.dows.ddl.api.ddl.*;
-import org.dows.framework.ddl.api.ddl.*;
 
 public abstract class AbstractDdl implements DdlApi {
     public <T> T getIndex(Class<T> finder) {
