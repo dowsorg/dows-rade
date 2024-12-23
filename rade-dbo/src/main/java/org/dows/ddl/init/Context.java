@@ -1,7 +1,6 @@
 package org.dows.ddl.init;
 
 import org.dows.ddl.actuator.distribute.*;
-import org.dows.framework.ddl.actuator.distribute.*;
 import org.dows.ddl.utils.SqlTypeMapUtil;
 
 import java.util.HashMap;

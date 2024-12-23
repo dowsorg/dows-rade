@@ -2,20 +2,16 @@ package org.dows.ddl.init;
 
 import org.dows.ddl.actuator.ibuilder.*;
 import org.dows.ddl.api.ddl.*;
-import org.dows.ddl.builder.mysql.*;
-import org.dows.framework.ddl.actuator.ibuilder.*;
-import org.dows.framework.ddl.api.ddl.*;
 import org.dows.ddl.builder.db2.AlterDb2Builder;
-import org.dows.ddl.builder.db2.CreateDb2Builder;
 import org.dows.ddl.builder.db2.DropDb2Builder;
 import org.dows.ddl.builder.db2.TruncateDb2Builder;
-import org.dows.framework.ddl.builder.mysql.*;
+import org.dows.ddl.builder.mysql.AlterMysqlBuilder;
+import org.dows.ddl.builder.mysql.DropMysqlBuilder;
+import org.dows.ddl.builder.mysql.TruncateMysqlBuilder;
 import org.dows.ddl.builder.oracle.AlterOracleBuilder;
-import org.dows.ddl.builder.oracle.CreateOracleBuilder;
 import org.dows.ddl.builder.oracle.DropOracleBuilder;
 import org.dows.ddl.builder.oracle.TruncateOracleBuilder;
 import org.dows.ddl.builder.postgresql.AlterPostgresqlBuilder;
-import org.dows.ddl.builder.postgresql.CreatePostgresqlBuilder;
 import org.dows.ddl.builder.postgresql.DropPostgresqlBuilder;
 import org.dows.ddl.builder.postgresql.TruncatePostgresqlBuilder;
 import org.dows.ddl.enums.DbTypeEnum;
@@ -45,7 +41,7 @@ public class FactoryBuilder {
 
     public static HashMap<Object, List<Class>> initBuilder() {
         HashMap<Object, List<Class>> hashMap = new LinkedHashMap<>();
-        hashMap.put(DbTypeEnum.MYSQL.getDb(), Arrays.asList(
+       /* hashMap.put(DbTypeEnum.MYSQL.getDb(), Arrays.asList(
                 AlterMysqlBuilder.class, CreateMysqlBuilder.class, SnapshotMysqlBuilder.class, DropMysqlBuilder.class, TruncateMysqlBuilder.class)
         );
         hashMap.put(DbTypeEnum.DB2.getDb(), Arrays.asList(
@@ -56,7 +52,7 @@ public class FactoryBuilder {
         );
         hashMap.put(DbTypeEnum.POSTGRESQL.getDb(), Arrays.asList(
                 AlterPostgresqlBuilder.class, CreatePostgresqlBuilder.class, SnapshotMysqlBuilder.class, DropPostgresqlBuilder.class, TruncatePostgresqlBuilder.class)
-        );
+        );*/
         return hashMap;
     }
 
