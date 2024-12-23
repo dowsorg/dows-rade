@@ -21,7 +21,8 @@ spring:
       version,mybatis,log,caffeine,oss,ws,ssh,domain,apidoc,app,license,mongo,cron,
       init,depends,datasource,cdc,mysql,task-init,aac-root,module,
       rbac-rbac,rbac-root,rbac-caffeine,uat-rbac,log-rbac,app-rbac,
-      aac-rbac,aac-rbac,workspace-rbac,eqpt-rbac,material-rbac,inventory-rbac,task-rbac
+      aac-rbac,aac-rbac,workspace-rbac,eqpt-rbac,material-rbac,inventory-rbac,task-rbac,
+      vac,register
 
     active: dev
   servlet:

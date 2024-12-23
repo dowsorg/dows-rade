@@ -19,10 +19,10 @@ systemLog:
   # 以追加方式写入日志
   logAppend: true
 
-<#if mongod.authorization??>
-security:
-  authorization: ${mongod.authorization!"enabled"}
-</#if>
+  #<#if mongod.authorization??>
+  #security:
+  #authorization: ${mongod.authorization!"enabled"}
+  #</#if>
 
 # 网络相关配置
 net:

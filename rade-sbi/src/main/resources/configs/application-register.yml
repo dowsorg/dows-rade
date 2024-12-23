@@ -1,0 +1,6 @@
+dows:
+  register:
+    scanPackages:
+#      - org.dows.vac.hik
+#      - org.dows.vac.mcgs
+      - org.dows.vac

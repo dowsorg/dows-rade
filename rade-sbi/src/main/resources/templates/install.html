@@ -145,7 +145,7 @@
 
 <!-- 步骤导航 -->
 <ul class="steps">
-    <li th:class="${step =='mysql' || step =='mongo' || step == 'app'? 'active' : ''}">依赖设置</li>
+    <li th:class="${step =='mysql' || step =='mongo' || step == 'app' || step == 'mssql'? 'active' : ''}">依赖设置</li>
     <li th:class="${step =='init'? 'active' : ''}">初始化数据</li>
     <li th:class="${step == 'startup'? 'active' : ''}">启动服务</li>
 </ul>

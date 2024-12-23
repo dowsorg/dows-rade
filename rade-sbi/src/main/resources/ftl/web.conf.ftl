@@ -1,22 +1,22 @@
-location /dev/assets/${web.name} {
+location /dev/assets/${web.appCode} {
     #alias /diy/saas/acre/dev/web/dist;
     alias ${web.assets};
 }
 
-location /dev/statics/${web.name} {
+location /dev/statics/${web.appCode} {
     #alias /diy/saas/acre/dev/web/dist;
     alias ${web.statics};
 }
 
-location /dev/web/${web.name} {
+location /dev/web/${web.appCode} {
     #alias /usr/share/nginx/html/h5;
     #alias /diy/saas/acre/dev/web/dist;
     alias ${web.dist};
     index index.html index.htm;
-    try_files $uri $uri/ /dev/web/${web.name}/index.html;
+    try_files $uri $uri/ /dev/web/${web.appCode}/index.html;
 }
 
-location /dev/api/${web.name}/ {
+location /dev/api/${web.appCode}/ {
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for,$remote_addr;
